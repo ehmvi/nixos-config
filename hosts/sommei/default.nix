@@ -75,6 +75,8 @@ in
       "bitwarden"
       "ente-auth"
       "vesktop"
+      # nixpkgs equibop est linux-only : le cask officiel couvre macos
+      "equibop"
       "font-jetbrains-mono-nerd-font"
       "gstreamer-runtime"
       "grok-bot"
