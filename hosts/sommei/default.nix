@@ -18,6 +18,7 @@ in
 {
   imports = [
     ../../modules/shared/nix.nix
+    ../../modules/programs/godot-android.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";
@@ -70,7 +71,6 @@ in
       "mole"
     ];
     casks = [
-      "android-platform-tools"
       "brave-browser"
       "bitwarden"
       "ente-auth"
@@ -91,10 +91,7 @@ in
       "hopper-disassembler"
       "handbrake-app"
       "zen"
-      # installes a la main avant, retires par cleanup = "uninstall" : declares ici
-      "android-commandlinetools"
-      "godot"
-      "temurin@17"
+      # godot 4.5, jdk 17 et le sdk android : modules/programs/godot-android.nix
       # lecteur de musique. sur macos, le cask s installe dans /Applications ;
       # le paquet nix, lui, ne fournit pas de .app visible dans le launchpad
       "kopuz-org/tap/kopuz"
