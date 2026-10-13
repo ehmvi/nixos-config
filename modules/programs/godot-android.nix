@@ -92,11 +92,4 @@ in
     ANDROID_HOME = "/etc/godot/android-sdk";
     ANDROID_SDK_ROOT = "/etc/godot/android-sdk";
   };
-
-  # homebrew (cleanup) tourne avant postActivation : le cask godot est retire
-  # avant ce lien. types.lines concatene avec le script zen du host.
-  system.activationScripts.postActivation.text = ''
-    # nixpkgs depose le bundle dans GodotMono.app meme sans le module mono.
-    ln -sfn ${godot}/Applications/GodotMono.app /Applications/Godot.app
-  '';
 }
