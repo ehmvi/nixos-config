@@ -112,8 +112,8 @@ the ndk sits under the sdk path:
 fish, the login shell on sommei, reads `environment.variables` from
 `/etc/fish/nixos-env-preinit.fish`. godot itself does not take the export
 paths from the environment: the editor settings are the two `/etc/godot`
-paths above. the `.app` is linked to `/Applications/Godot.app`
-(nixpkgs names the bundle `GodotMono.app` even without mono).
+paths above. nix-darwin already links the bundle into `/Applications/Nix Apps`
+(the package names it `GodotMono.app` even without mono).
 
 export templates are not managed. the editor rewrites
 `~/Library/Application Support/Godot/export_templates/4.5.1.stable`, same
