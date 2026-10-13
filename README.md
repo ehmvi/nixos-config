@@ -79,7 +79,7 @@ by `sommei`.
 ## godot on sommei
 
 `modules/programs/godot-android.nix` installs godot 4.5.1 (`pkgs.godot_4_5`,
-which nixpkgs builds for `aarch64-darwin`), jdk 17, and an android sdk from
+which nixpkgs provides for `aarch64-darwin`), jdk 17, and an android sdk from
 `androidenv.composeAndroidPackages`. on this platform `pkgs.jdk17` is the azul
 zulu 17 binary. the android sdk license is accepted with
 `androidenv.override { licenseAccepted = true; }` on that package set only.
@@ -136,9 +136,8 @@ checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
   (2017, including `tools/lib/monitor-x86_64`) and wraps those scripts with
   jdk 8. godot 4.5 does not call them.
 
-`just check` evaluates the darwin configuration, it does not unpack the sdk
-or compile godot. both of those run on the mac, the first time `just build`
-or `just switch` is asked for this toolchain.
+`just check` evaluates the darwin configuration and does not build it.
+godot 4.5.1 is substituted from the binary cache. it is not compiled on the mac.
 
 ## flake inputs
 
