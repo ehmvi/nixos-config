@@ -29,8 +29,6 @@ let
   buildToolsVersion = "35.0.0";
   platformVersion = "35";
   ndkVersion = "28.1.13356709";
-  # le chemin installe est cmake/3.10.2.4988404
-  cmakeVersion = "3.10.2";
 
   # licence android acceptee ici seulement. nixpkgs.config.android_sdk.accept_license
   # n est pas pose pour le reste du systeme. allowUnfree est deja global.
@@ -45,8 +43,9 @@ let
     includeSources = false;
     includeNDK = true;
     ndkVersions = [ ndkVersion ];
-    includeCmake = true;
-    cmakeVersions = [ cmakeVersion ];
+    # defaut true sur darwin. cmake 3.10.2 est x86_64 only, et l export 4.5
+    # ne l appelle pas.
+    includeCmake = false;
     useGoogleAPIs = false;
     useGoogleTVAddOns = false;
   };
