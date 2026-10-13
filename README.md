@@ -39,7 +39,8 @@ declared in `modules/desktop/hjem.nix`.
 
 **sommei** runs macos. nix-darwin handles the declarative system config, and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
-that nix handles poorly on mac.
+that nix handles poorly on mac. godot 4.5 and the android toolchain for a meta
+quest 3 export are nix packages; see [godot on sommei](#godot-on-sommei).
 
 ## structure
 
@@ -62,7 +63,7 @@ nixos-config/
 │   ├── core/              # boot, locale, nix daemon, zram, networking, users (no gui)
 │   ├── desktop/           # hyprland, sddm, audio, fonts, cursor, printing, hjem
 │   ├── hardware/          # intel, nvidia, bluetooth
-│   └── programs/          # cli, apps (all gui apps), office, gaming, spicetify
+│   └── programs/          # cli, apps, office, gaming, spicetify, godot-android (sommei)
 └── config/                # native dotfiles (hyprland.lua, wayle, kitty, ...)
 ```
 
@@ -72,7 +73,78 @@ itself). shared modules propose values with `lib.mkDefault`; a host overrides
 them plainly, `lib.mkForce` stays for real emergencies.
 
 the darwin host declares its own hjem block inline, since its paths and its
-subset of tools differ.
+subset of tools differ. `modules/programs/godot-android.nix` is imported only
+by `sommei`.
+
+## godot on sommei
+
+`modules/programs/godot-android.nix` installs godot 4.5.1 (`pkgs.godot_4_5`,
+which nixpkgs builds for `aarch64-darwin`), jdk 17, and an android sdk from
+`androidenv.composeAndroidPackages`. on this platform `pkgs.jdk17` is the azul
+zulu 17 binary. the android sdk license is accepted with
+`androidenv.override { licenseAccepted = true; }` on that package set only.
+`nixpkgs.config.android_sdk.accept_license` is not set for the rest of the
+system.
+
+godot 4.5.1's `platform/android/java/app/config.gradle` pins ndk
+`28.1.13356709`, build-tools `35.0.0` and platform `android-35`. ndk
+`23.2.8568313` with build-tools 34 and `android-34` is the godot 4.4 set; a
+4.5 gradle export fails if that is all that is installed. platform-tools in
+this nixpkgs revision is `37.0.1` (godot asks for >= 35). cmdline-tools is
+`22.0`, the arm64 macos build, with `cmdline-tools/latest` linked to it.
+
+store paths change on each rebuild. nix-darwin `environment.etc` keeps two
+symlinks. paste them into godot, editor settings → export → android:
+
+| setting | path |
+|---|---|
+| java sdk path | `/etc/godot/jdk` |
+| android sdk path | `/etc/godot/android-sdk` |
+
+the ndk sits under the sdk path:
+`/etc/godot/android-sdk/ndk/28.1.13356709`. cmake 3.10.2.4988404 is
+`/etc/godot/android-sdk/cmake/3.10.2.4988404`. `adb` is
+`/etc/godot/android-sdk/platform-tools/adb` and is also on `PATH`.
+
+`JAVA_HOME`, `ANDROID_HOME` and `ANDROID_SDK_ROOT` are those same directories.
+fish reads `environment.variables` from `/etc/fish/nixos-env-preinit.fish`.
+nushell 0.115 reads
+`/Library/Application Support/nushell/vendor/autoload/godot-android.nu` on
+macos, including when it is not started from fish. godot itself does not take
+the export paths from the environment: the editor settings are the two
+`/etc/godot` paths above. the `.app` is linked to `/Applications/Godot.app`
+(nixpkgs names the bundle `GodotMono.app` even without mono).
+
+export templates are not managed. the editor rewrites
+`~/Library/Application Support/Godot/export_templates/4.5.1.stable`, same
+reason zen's `profiles.ini` is only seeded once. install them from the editor
+(manage export templates).
+
+quest 3 is an android device. use an android export preset with arm64 and
+deploy with `adb` after developer mode is on. no separate meta sdk is
+installed.
+
+checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
+
+- `adb` and build-tools 35.0.0 are universal (x86_64 and arm64). they run
+  natively.
+- ndk r28b keeps its host tools in `toolchains/llvm/prebuilt/darwin-x86_64`.
+  the directory name is historical; the sampled `llvm-readobj` is universal,
+  so the compiler runs natively. rosetta is not required for the ndk.
+- cmdline-tools 22.0 is the macos arm64 archive.
+- cmake 3.10.2's zip is named `darwin-aarch64`, but the mach-o binaries in it
+  are x86_64 only. running that cmake needs macos rosetta. godot 4.5's gradle
+  file sets `ndkVersion` and does not declare an `externalNativeBuild` cmake
+  step, so a normal template export does not execute it.
+  `nix-homebrew.enableRosetta` stays `false`: that flag runs homebrew under
+  rosetta, which is separate from macos needing rosetta for one x86_64 tool.
+- `composeAndroidPackages` also links the obsolete sdk tools 26.1.1 package
+  (2017, including `tools/lib/monitor-x86_64`) and wraps those scripts with
+  jdk 8. godot 4.5 does not call them.
+
+`just check` evaluates the darwin configuration, it does not unpack the sdk
+or compile godot. both of those run on the mac, the first time `just build`
+or `just switch` is asked for this toolchain.
 
 ## flake inputs
 
