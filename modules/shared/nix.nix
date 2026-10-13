@@ -7,10 +7,19 @@
 {
   nixpkgs.config.allowUnfree = true;
 
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix.settings = {
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
+    # cache binaire de kopuz, sur nixos et sur sommei. l input ne suit pas
+    # notre nixpkgs : ce cache ne contient que les binaires construits avec
+    # le leur. le suivre recompilerait le lecteur en local.
+    substituters = [ "https://kopuz.cachix.org" ];
+    trusted-public-keys = [
+      "kopuz.cachix.org-1:J2X3AnAYhKTJW5S3aCLoA1ckonQXVNZMQvhZA0YAufw="
+    ];
+  };
 
   nix.gc = {
     automatic = true;
