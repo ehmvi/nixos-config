@@ -15,7 +15,7 @@
 #
 # fish lit JAVA_HOME / ANDROID_HOME / ANDROID_SDK_ROOT via environment.variables
 # (nix-darwin les pose dans /etc/fish/nixos-env-preinit.fish).
-# nushell les lit dans son vendor autoload macos, sans bashrc et sans fish.
+# sommei n utilise que fish. nushell reste le shell des hosts nixos.
 { pkgs, ... }:
 
 let
@@ -75,28 +75,6 @@ let
   # sur aarch64-darwin, pkgs.jdk17 est le binaire zulu 17 (pas une compile).
   jdk = pkgs.jdk17;
   godot = pkgs.godot_4_5;
-
-  # nushell 0.115 charge /Library/Application Support/nushell/vendor/autoload
-  # sur macos, que XDG_CONFIG_HOME soit pose ou non, et apres env.nu.
-  godotAndroidNu = pkgs.writeText "godot-android.nu" ''
-    $env.JAVA_HOME = "/etc/godot/jdk"
-    $env.ANDROID_HOME = "/etc/godot/android-sdk"
-    $env.ANDROID_SDK_ROOT = "/etc/godot/android-sdk"
-
-    let path_list = if ($env.PATH | describe | str starts-with "list") {
-      $env.PATH
-    } else {
-      $env.PATH | split row (char esep)
-    }
-    $env.PATH = (
-      [
-        "/etc/godot/jdk/bin"
-        "/etc/godot/android-sdk/platform-tools"
-      ]
-      | append $path_list
-      | uniq
-    )
-  '';
 in
 {
   environment.systemPackages = [
@@ -118,10 +96,6 @@ in
   # homebrew (cleanup) tourne avant postActivation : le cask godot est retire
   # avant ce lien. types.lines concatene avec le script zen du host.
   system.activationScripts.postActivation.text = ''
-    nuDir="/Library/Application Support/nushell/vendor/autoload"
-    mkdir -p "$nuDir"
-    ln -sfn ${godotAndroidNu} "$nuDir/godot-android.nu"
-
     # nixpkgs depose le bundle dans GodotMono.app meme sans le module mono.
     ln -sfn ${godot}/Applications/GodotMono.app /Applications/Godot.app
   '';
