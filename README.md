@@ -124,6 +124,10 @@ quest 3 is an android device. use an android export preset with arm64 and
 deploy with `adb` after developer mode is on. no separate meta sdk is
 installed.
 
+on aarch64-darwin, `godot_4_5` crashes with the metal renderer: spirv-cross
+and moltenvk collide. launch with `--rendering-driver vulkan`, or set
+`rendering/rendering_device/driver.macos` to `vulkan` in the project settings.
+
 checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
 
 - `adb` and build-tools 35.0.0 are universal (x86_64 and arm64). they run
