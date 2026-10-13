@@ -41,6 +41,8 @@ declared in `modules/desktop/hjem.nix`.
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
 that nix handles poorly on mac. godot 4.5 and the android toolchain for a meta
 quest 3 export are nix packages; see [godot on sommei](#godot-on-sommei).
+Kopuz comes from its own flake, so `nix flake update` follows upstream while
+nixpkgs lags. nix-darwin links `Kopuz.app` into `/Applications/Nix Apps`.
 
 ## structure
 
@@ -154,9 +156,12 @@ godot 4.5.1 is substituted from the binary cache. it is not compiled on the mac.
 | `spicetify-nix` | patched spotify on `games` |
 | `treefmt-nix` | formatter + `nix flake check` gate |
 | `sops-nix` | age-encrypted secrets on every host; `sops` and `age` in the dev shell |
+| `kopuz` | music player from upstream. on `sommei` it is a Nix app; `navi` and `games` install the same package |
 
-every input that has a `nixpkgs` or `nix-darwin` input follows ours, so there is
-a single copy of each in the lock. sops-nix follows `nixpkgs`.
+inputs that ship a `nixpkgs` or `nix-darwin` input follow ours, so the lock
+keeps a single copy of each. `kopuz` keeps its own nixpkgs: `kopuz.cachix.org`
+only stores binaries built against that copy, and following ours would compile
+the player locally. sops-nix follows `nixpkgs`.
 
 ## theming
 
@@ -256,6 +261,7 @@ a fresh install brings back the config, not this. redo it by hand:
 | sops age user key | `~/.config/sops/age/keys.txt` | `age-keygen`; back it up off-machine — losing it makes secrets unrecoverable unless a host key remains |
 | mumble audio backend (nixos) | `~/.config/Mumble/Mumble/mumble_settings.json` | input/output system = `PulseAudio`, otherwise mumble 1.5 gets SIGKILLed with pipewire >= 1.4 |
 | game prefixes | `~/Games`, steam library | reinstall from steam / lutris |
+| manual Kopuz.app (`sommei`) | `/Applications/Kopuz.app` | delete it after switching, so Launch Services opens `/Applications/Nix Apps/Kopuz.app` |
 
 ## gotchas
 
