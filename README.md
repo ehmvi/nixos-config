@@ -92,6 +92,9 @@ godot 4.5.1's `platform/android/java/app/config.gradle` pins ndk
 4.5 gradle export fails if that is all that is installed. platform-tools in
 this nixpkgs revision is `37.0.1` (godot asks for >= 35). cmdline-tools is
 `22.0`, the arm64 macos build, with `cmdline-tools/latest` linked to it.
+cmake is not installed. the 3.10.2 macos package is x86_64-only, and a 4.5
+template export does not call it. `includeCmake` defaults to true on darwin,
+so the module sets it to false.
 
 store paths change on each rebuild. nix-darwin `environment.etc` keeps two
 symlinks. paste them into godot, editor settings → export → android:
@@ -102,8 +105,7 @@ symlinks. paste them into godot, editor settings → export → android:
 | android sdk path | `/etc/godot/android-sdk` |
 
 the ndk sits under the sdk path:
-`/etc/godot/android-sdk/ndk/28.1.13356709`. cmake 3.10.2.4988404 is
-`/etc/godot/android-sdk/cmake/3.10.2.4988404`. `adb` is
+`/etc/godot/android-sdk/ndk/28.1.13356709`. `adb` is
 `/etc/godot/android-sdk/platform-tools/adb` and is also on `PATH`.
 
 `JAVA_HOME`, `ANDROID_HOME` and `ANDROID_SDK_ROOT` are those same directories.
@@ -132,12 +134,6 @@ checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
   the directory name is historical; the sampled `llvm-readobj` is universal,
   so the compiler runs natively. rosetta is not required for the ndk.
 - cmdline-tools 22.0 is the macos arm64 archive.
-- cmake 3.10.2's zip is named `darwin-aarch64`, but the mach-o binaries in it
-  are x86_64 only. running that cmake needs macos rosetta. godot 4.5's gradle
-  file sets `ndkVersion` and does not declare an `externalNativeBuild` cmake
-  step, so a normal template export does not execute it.
-  `nix-homebrew.enableRosetta` stays `false`: that flag runs homebrew under
-  rosetta, which is separate from macos needing rosetta for one x86_64 tool.
 - `composeAndroidPackages` also links the obsolete sdk tools 26.1.1 package
   (2017, including `tools/lib/monitor-x86_64`) and wraps those scripts with
   jdk 8. godot 4.5 does not call them.
