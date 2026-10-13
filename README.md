@@ -109,12 +109,10 @@ the ndk sits under the sdk path:
 `/etc/godot/android-sdk/platform-tools/adb` and is also on `PATH`.
 
 `JAVA_HOME`, `ANDROID_HOME` and `ANDROID_SDK_ROOT` are those same directories.
-fish reads `environment.variables` from `/etc/fish/nixos-env-preinit.fish`.
-nushell 0.115 reads
-`/Library/Application Support/nushell/vendor/autoload/godot-android.nu` on
-macos, including when it is not started from fish. godot itself does not take
-the export paths from the environment: the editor settings are the two
-`/etc/godot` paths above. the `.app` is linked to `/Applications/Godot.app`
+fish, the login shell on sommei, reads `environment.variables` from
+`/etc/fish/nixos-env-preinit.fish`. godot itself does not take the export
+paths from the environment: the editor settings are the two `/etc/godot`
+paths above. the `.app` is linked to `/Applications/Godot.app`
 (nixpkgs names the bundle `GodotMono.app` even without mono).
 
 export templates are not managed. the editor rewrites
