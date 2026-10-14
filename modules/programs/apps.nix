@@ -20,8 +20,8 @@
     gajim
     mumble # chat vocal
     signal-desktop
-    equibop
-    vesktop
+    equibop # client Discord principal, session/config séparées de Vesktop (voulu)
+    vesktop # 2e client Discord, session/config séparées d'Equibop (voulu)
     wezterm
     zed-editor
     kdePackages.kate

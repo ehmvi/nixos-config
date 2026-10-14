@@ -92,9 +92,9 @@ in
       "brave-browser"
       "bitwarden"
       "ente-auth"
-      "vesktop"
+      "vesktop" # 2e client Discord, session/config séparées d'Equibop (voulu)
       # nixpkgs equibop est linux-only : le cask officiel couvre macos
-      "equibop"
+      "equibop" # client Discord principal, session/config séparées de Vesktop (voulu)
       "font-jetbrains-mono-nerd-font"
       "gstreamer-runtime"
       "grok-bot"
