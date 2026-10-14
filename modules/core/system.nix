@@ -47,6 +47,8 @@
     git
     unzip
     claude-code
+    # paquet seul et pas programs.starship : le module nixos n initialise que
+    # bash/zsh/fish, pas nushell. l init nu est faite dans config/nushell/
     starship
   ];
 }
