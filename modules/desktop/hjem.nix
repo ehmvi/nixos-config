@@ -1,10 +1,11 @@
 # module: desktop/hjem
-# declarative dotfiles for user paul (symlinks via hjem)
+# declarative dotfiles for the main user (username, symlinks via hjem)
 {
   config,
   lib,
   pkgs,
   theme,
+  username,
   ...
 }:
 
@@ -130,8 +131,8 @@ in
   };
 
   config = {
-    hjem.users.paul = {
-      directory = "/home/paul";
+    hjem.users.${username} = {
+      directory = config.users.users.${username}.home;
       files = {
         ".config/hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
         ".config/hypr/hypr-theme.lua".source = hyprThemeLua;
