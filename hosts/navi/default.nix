@@ -7,7 +7,6 @@
     ./hardware.nix
     ../../modules/core
     ../../modules/desktop
-    ../../modules/desktop/hjem.nix
     ../../modules/hardware/intel.nix
     ../../modules/hardware/bluetooth.nix
     ../../modules/programs/cli.nix
