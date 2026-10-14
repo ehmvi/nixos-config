@@ -10,6 +10,9 @@
 }:
 
 let
+  # "#rrggbb" -> "rrggbb"
+  hex = c: builtins.substring 1 6 c;
+
   # fonds evangelion (github.com/Aleph1-9012/Evangelion), epingles sur un commit precis.
   # nix ne telecharge que ces 2 images, et verifie leur contenu grace au hash.
   lockWallpaper = pkgs.fetchurl {
@@ -39,22 +42,20 @@ let
         rounding = 0
         dots_center = true
         fade_on_empty = false
-        placeholder_text = <span foreground="##${
-          builtins.substring 1 6 theme.palette.subtext0
-        }">Password...</span>
-        font_color = rgb(${builtins.substring 1 6 theme.palette.text})
-        inner_color = rgb(${builtins.substring 1 6 theme.palette.base})
+        placeholder_text = <span foreground="##${hex theme.palette.subtext0}">Password...</span>
+        font_color = rgb(${hex theme.palette.text})
+        inner_color = rgb(${hex theme.palette.base})
         # bordure du champ de mot de passe : blanc
         outer_color = rgb(ffffff)
-        check_color = rgb(${builtins.substring 1 6 theme.palette.green})
-        fail_color = rgb(${builtins.substring 1 6 theme.palette.red})
+        check_color = rgb(${hex theme.palette.green})
+        fail_color = rgb(${hex theme.palette.red})
         shadow_passes = 2
     }
 
     label {
         monitor =
         text = cmd[update:1000] echo "$(date +'%H:%M')"
-        color = rgba(${builtins.substring 1 6 theme.accentHex}, 1.0)
+        color = rgba(${hex theme.accentHex}, 1.0)
         font_size = 24
         font_family = JetBrainsMono Nerd Font
         position = 0, 100
@@ -68,8 +69,8 @@ let
     -- hypr-theme.lua — variant "${theme.variant}"
     -- généré par nix depuis theme.nix, ne pas éditer à la main
     return {
-        active_border = "rgb(${builtins.substring 1 6 theme.accentHex})",
-        inactive_border = "rgb(${builtins.substring 1 6 theme.palette.surface0})",
+        active_border = "rgb(${hex theme.accentHex})",
+        inactive_border = "rgb(${hex theme.palette.surface0})",
     }
   '';
 
