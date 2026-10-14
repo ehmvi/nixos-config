@@ -1,0 +1,41 @@
+# miroir : pousse toutes les branches et tous les tags vers codeberg a chaque push
+name: mirror
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["**"]
+  workflow_dispatch: # bouton "run workflow" dans l onglet actions
+
+# moindre privilege : le job lit le repo github, l ecriture se fait cote codeberg via le token
+permissions:
+  contents: read
+
+# un seul miroir a la fois, sans annuler : le dernier run pousse l etat le plus recent
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      # actions epinglees par sha, comme dans check.yml
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # historique complet + toutes les branches et tags, sinon le miroir serait tronque
+          fetch-depth: 0
+          # le token github n a rien a faire dans la config git locale
+          persist-credentials: false
+      - name: push vers codeberg
+        env:
+          # passe par env et non inline : github masque la valeur dans les logs
+          CODEBERG_TOKEN: ${{ secrets.CODEBERG_TOKEN }}
+        run: |
+          # supprime refs/remotes/origin/HEAD s il existe : sinon il creerait une branche HEAD
+          # sur codeberg (git push ignore les refspecs negatives du type ^refs/...)
+          git remote set-head origin --delete 2>/dev/null || true
+          git push --prune \
+            "https://ehmvi:${CODEBERG_TOKEN}@codeberg.org/ehmvi/nixos-config.git" \
+            '+refs/remotes/origin/*:refs/heads/*' \
+            '+refs/tags/*:refs/tags/*'
