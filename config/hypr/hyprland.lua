@@ -409,6 +409,18 @@ hl.window_rule({
 })
 
 hl.window_rule({
+    name      = "assign-vesktop-workspace",
+    match     = { class = "^(vesktop)$" },
+    workspace = "3 silent",
+})
+
+hl.window_rule({
+    name      = "assign-cinny-workspace",
+    match     = { class = "^(cinny)$" },
+    workspace = "3 silent",
+})
+
+hl.window_rule({
     name      = "assign-gajim-workspace",
     match     = { class = "^(org.gajim.Gajim)$" },
     workspace = "3 silent",
