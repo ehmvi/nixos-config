@@ -21,6 +21,7 @@
     mumble # chat vocal
     signal-desktop
     equibop
+    vesktop
     wezterm
     zed-editor
     kdePackages.kate
