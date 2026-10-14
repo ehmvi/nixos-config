@@ -43,6 +43,7 @@ that nix handles poorly on mac. godot 4.5 and the android toolchain for a meta
 quest 3 export are nix packages; see [godot on sommei](#godot-on-sommei).
 Kopuz comes from its own flake, so `nix flake update` follows upstream while
 nixpkgs lags. nix-darwin links `Kopuz.app` into `/Applications/Nix Apps`.
+Cinny comes from nixpkgs (`cinny-desktop`) and lands there too, as `Cinny.app`.
 
 ## structure
 
