@@ -139,6 +139,7 @@ in
       wimlib
       just
       starship
+      cinny-desktop # client matrix, Cinny.app dans /Applications/Nix Apps
     ]
     ++ [ kopuzApp ];
 
