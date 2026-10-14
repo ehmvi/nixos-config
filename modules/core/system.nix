@@ -1,18 +1,20 @@
 # module: core/system
 # boot, locale, nix daemon, zram, shared cli packages
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
   # 10 générations max dans le menu de boot : évite de remplir l esp (/boot)
-  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  time.timeZone = "Europe/Paris";
+  # mkDefault : valeurs partagees, un host peut les surcharger sans mkForce
+  time.timeZone = lib.mkDefault "Europe/Paris";
 
   i18n.defaultLocale = "en_US.UTF-8";
 
-  i18n.extraLocaleSettings = {
+  # mkDefault par cle : un host qui surcharge une seule variable lc_ garde les autres
+  i18n.extraLocaleSettings = lib.mapAttrs (_: lib.mkDefault) {
     LC_ADDRESS = "fr_FR.UTF-8";
     LC_IDENTIFICATION = "fr_FR.UTF-8";
     LC_MEASUREMENT = "fr_FR.UTF-8";
