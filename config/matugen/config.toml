@@ -4,13 +4,13 @@
 
 # couleurs des bordures hyprland
 [templates.hyprland]
-input_path = "/home/paul/.config/matugen/templates/hypr-colors.lua"
-output_path = "/home/paul/.config/hypr/matugen-colors.lua"
+input_path = "~/.config/matugen/templates/hypr-colors.lua"
+output_path = "~/.config/hypr/matugen-colors.lua"
 # applique aussi les couleurs tout de suite, sans reconnexion (hyprctl eval = lua en direct)
 post_hook = "sh ~/.config/matugen/apply-hypr-colors.sh"
 
 
 # couleurs de rofi (lanceur d applis) : relu a chaque ouverture, rien a relancer
 [templates.rofi]
-input_path = "/home/paul/.config/matugen/templates/rofi-colors.rasi"
-output_path = "/home/paul/.config/rofi/matugen-colors.rasi"
+input_path = "~/.config/matugen/templates/rofi-colors.rasi"
+output_path = "~/.config/rofi/matugen-colors.rasi"
