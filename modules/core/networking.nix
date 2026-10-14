@@ -13,8 +13,9 @@
 
   services.tailscale.enable = true;
 
+  # tailscale0 volontairement pas dans trustedInterfaces : aucun service n'est
+  # exposé sur le tailnet, ces hosts ne font que du ssh sortant vers le pi
   networking.firewall = {
-    trustedInterfaces = [ "tailscale0" ];
     allowedUDPPorts = [ config.services.tailscale.port ];
   };
 }
