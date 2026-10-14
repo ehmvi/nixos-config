@@ -11,10 +11,15 @@
   # passe par un relais derp au lieu du lan quand mullvad est connecte
   services.resolved.enable = true;
 
-  services.tailscale.enable = true;
+  # tailscaled accepte lui-meme le trafic de tailscale0 (chaine ts-input, avant les
+  # regles nixos), donc trustedInterfaces n'y change rien. l'entrant est bloque par
+  # shields-up (aucun service expose, juste du ssh sortant vers le pi). le vrai
+  # controle d'acces au tailnet = les acls tailscale.
+  services.tailscale = {
+    enable = true;
+    extraSetFlags = [ "--shields-up" ];
+  };
 
-  # tailscale0 volontairement pas dans trustedInterfaces : aucun service n'est
-  # exposé sur le tailnet, ces hosts ne font que du ssh sortant vers le pi
   networking.firewall = {
     allowedUDPPorts = [ config.services.tailscale.port ];
   };
