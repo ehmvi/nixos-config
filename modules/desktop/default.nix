@@ -10,5 +10,6 @@
     ./fonts.nix
     ./cursor.nix
     ./printing.nix
+    ./hjem.nix
   ];
 }

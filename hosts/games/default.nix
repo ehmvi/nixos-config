@@ -10,7 +10,6 @@
     ./hardware.nix
     ../../modules/core
     ../../modules/desktop
-    ../../modules/desktop/hjem.nix
     ../../modules/hardware/nvidia.nix
     ../../modules/hardware/health.nix
     ../../modules/hardware/nvidia-power.nix
