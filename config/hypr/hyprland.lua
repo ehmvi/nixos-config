@@ -419,3 +419,9 @@ hl.window_rule({
     match     = { class = "^([Ss]ignal)$" },
     workspace = "3 silent",
 })
+
+hl.window_rule({
+    name      = "assign-cinny-workspace",
+    match     = { class = "^(cinny)$" },
+    workspace = "3 silent",
+})
