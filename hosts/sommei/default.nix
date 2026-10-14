@@ -1,7 +1,6 @@
 # host: sommei
 # macbook pro m1 — nix-darwin/daily driver
 {
-  config,
   pkgs,
   inputs,
   username,
@@ -76,7 +75,7 @@ in
   # nix-darwin (bloc homebrew ci-dessous) ne gère que les paquets.
   nix-homebrew = {
     enable = true;
-    user = config.system.primaryUser;
+    user = username;
     autoMigrate = true;
     enableRosetta = false;
   };
