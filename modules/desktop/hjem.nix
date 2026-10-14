@@ -132,7 +132,6 @@ in
 
   config = {
     hjem.users.${username} = {
-      directory = config.users.users.${username}.home;
       files = {
         ".config/hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
         ".config/hypr/hypr-theme.lua".source = hyprThemeLua;
