@@ -420,6 +420,15 @@ hl.window_rule({
     workspace = "3 silent",
 })
 
+-- gajim flotte au-dessus de la grille du workspace 3 au lieu d y prendre une case
+hl.window_rule({
+    name   = "float-gajim",
+    match  = { class = "^(org.gajim.Gajim)$" },
+    float  = true,
+    size   = "monitor_w*0.4 monitor_h*0.6",
+    center = true,
+})
+
 hl.window_rule({
     name      = "assign-signal-workspace",
     match     = { class = "^([Ss]ignal)$" },
