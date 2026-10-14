@@ -1,8 +1,10 @@
 # host: sommei
 # macbook pro m1 — nix-darwin/daily driver
 {
+  config,
   pkgs,
   inputs,
+  username,
   ...
 }:
 
@@ -46,7 +48,7 @@ in
   # partage ; ici seulement l optimise, defaut dimanche 4h15.
   nix.optimise.automatic = true;
 
-  system.primaryUser = "user";
+  system.primaryUser = username;
   system.stateVersion = 5;
 
   # touch id for sudo
@@ -64,8 +66,8 @@ in
   # fish shell
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish ];
-  users.knownUsers = [ "user" ];
-  users.users.user = {
+  users.knownUsers = [ username ];
+  users.users.${username} = {
     uid = 501;
     shell = pkgs.fish;
   };
@@ -74,7 +76,7 @@ in
   # nix-darwin (bloc homebrew ci-dessous) ne gère que les paquets.
   nix-homebrew = {
     enable = true;
-    user = "user";
+    user = config.system.primaryUser;
     autoMigrate = true;
     enableRosetta = false;
   };
@@ -144,8 +146,9 @@ in
     ++ [ kopuzApp ];
 
   # hjem — declarative dotfiles
-  hjem.users.user = {
-    directory = "/Users/user";
+  hjem.users.${username} = {
+    # pas config.users.users.${username}.home : nix-darwin le laisse a null tant qu on ne le declare pas
+    directory = "/Users/${username}";
     files = {
       ".config/kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
       ".config/kitty/themes/eva24.conf".source = ../../config/kitty/themes/eva24.conf;
@@ -162,12 +165,12 @@ in
   # au hasard au premier lancement et le user.js ci-dessus pointe dans le
   # vide. idempotent : ne touche à rien si le fichier existe déjà.
   system.activationScripts.postActivation.text = ''
-    zenDir="/Users/user/Library/Application Support/zen"
+    zenDir="/Users/${username}/Library/Application Support/zen"
     if [ ! -e "$zenDir/profiles.ini" ]; then
       mkdir -p "$zenDir/Profiles/default"
       cp ${zenProfilesIni} "$zenDir/profiles.ini"
       chmod u+w "$zenDir/profiles.ini"
-      chown -R user:staff "$zenDir"
+      chown -R ${username}:staff "$zenDir"
     fi
   '';
 
