@@ -1,4 +1,4 @@
-# ci : rejoue `just check` (format + lint + eval des 3 hosts) a chaque push
+# ci : rejoue `just check` (format + lint + eval des 3 hosts) et `just scan` (gitleaks) a chaque push
 name: check
 
 on:
@@ -22,6 +22,11 @@ jobs:
       # actions epinglees par sha : un tag peut etre deplace vers un autre code, un sha non.
       # le commentaire en fin de ligne garde la version lisible pour les mises a jour.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          # historique complet : gitleaks scanne tous les commits, pas seulement le dernier
+          fetch-depth: 0
       - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
       - name: just check
         run: nix shell --inputs-from . nixpkgs#just -c just check
+      - name: just scan
+        run: nix shell --inputs-from . nixpkgs#just -c just scan
