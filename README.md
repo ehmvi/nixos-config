@@ -307,6 +307,14 @@ a fresh install brings back the config, not this. redo it by hand:
 - **`TAG+="uaccess"` udev rules must sort before `73-seat-late.rules`.**
   `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
   rules ship as `70-gaming.rules` through `services.udev.packages`.
+- **workspace 3 is a fixed 2x2 chat grid**, not dwindle. `hyprland.lua`
+  registers a lua layout (`hl.layout.register`, hyprland >= 0.56) that picks
+  the cell from the window class: vesktop top-left, equibop top-right, signal
+  bottom-left, cinny bottom-right. open order does not matter, and a closed
+  app leaves its cell empty. gajim also lands on workspace 3 but floats,
+  centred, above the grid. any other tiled window fills a free cell; past four
+  tiled windows the workspace falls back to a plain grid. resizing tiles there
+  does nothing.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.
 
