@@ -3,7 +3,7 @@
 { pkgs, inputs, ... }:
 
 let
-  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.system};
+  spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
   # le module spicetify-nix est importe ici : ce fichier est autonome
