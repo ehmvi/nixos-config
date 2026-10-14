@@ -431,3 +431,64 @@ hl.window_rule({
     match     = { class = "^([Ss]ignal)$" },
     workspace = "3 silent",
 })
+
+-- workspace 3 : grille 2x2 fixe. la case depend de la classe, pas de l ordre
+-- d ouverture : une appli relancee reprend sa case, les autres ne bougent pas.
+-- une case dont l appli est fermee reste vide.
+local chatGridSlots = {
+    vesktop = 1, -- haut gauche
+    equibop = 2, -- haut droite
+    signal  = 3, -- bas gauche
+    cinny   = 4, -- bas droite
+}
+
+hl.layout.register("chat-grid", {
+    recalculate = function(ctx)
+        local cells, extras = {}, {}
+        for _, target in ipairs(ctx.targets) do
+            local window = target.window
+            local slot = window and chatGridSlots[string.lower(window.class or "")]
+            if slot and not cells[slot] then
+                cells[slot] = target
+            else
+                table.insert(extras, target)
+            end
+        end
+
+        -- fenetre inconnue ou deuxieme fenetre d une appli : case libre s il en reste
+        local free = {}
+        for slot = 1, 4 do
+            if not cells[slot] then
+                table.insert(free, slot)
+            end
+        end
+
+        if #extras <= #free then
+            for i, target in ipairs(extras) do
+                cells[free[i]] = target
+            end
+            for slot, target in pairs(cells) do
+                target:place(ctx:grid_cell(slot, 2, 2))
+            end
+            return
+        end
+
+        -- plus de 4 fenetres tuilees : grille generique, les 4 applis restent en tete
+        local ordered = {}
+        for slot = 1, 4 do
+            if cells[slot] then
+                table.insert(ordered, cells[slot])
+            end
+        end
+        for _, target in ipairs(extras) do
+            table.insert(ordered, target)
+        end
+        local cols = math.ceil(math.sqrt(#ordered))
+        for i, target in ipairs(ordered) do
+            target:place(ctx:grid_cell(i, cols))
+        end
+    end,
+})
+
+-- hl.layout.register prefixe le nom par "lua:"
+hl.workspace_rule({ workspace = "3", layout = "lua:chat-grid" })
