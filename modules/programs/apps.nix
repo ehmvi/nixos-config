@@ -15,7 +15,6 @@
     imv
     mpv
     obs-studio
-    nushell
     ente-auth
     gajim
     mumble # chat vocal
