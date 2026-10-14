@@ -52,8 +52,8 @@
       treefmtEval = forAllSystems (
         system: treefmt-nix.lib.evalModule nixpkgs.legacyPackages.${system} ./treefmt.nix
       );
-      # specialArgs et sops-nix sont communs aux 3 hosts. le module nixos ou
-      # darwin est choisi ici ; la config age est dans modules/shared/sops.nix.
+      # specialArgs, sops-nix et hjem sont communs aux 3 hosts. le module nixos
+      # ou darwin est choisi ici ; la config age est dans modules/shared/sops.nix.
       # les autres modules restent passes par l appelant.
       mkHost =
         {
@@ -68,6 +68,7 @@
           modules = [
             (if darwin then sops-nix.darwinModules.sops else sops-nix.nixosModules.sops)
             ./modules/shared/sops.nix
+            (if darwin then hjem.darwinModules.default else hjem.nixosModules.default)
           ]
           ++ modules;
         };
@@ -102,17 +103,11 @@
       nixosConfigurations = {
         navi = mkHost {
           builder = nixpkgs.lib.nixosSystem;
-          modules = [
-            ./hosts/navi/default.nix
-            hjem.nixosModules.default
-          ];
+          modules = [ ./hosts/navi/default.nix ];
         };
         games = mkHost {
           builder = nixpkgs.lib.nixosSystem;
-          modules = [
-            ./hosts/games/default.nix
-            hjem.nixosModules.default
-          ];
+          modules = [ ./hosts/games/default.nix ];
         };
       };
 
@@ -121,7 +116,6 @@
         darwin = true;
         modules = [
           ./hosts/sommei/default.nix
-          hjem.darwinModules.default
           nix-homebrew.darwinModules.nix-homebrew
         ];
       };
