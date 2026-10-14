@@ -1,9 +1,9 @@
 # module: core/users
-# user paul + nushell
-{ pkgs, ... }:
+# utilisateur principal (username, via specialArgs) + nushell
+{ pkgs, username, ... }:
 
 {
-  users.users.paul = {
+  users.users.${username} = {
     isNormalUser = true;
     description = "paul";
     extraGroups = [

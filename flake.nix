@@ -59,11 +59,12 @@
         {
           builder,
           modules,
+          username, # compte principal du host, passe aux modules via specialArgs
           darwin ? false,
         }:
         builder {
           specialArgs = {
-            inherit inputs theme;
+            inherit inputs theme username;
           };
           modules = [
             (if darwin then sops-nix.darwinModules.sops else sops-nix.nixosModules.sops)
@@ -102,6 +103,7 @@
       nixosConfigurations = {
         navi = mkHost {
           builder = nixpkgs.lib.nixosSystem;
+          username = "paul";
           modules = [
             ./hosts/navi/default.nix
             hjem.nixosModules.default
@@ -109,6 +111,7 @@
         };
         games = mkHost {
           builder = nixpkgs.lib.nixosSystem;
+          username = "paul";
           modules = [
             ./hosts/games/default.nix
             hjem.nixosModules.default
@@ -119,6 +122,7 @@
       darwinConfigurations.sommei = mkHost {
         builder = nix-darwin.lib.darwinSystem;
         darwin = true;
+        username = "user";
         modules = [
           ./hosts/sommei/default.nix
           hjem.darwinModules.default
