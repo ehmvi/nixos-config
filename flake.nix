@@ -29,6 +29,10 @@
     nix-homebrew = {
       url = "github:zhaofengli/nix-homebrew";
     };
+    fsa = {
+      url = "github:ehmvi/fsa";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
