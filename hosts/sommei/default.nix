@@ -62,6 +62,10 @@ in
     enableStealthMode = true;
   };
 
+  # fsa : traitement du micro en temps reel, sortie vers le micro virtuel blackhole 2ch.
+  # le module copie le driver dans /Library/Audio/Plug-Ins/HAL a l activation
+  programs.fsa.enable = true;
+
   # fish shell
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish ];
