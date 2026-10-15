@@ -32,6 +32,26 @@
         "type": "github"
       }
     },
+    "fsa": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1792064702,
+        "narHash": "sha256-rG6SKCI6dbXgWzLG1ylaON+O/CEkaPe23WNV7F4i4ss=",
+        "owner": "ehmvi",
+        "repo": "fsa",
+        "rev": "450a121499cbebc5a31d03626e4ef5b857f6907a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ehmvi",
+        "repo": "fsa",
+        "type": "github"
+      }
+    },
     "hjem": {
       "inputs": {
         "nixpkgs": [
@@ -142,6 +162,7 @@
     },
     "root": {
       "inputs": {
+        "fsa": "fsa",
         "hjem": "hjem",
         "kopuz": "kopuz",
         "nix-darwin": "nix-darwin",
