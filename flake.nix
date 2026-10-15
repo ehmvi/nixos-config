@@ -42,6 +42,7 @@
       hjem,
       nix-darwin,
       nix-homebrew,
+      fsa,
       treefmt-nix,
       sops-nix,
       ...
@@ -124,6 +125,7 @@
         modules = [
           ./hosts/sommei/default.nix
           nix-homebrew.darwinModules.nix-homebrew
+          fsa.darwinModules.default
         ];
       };
 
