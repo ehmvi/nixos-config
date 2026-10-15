@@ -39,11 +39,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1792064702,
-        "narHash": "sha256-rG6SKCI6dbXgWzLG1ylaON+O/CEkaPe23WNV7F4i4ss=",
+        "lastModified": 1792069319,
+        "narHash": "sha256-+yva3DAd1l6+cuHps3QPtIxWGn/zbi5nKAsdMXFvKBQ=",
         "owner": "ehmvi",
         "repo": "fsa",
-        "rev": "450a121499cbebc5a31d03626e4ef5b857f6907a",
+        "rev": "fe95da4546a8e09b1c90c5d5025001762dc530dd",
         "type": "github"
       },
       "original": {
