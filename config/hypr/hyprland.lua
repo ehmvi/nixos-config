@@ -409,8 +409,8 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name      = "assign-cinny-workspace",
-    match     = { class = "^(cinny)$" },
+    name      = "assign-fsa-workspace",
+    match     = { class = "^(fsa)$" },
     workspace = "3 silent",
 })
 
@@ -421,7 +421,7 @@ local chatGridSlots = {
     vesktop = 1, -- haut gauche
     equibop = 2, -- haut droite
     signal  = 3, -- bas gauche
-    cinny   = 4, -- bas droite
+    fsa     = 4, -- bas droite
 }
 
 hl.layout.register("chat-grid", {
