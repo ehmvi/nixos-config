@@ -34,5 +34,7 @@
   system.stateVersion = "25.11";
   environment.systemPackages = [
     (pkgs.callPackage ../../pkgs/egctl.nix { })
+    # blender sans cuda : cudaSupport = true compile depuis les sources, sans cache binaire
+    pkgs.blender
   ];
 }
