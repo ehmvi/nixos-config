@@ -36,5 +36,7 @@
     (pkgs.callPackage ../../pkgs/egctl.nix { })
     # blender sans cuda : cudaSupport = true compile depuis les sources, sans cache binaire
     pkgs.blender
+    # release linux officielle : le paquet nixpkgs exige la rom us a la compilation
+    (pkgs.callPackage ../../pkgs/sm64coopdx.nix { })
   ];
 }
