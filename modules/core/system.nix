@@ -44,9 +44,11 @@
   # mounts removable drives (usb sticks); not enabled outside plasma, so i enable it explicitly
   services.udisks2.enable = true;
 
+  # git via le module nixos : il installe le paquet, sans le dupliquer ici.
+  programs.git.enable = true;
+
   environment.systemPackages = with pkgs; [
     fastfetch
-    git
     unzip
     claude-code
     # paquet seul et pas programs.starship : le module nixos n initialise que
