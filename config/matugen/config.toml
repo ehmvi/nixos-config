@@ -6,8 +6,9 @@
 [templates.hyprland]
 input_path = "~/.config/matugen/templates/hypr-colors.lua"
 output_path = "~/.config/hypr/matugen-colors.lua"
-# applique aussi les couleurs tout de suite, sans reconnexion (hyprctl eval = lua en direct)
-post_hook = "sh ~/.config/matugen/apply-hypr-colors.sh"
+# applique aussi les couleurs tout de suite, sans reconnexion (hyprctl eval = lua en direct).
+# chemin absolu : matugen lance le hook avec $SHELL (nushell), le PATH n est pas garanti.
+post_hook = "/run/current-system/sw/bin/apply-hypr-colors"
 
 
 # couleurs de rofi (lanceur d applis) : relu a chaque ouverture, rien a relancer
