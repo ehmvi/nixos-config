@@ -56,5 +56,8 @@
     # decoupe video sans reencodage. nixpkgs suit la derniere release upstream.
     # le paquet source est dans le cache. losslesscut-bin reconstruirait un wrapper fhs en local.
     pkgs.losslesscut
+    # agent de code en ligne de commande d'openai. nixpkgs est a 0.162.1,
+    # une release derriere la stable upstream.
+    pkgs.codex
   ];
 }
