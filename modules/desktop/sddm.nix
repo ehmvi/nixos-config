@@ -1,5 +1,5 @@
 # module: desktop/sddm
-# sddm en wayland (session hyprland) + xserver pour le clavier et nvidia
+# sddm en wayland (session hyprland via uwsm) + xserver pour le clavier et nvidia
 { lib, ... }:
 
 {
@@ -12,7 +12,8 @@
 
   services.displayManager.sddm.enable = true;
   services.displayManager.sddm.settings.General.Numlock = "on"; # verr num actif sur sddm aussi
-  services.displayManager.defaultSession = "hyprland";
+  # hyprland-uwsm.desktop du paquet hyprland (providedSessions), pas la session nue
+  services.displayManager.defaultSession = "hyprland-uwsm";
 
   services.xserver.xkb = {
     layout = lib.mkDefault "us"; # games le remplace par "fr"

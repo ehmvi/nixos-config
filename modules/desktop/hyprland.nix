@@ -8,6 +8,9 @@
 
 {
   programs.hyprland.enable = true;
+  # uwsm demarre graphical-session.target. sans ca, xdg-desktop-portal
+  # (requisite sur cette cible) echoue en "dependency failed"
+  programs.hyprland.withUWSM = true;
   programs.hyprlock.enable = true;
 
   # agent polkit (fenetre de mot de passe pour les actions privilegiees), absent par
