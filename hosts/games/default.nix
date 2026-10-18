@@ -53,5 +53,8 @@
     pkgs.blender
     # release linux officielle : le paquet nixpkgs exige la rom us a la compilation
     (pkgs.callPackage ../../pkgs/sm64coopdx.nix { })
+    # decoupe video sans reencodage. nixpkgs suit la derniere release upstream.
+    # le paquet source est dans le cache. losslesscut-bin reconstruirait un wrapper fhs en local.
+    pkgs.losslesscut
   ];
 }
