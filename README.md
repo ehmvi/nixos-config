@@ -10,6 +10,8 @@ nix-darwin. dotfiles are managed by [hjem](https://github.com/feel-co/hjem) in
 symlink-only mode: native config files in `config/` are the single source of
 truth, and hjem just links them into place.
 
+commit and pull request rules: [docs/conventions.md](docs/conventions.md).
+
 ## foreword
 
 i'm learning linux and nix in the open. this repo is the practice ground. the
