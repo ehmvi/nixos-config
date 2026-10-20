@@ -19,6 +19,8 @@
     gajim
     mumble # chat vocal
     signal-desktop
+    # messagerie simplex. l'appimage est dans le cache ; le wrapper fhs s'assemble en local
+    simplex-chat-desktop
     equibop # client Discord principal, session/config séparées de Vesktop (voulu)
     vesktop # 2e client Discord, session/config séparées d'Equibop (voulu)
     wezterm
