@@ -78,6 +78,54 @@ in
     openFirewall = false;
   };
 
+  # stream du bureau vers le mac (moonlight), seulement via tailscale.
+  # openFirewall reste faux : le module ouvrirait aussi le tcp 47990 et
+  # l'udp 48002 et 48010, sur toutes les interfaces.
+  # le paquet par defaut est celui du cache. quel encodeur est choisi
+  # se lit dans le journal, on ne le suppose pas ici.
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    openFirewall = false;
+    # capture kms (drm), pas propre a nvidia. sous hyprland, sunshine
+    # passe par wlroots et s'en passe. true donnerait cap_sys_admin,
+    # presque root, a un binaire que n'importe quel utilisateur lance.
+    capSysAdmin = false;
+    # pc : l'ui web ne repond qu'a localhost. fermer le port 47990 dans
+    # nixos ne suffit pas, ts-input accepte tout tailscale0. 100.64/10
+    # est un lan pour sunshine, et son defaut accepte le lan.
+    # ce reglage ecrit sunshine.conf dans le store, en lecture seule :
+    # l'ui ne peut plus y sauver ses options. le mot de passe, les
+    # certificats et les clients apparies vont ailleurs
+    # (~/.config/sunshine/sunshine_state.json et credentials/).
+    settings.origin_web_ui_allowed = "pc";
+  };
+
+  # le module sunshine allume avahi (mkDefault) pour le reseau local.
+  # le mac et le telephone joignent games par le nom ou l'ip tailscale.
+  # cups est installe, mais il ne demande pas avahi : seul cups-browsed
+  # s'en sert, pour trouver les imprimantes du lan. on le coupe avec.
+  # sans le demon, sunshine ecrit "Failed to create client" et continue.
+  services.avahi.enable = false;
+
+  # ts-input accepte tout tailscale0 avant nixos-fw, donc cette liste ne
+  # filtre pas aujourd'hui. on la garde : si cet accept disparait, seuls
+  # ces ports passent, et seulement sur tailscale0. pas le 47990.
+  # le vrai filtre, shields-up etant coupe, ce sont les acls tailscale.
+  networking.firewall.interfaces.tailscale0 = {
+    allowedTCPPorts = [
+      47984
+      47989
+      48010
+    ];
+    allowedUDPPortRanges = [
+      {
+        from = 47998;
+        to = 48000;
+      }
+    ];
+  };
+
   system.stateVersion = "25.11";
   environment.systemPackages = [
     (pkgs.callPackage ../../pkgs/egctl.nix { })

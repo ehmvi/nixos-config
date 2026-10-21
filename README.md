@@ -33,7 +33,7 @@ reflects where i was in the learning curve when i made it.
 | keyboard | `us,fr` | `fr` only |
 | `mainMod` | `SUPER` | `SUPER` via caps lock (`caps:super`, 60% keyboard) |
 | wayle config | `config/wayle/config-navi.toml` | `config/wayle/config-games.toml` |
-| extras | power management, `powertop` | nvidia (open kernel module, stable branch), steam + proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot) |
+| extras | power management, `powertop` | nvidia (open kernel module, stable branch), steam + proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot), sunshine (stream the desktop to moonlight on the mac) |
 
 per-host values in `hyprland.lua` are picked by reading `/etc/hostname`. the
 wayle file is selected through a custom option, `fyrr.wayle.configFile`,
