@@ -403,63 +403,70 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name      = "assign-signal-workspace",
-    match     = { class = "^([Ss]ignal)$" },
-    workspace = "3 silent",
-})
-
-hl.window_rule({
     name      = "assign-fsa-workspace",
     match     = { class = "^(fsa)$" },
     workspace = "3 silent",
 })
 
--- workspace 3 : grille 2x2 fixe. la case depend de la classe, pas de l ordre
--- d ouverture : une appli relancee reprend sa case, les autres ne bougent pas.
--- une case dont l appli est fermee reste vide.
-local chatGridSlots = {
-    vesktop = 1, -- haut gauche
-    equibop = 2, -- haut droite
-    signal  = 3, -- bas gauche
-    fsa     = 4, -- bas droite
+-- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
+-- signal en plus du haut gauche). equibop reste en haut a droite, fsa en
+-- bas a droite. la zone depend de la classe, pas de l'ordre d'ouverture.
+-- une zone dont l'appli est fermee reste vide, sauf pour une fenetre
+-- inconnue qui prend une zone libre. au-dela, grille generique.
+local chatGridRoles = {
+    vesktop = "left",
+    equibop = "top-right",
+    fsa     = "bottom-right",
 }
+
+local chatGridRoleOrder = { "left", "top-right", "bottom-right" }
+
+local function chatGridBox(ctx, role)
+    if role == "left" then
+        return ctx:column(1, 2)
+    elseif role == "top-right" then
+        return ctx:grid_cell(2, 2, 2)
+    else
+        return ctx:grid_cell(4, 2, 2)
+    end
+end
 
 hl.layout.register("chat-grid", {
     recalculate = function(ctx)
-        local cells, extras = {}, {}
+        local placed, extras = {}, {}
         for _, target in ipairs(ctx.targets) do
             local window = target.window
-            local slot = window and chatGridSlots[string.lower(window.class or "")]
-            if slot and not cells[slot] then
-                cells[slot] = target
+            local role = window and chatGridRoles[string.lower(window.class or "")]
+            if role and not placed[role] then
+                placed[role] = target
             else
                 table.insert(extras, target)
             end
         end
 
-        -- fenetre inconnue ou deuxieme fenetre d une appli : case libre s il en reste
+        -- fenetre inconnue ou deuxieme fenetre d'une appli : zone libre s'il en reste
         local free = {}
-        for slot = 1, 4 do
-            if not cells[slot] then
-                table.insert(free, slot)
+        for _, role in ipairs(chatGridRoleOrder) do
+            if not placed[role] then
+                table.insert(free, role)
             end
         end
 
         if #extras <= #free then
             for i, target in ipairs(extras) do
-                cells[free[i]] = target
+                placed[free[i]] = target
             end
-            for slot, target in pairs(cells) do
-                target:place(ctx:grid_cell(slot, 2, 2))
+            for role, target in pairs(placed) do
+                target:place(chatGridBox(ctx, role))
             end
             return
         end
 
-        -- plus de 4 fenetres tuilees : grille generique, les 4 applis restent en tete
+        -- plus de fenetres tuilees que de zones : grille generique, les applis connues restent en tete
         local ordered = {}
-        for slot = 1, 4 do
-            if cells[slot] then
-                table.insert(ordered, cells[slot])
+        for _, role in ipairs(chatGridRoleOrder) do
+            if placed[role] then
+                table.insert(ordered, placed[role])
             end
         end
         for _, target in ipairs(extras) do
