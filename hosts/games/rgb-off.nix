@@ -1,31 +1,24 @@
 # leds du host games. openrgb les eteint une fois au demarrage, puis quitte.
-# le module nixos apporte les regles udev et le bus i2c de la carte intel
-# (asus tuf gaming h770-pro, i7-13700kf). son service est masque : il
-# lancerait le serveur sdk (tcp 6742) en permanence.
+# pas de module nixos : il installerait des regles udev (i2c et /dev/port
+# pour l'utilisateur connecte) et un serveur sdk. ici seul root y touche,
+# le temps du oneshot. carte asus tuf h770-pro, i7-13700kf : bus smbus intel.
 {
   pkgs,
   lib,
   ...
 }:
 {
-  services.hardware.openrgb = {
-    enable = true;
-    motherboard = "intel";
-  };
-
-  # masque le serveur sdk et retire le lien multi-user, sinon systemd
-  # essaierait de le demarrer a chaque boot
-  systemd.services.openrgb.enable = false;
-  systemd.services.openrgb.wantedBy = lib.mkForce [ ];
+  boot.kernelModules = [
+    "i2c-dev"
+    "i2c-i801"
+  ];
 
   systemd.services.openrgb-leds-off = {
     description = "Turn off RGB LEDs that OpenRGB can control";
     wantedBy = [ "multi-user.target" ];
-    # wants seulement : /dev/usb est un repertoire, donc l'unite
-    # dev-usb.device peut ne jamais apparaitre. un after attendrait
-    # le timeout appareil (90 s) et retarderait multi-user. le module
-    # nixos ne met ce device que dans wants.
-    wants = [ "dev-usb.device" ];
+    # pas d'after sur dev-usb.device : /dev/usb est un repertoire, l'unite
+    # peut ne jamais apparaitre et le boot attendrait 90 s. udev doit
+    # juste avoir cree les noeuds avant qu'openrgb les ouvre.
     after = [
       "systemd-modules-load.service"
       "systemd-udevd.service"
@@ -43,6 +36,12 @@
       ProtectHome = true;
       ProtectSystem = "strict";
       NoNewPrivileges = true;
+      # PrivateDevices remplacerait /dev par un tmpfs presque vide, et
+      # DevicePolicy=closed fermerait le reste. ProtectKernelTunables
+      # figerait /sys en lecture seule. on ne les active pas : root doit
+      # pouvoir ouvrir /dev/i2c-*, /dev/port et les hidraw.
+      PrivateDevices = false;
+      DevicePolicy = "auto";
       ExecStart = pkgs.writeShellScript "openrgb-leds-off" ''
         # un --mode off global est dangereux. si l'appareil n'a pas ce
         # mode, openrgb active le mode 0, souvent un effet qui reste
