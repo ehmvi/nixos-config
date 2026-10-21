@@ -106,6 +106,8 @@ in
       "knockknock"
       "marta"
       "monal"
+      # client pour regarder le bureau de games via tailscale
+      "moonlight"
       "mullvad-browser"
       "mullvad-vpn"
       "obsidian"
