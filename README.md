@@ -310,9 +310,10 @@ a fresh install brings back the config, not this. redo it by hand:
   rules ship as `70-gaming.rules` through `services.udev.packages`.
 - **workspace 3 is a fixed chat layout**, not dwindle. `hyprland.lua`
   registers a lua layout (`hl.layout.register`, hyprland >= 0.56) that picks
-  the area from the window class: vesktop the full left half, fsa
-  bottom-right. equibop has no workspace rule and opens wherever it
-  wants. open order does not matter, and a closed
+  the area from the window class: vesktop the full left half, a wezterm
+  started with the session (`ws3-term`: fastfetch, then a normal nushell)
+  top-right, fsa bottom-right. equibop has no workspace rule and opens
+  wherever it wants. open order does not matter, and a closed
   app leaves its area empty. gajim also lands on workspace 3 but floats,
   centred, above the grid. any other tiled window fills a free area; when
   there are more tiled windows than areas, the workspace falls back to a

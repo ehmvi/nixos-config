@@ -47,6 +47,10 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("wayle panel start")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("systemctl --user start hypridle")
+    -- terminal du workspace 3 : fastfetch, puis un nushell interactif.
+    -- la classe ws3-term ne touche pas un wezterm normal, et
+    -- --always-new-process evite de rejoindre une instance deja ouverte.
+    hl.exec_cmd("wezterm start --always-new-process --class ws3-term -- nu -e fastfetch")
 end)
 
 
@@ -384,6 +388,13 @@ hl.window_rule({
     workspace = "3 silent",
 })
 
+-- terminal lance au demarrage. seule la classe ws3-term est visee.
+hl.window_rule({
+    name      = "assign-ws3-term-workspace",
+    match     = { class = "^(ws3-term)$" },
+    workspace = "3 silent",
+})
+
 hl.window_rule({
     name      = "assign-gajim-workspace",
     match     = { class = "^(org.gajim.Gajim)$" },
@@ -420,14 +431,15 @@ hl.window_rule({
 })
 
 -- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
--- signal en plus du haut gauche). fsa reste en bas a droite. equibop n'a
--- plus de regle ni de zone : il s'ouvre ou il veut. la zone depend de la
--- classe, pas de l'ordre d'ouverture. une zone dont l'appli est fermee
--- reste vide, sauf pour une fenetre inconnue qui prend une zone libre.
--- au-dela, grille generique.
+-- signal en plus du haut gauche). le terminal ws3-term est en haut a
+-- droite, fsa en bas a droite. equibop n'a plus de regle. la zone depend
+-- de la classe, pas de l'ordre d'ouverture. une zone dont l'appli est
+-- fermee reste vide, sauf pour une fenetre inconnue qui prend une zone
+-- libre. au-dela, grille generique.
 local chatGridRoles = {
-    vesktop = "left",
-    fsa     = "bottom-right",
+    vesktop      = "left",
+    ["ws3-term"] = "top-right",
+    fsa          = "bottom-right",
 }
 
 local chatGridRoleOrder = { "left", "top-right", "bottom-right" }
