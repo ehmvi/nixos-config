@@ -327,8 +327,9 @@ a fresh install brings back the config, not this. redo it by hand:
 
 ## system
 
-- network: networkmanager, systemd-resolved, tailscale (tailnet trusted in the
-  firewall), mullvad (daemon + gui)
+- network: networkmanager, systemd-resolved, tailscale (incoming blocked by
+  shields-up; tailscale0 is not a trusted firewall interface), mullvad
+  (daemon + gui)
 - memory: zram swap (zstd, up to 50 % of ram), no disk swap, no hibernation
 - desktop: sddm → hyprland, wezterm, nushell (login shell) + starship, wayle bar,
   hyprlock + hypridle (auto-lock, lock before sleep), hyprpolkitagent
