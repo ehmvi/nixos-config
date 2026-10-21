@@ -21,11 +21,14 @@
   systemd.services.openrgb-leds-off = {
     description = "Turn off RGB LEDs that OpenRGB can control";
     wantedBy = [ "multi-user.target" ];
+    # wants seulement : /dev/usb est un repertoire, donc l'unite
+    # dev-usb.device peut ne jamais apparaitre. un after attendrait
+    # le timeout appareil (90 s) et retarderait multi-user. le module
+    # nixos ne met ce device que dans wants.
     wants = [ "dev-usb.device" ];
     after = [
       "systemd-modules-load.service"
       "systemd-udevd.service"
-      "dev-usb.device"
     ];
     environment.QT_QPA_PLATFORM = "offscreen";
     serviceConfig = {
