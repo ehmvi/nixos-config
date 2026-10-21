@@ -3,3 +3,17 @@ result
 .swp
 wallpapers/*
 config/hypr/hyprland.conf
+
+# secrets locaux : ne pas les versionner par accident
+.env
+.env.*
+*.env
+.envrc
+*.pem
+*.key
+id_rsa
+id_ed25519
+id_ed25519_signing
+id_ecdsa
+key.txt
+keys.txt
