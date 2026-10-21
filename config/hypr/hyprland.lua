@@ -379,12 +379,6 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name      = "assign-equibop-workspace",
-    match     = { class = "^(equibop)$" },
-    workspace = "3 silent",
-})
-
-hl.window_rule({
     name      = "assign-vesktop-workspace",
     match     = { class = "^(vesktop)$" },
     workspace = "3 silent",
@@ -426,13 +420,13 @@ hl.window_rule({
 })
 
 -- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
--- signal en plus du haut gauche). equibop reste en haut a droite, fsa en
--- bas a droite. la zone depend de la classe, pas de l'ordre d'ouverture.
--- une zone dont l'appli est fermee reste vide, sauf pour une fenetre
--- inconnue qui prend une zone libre. au-dela, grille generique.
+-- signal en plus du haut gauche). fsa reste en bas a droite. equibop n'a
+-- plus de regle ni de zone : il s'ouvre ou il veut. la zone depend de la
+-- classe, pas de l'ordre d'ouverture. une zone dont l'appli est fermee
+-- reste vide, sauf pour une fenetre inconnue qui prend une zone libre.
+-- au-dela, grille generique.
 local chatGridRoles = {
     vesktop = "left",
-    equibop = "top-right",
     fsa     = "bottom-right",
 }
 
