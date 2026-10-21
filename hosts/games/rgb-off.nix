@@ -1,7 +1,7 @@
 # leds du host games. openrgb les eteint une fois au demarrage, puis quitte.
 # pas de module nixos : il installerait des regles udev (i2c et /dev/port
 # pour l'utilisateur connecte) et un serveur sdk. ici seul root y touche,
-# le temps du oneshot. carte asus tuf h770-pro, i7-13700kf : bus smbus intel.
+# le temps du script. carte asus tuf h770-pro, i7-13700kf : bus smbus intel.
 {
   pkgs,
   lib,
@@ -25,7 +25,11 @@
     ];
     environment.QT_QPA_PLATFORM = "offscreen";
     serviceConfig = {
-      Type = "oneshot";
+      # type=exec : multi-user est debloque des l'exec du script, pas a la
+      # fin de la detection (~15 s avec oneshot). remainafterexit laisse
+      # l'unite active (exited) apres un succes, et failed si le code n'est
+      # pas zero.
+      Type = "exec";
       RemainAfterExit = true;
       # la config et les logs restent ici, pas dans /root
       StateDirectory = "openrgb-leds-off";
