@@ -315,6 +315,9 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 
 hl.bind("Print",                          hl.dsp.exec_cmd("hyprshot -m region"))
 hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("hyprshot -m region"))
+-- home sans modificateur : meme capture de zone que print.
+-- sans non_consuming, hyprland garde la touche et les applis ne la voient pas.
+hl.bind("Home",                          hl.dsp.exec_cmd("hyprshot -m region"))
 
 
 -- window rules apply specific behaviors to windows matching certain criteria (class, title, float state, etc.).
