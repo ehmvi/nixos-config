@@ -19,6 +19,7 @@
     ../../modules/programs/office.nix
     ../../modules/programs/apps.nix
     ../../modules/programs/spicetify.nix
+    ./rgb-off.nix
   ];
 
   networking.hostName = "games";
