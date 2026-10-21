@@ -411,6 +411,20 @@ hl.window_rule({
     workspace = "3 silent",
 })
 
+-- steam et lutris ouvrent sur le workspace 5, sans prendre le focus.
+-- steam ou Steam seulement : pas les jeux (steam_app_*).
+hl.window_rule({
+    name      = "assign-steam-workspace",
+    match     = { class = "^([Ss]team)$" },
+    workspace = "5 silent",
+})
+
+hl.window_rule({
+    name      = "assign-lutris-workspace",
+    match     = { class = "^(net.lutris.Lutris|[Ll]utris)$" },
+    workspace = "5 silent",
+})
+
 -- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
 -- signal en plus du haut gauche). equibop reste en haut a droite, fsa en
 -- bas a droite. la zone depend de la classe, pas de l'ordre d'ouverture.
