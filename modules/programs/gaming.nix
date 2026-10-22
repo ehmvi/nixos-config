@@ -14,7 +14,7 @@
     pkgs.lutris
   ];
 
-  # udev rules: nintendo controllers + endgame gear mouse
+  # regles udev : manettes nintendo, souris endgame gear, clavier melgeek
   # uaccess = acces pour la session active seulement. fichier 70-* car uaccess doit
   # etre pose avant 73-seat-late.rules (extraRules finit en 99-local.rules : trop tard)
   services.udev.packages = [
@@ -23,6 +23,7 @@
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1978", TAG+="uaccess"
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1976", TAG+="uaccess"
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1966", TAG+="uaccess"
+      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0416", ATTRS{idProduct}=="0114", TAG+="uaccess"
     '')
   ];
   # ntsync : primitives de sync windows cote noyau, utilisees par proton-ge (/dev/ntsync)
