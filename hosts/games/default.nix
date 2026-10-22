@@ -47,6 +47,41 @@
     openFirewall = false;
   };
 
+  # stream du bureau vers le mac (moonlight), seulement via tailscale.
+  # openFirewall reste faux : il ouvrirait ces ports sur toutes les interfaces.
+  # ports du module (base 47989), sans le tcp 47990 : l'interface web
+  # reste sur localhost pour saisir le pin.
+  # le paquet par defaut est sans cuda et vient du cache. nvenc passe par le pilote nvidia.
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    # cap_sys_admin, presque root. requis pour la capture kms avec nvidia.
+    capSysAdmin = true;
+  };
+
+  # le module allume avahi pour la decouverte sur le reseau local.
+  # le mac joint games par son nom tailscale, donc on n'ouvre pas le port 5353.
+  services.avahi.openFirewall = false;
+
+  # ts-input accepte tout tailscale0 avant le pare-feu nixos (iptables,
+  # nftables desactive). cette liste ne filtre donc pas aujourd'hui.
+  # le vrai controle est shields-up, ou les acls tailscale.
+  # on la garde pour l'intention, et si ts-input est un jour coupe.
+  networking.firewall.interfaces.tailscale0 = {
+    allowedTCPPorts = [
+      47984
+      47989
+      48010
+    ];
+    allowedUDPPorts = [
+      47998
+      47999
+      48000
+      48002
+      48010
+    ];
+  };
+
   system.stateVersion = "25.11";
   environment.systemPackages = [
     (pkgs.callPackage ../../pkgs/egctl.nix { })
