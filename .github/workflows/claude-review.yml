@@ -1,0 +1,104 @@
+# revue d'une pr par claude code (anthropics/claude-code-action).
+# claude poste un commentaire et, s'il faut corriger, commit sur la branche de la pr.
+# personne d'autre que mizu ne merge : ce fichier ne donne aucun outil de merge.
+name: claude review
+
+on:
+  pull_request:
+    # opened : une pr prete des l'ouverture.
+    # ready_for_review : un brouillon qu'on marque pret.
+    # pas synchronize : le push de claude, ou un push suivant, ne relance pas une revue.
+    # un push fait avec GITHUB_TOKEN ne cree de toute facon pas de nouveau workflow.
+    types: [opened, ready_for_review]
+
+# moindre privilege.
+# contents write sert a pousser le commit de correctif. l'api de merge demande
+# le meme droit : on ne l'enleve pas ici, on empeche l'appel (outils + script).
+# issues write : `gh pr comment` ecrit un commentaire de pr.
+# pas de id-token : le jeton oauth n'utilise pas oidc.
+# pas de workflows : github refuse un push qui modifie .github/workflows.
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+# une seule revue a la fois par pr
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    # pull_request, pas pull_request_target : une pr de fork n'a ni ce secret, ni un
+    # jeton d'ecriture. on saute aussi le fork, le brouillon, et une branche main.
+    if: >-
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.draft == false &&
+      github.event.pull_request.head.ref != 'main'
+    steps:
+      - name: checkout
+        # la branche de la pr, pas le commit de merge : le push revient dessus
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
+          fetch-depth: 1
+
+      - name: install nix
+        uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+
+      # copie hors du depot, en lecture seule : claude ne peut pas la reecrire
+      # (acceptEdits n'ecrit que dans le workspace) puis l'executer.
+      - name: figer le script de commit
+        run: |
+          install -m 0555 scripts/claude-review-commit.sh /tmp/claude-review-commit.sh
+          printf '%s' "${{ github.event.pull_request.head.ref }}" > /tmp/pr-head-ref
+          chmod 0444 /tmp/pr-head-ref
+
+      - name: revue
+        uses: anthropics/claude-code-action@925afb53776cf1a2b738c6bdbed37b4d4000ef13 # v1, sha du 2026-10-24 (le tag v1 suit main)
+        with:
+          # jeton du plan max, cree avec `claude setup-token`. mizu l'ajoute en secret.
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          # GITHUB_TOKEN : le push ne relance pas les workflows. l'app claude, si, le ferait.
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # identite git du job. le script refait la meme chose au moment du commit.
+          bot_id: "198573042"
+          bot_name: ehmvi
+          # pas de lien "fix this" : le correctif passe par le script, ou pas du tout.
+          include_fix_links: "false"
+          show_full_output: "false"
+          prompt: |
+            Review pull request #${{ github.event.pull_request.number }} in ${{ github.repository }}.
+            The pull request branch is `${{ github.event.pull_request.head.ref }}`.
+            The base branch is `${{ github.event.pull_request.base.ref }}`.
+
+            Read docs/conventions.md and CLAUDE.md. Review the diff against those rules.
+
+            Write in English:
+            - Post exactly one summary comment with `gh pr comment`.
+            - For a specific line that is part of the diff, use the inline comment tool
+              `mcp__github_inline_comment__create_inline_comment`.
+
+            If the code needs a fix, edit the files, then commit by running exactly:
+            /tmp/claude-review-commit.sh "<conventional commit subject>"
+            That script is the only way to commit. It runs `just check`, commits as
+            ehmvi <198573042+ehmvi@users.noreply.github.com> with no Co-authored-by trailer,
+            and pushes this pull request branch. If the script fails, fix the code and run it again.
+            One commit. Do not run it when there is nothing to fix.
+
+            Code comments you add are lowercase French, without accents, with natural apostrophes.
+
+            Never merge. Never approve. Never close the pull request. Never enable auto-merge.
+            Never run `gh pr merge`, `gh pr review`, `gh api`, or `git push`.
+            Never push to main. Never force-push. Never edit /tmp/claude-review-commit.sh.
+            Never print secrets, tokens, or the environment. Never open a new pull request.
+          claude_args: |
+            --permission-mode acceptEdits
+            --max-turns 30
+            --allowedTools "Read,Grep,Glob,Edit,Write,mcp__github_inline_comment__create_inline_comment,Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(git diff:*),Bash(git status:*),Bash(git log:*),Bash(/tmp/claude-review-commit.sh:*)"
+            --disallowedTools "Bash(gh pr merge:*),Bash(gh pr review:*),Bash(gh api:*),Bash(git push:*),Bash(git commit:*),Bash(git rebase:*),WebSearch,WebFetch"
