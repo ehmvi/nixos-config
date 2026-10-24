@@ -1,0 +1,18 @@
+# btm, version 0.14.9. pas de graphique processeur, pas de graphique memoire.
+# deux lignes. la premiere est trois fois plus haute : la liste des processus.
+# la seconde partage trois colonnes egales.
+
+[[row]]
+ratio = 3
+[[row.child]]
+type = "proc" # programmes en cours, charge et memoire de chacun
+default = true # le clavier commence ici
+
+[[row]]
+ratio = 1
+[[row.child]]
+type = "disk" # place restante, lectures et ecritures
+[[row.child]]
+type = "net" # debit montant et descendant
+[[row.child]]
+type = "temp" # temperatures des capteurs
