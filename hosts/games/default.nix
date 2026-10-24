@@ -2,6 +2,7 @@
 # desktop pc — gaming/multimedia
 {
   pkgs,
+  username,
   ...
 }:
 
@@ -57,5 +58,13 @@
     # decoupe video sans reencodage. nixpkgs suit la derniere release upstream.
     # le paquet source est dans le cache. losslesscut-bin reconstruirait un wrapper fhs en local.
     pkgs.losslesscut
+    # suivi du systeme. btm : processus, disques, reseau, temperatures.
+    # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
+    pkgs.bottom
+    pkgs.nvtopPackages.nvidia
   ];
+
+  # btm lit ~/.config/bottom/bottom.toml. le lien n'est que sur games :
+  # navi n'a pas le paquet.
+  hjem.users.${username}.files.".config/bottom/bottom.toml".source = ../../config/bottom/bottom.toml;
 }
