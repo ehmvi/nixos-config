@@ -25,6 +25,13 @@
     vesktop # 2e client Discord, session/config séparées d'Equibop (voulu)
     wezterm
     zed-editor
+    # t3 code : interface pour les agents. claude code a la place de codex.
+    # gh et git restent. navi et games seulement (ce module n'est pas
+    # importe par sommei, qui prend le cask).
+    (t3code.override {
+      enableClaude = true;
+      enableCodex = false;
+    })
     kdePackages.kate
     kdePackages.qttools
     kdePackages.kdenlive
