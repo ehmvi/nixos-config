@@ -54,6 +54,8 @@ in
   ];
 
   networking.hostName = "games";
+  # reveil a distance depuis le pi (wake-on-lan)
+  networking.interfaces.eno1.wakeOnLan.enable = true;
   console.keyMap = "fr";
   # dual boot : la rtc reste en utc. côté windows, clé registre RealTimeIsUniversal = 1
   services.xserver.xkb.layout = "fr";
