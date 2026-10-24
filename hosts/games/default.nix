@@ -2,9 +2,39 @@
 # desktop pc — gaming/multimedia
 {
   pkgs,
+  lib,
   username,
   ...
 }:
+let
+  # le .desktop du paquet ouvre le programme dans un terminal quelconque,
+  # sans classe, donc hyprland ne peut pas le placer. celui-ci passe devant
+  # et ouvre wezterm avec une classe a lui, envoyee sur le workspace 6.
+  monitorLauncher =
+    {
+      name,
+      desktopName,
+      class,
+      command,
+      icon,
+    }:
+    lib.hiPrio (
+      pkgs.makeDesktopItem {
+        inherit
+          name
+          desktopName
+          icon
+          ;
+        exec = "wezterm start --always-new-process --class ${class} -- ${command}";
+        terminal = false;
+        categories = [
+          "System"
+          "Monitor"
+        ];
+        startupWMClass = class;
+      }
+    );
+in
 
 {
   imports = [
@@ -60,8 +90,23 @@
     pkgs.losslesscut
     # suivi du systeme. btm : processus, disques, reseau, temperatures.
     # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
+    # les lanceurs remplacent le .desktop d'origine (meme nom de fichier).
     pkgs.bottom
     pkgs.nvtopPackages.nvidia
+    (monitorLauncher {
+      name = "bottom";
+      desktopName = "Bottom";
+      class = "ws6-btm";
+      command = "btm";
+      icon = "bottom-system-monitor";
+    })
+    (monitorLauncher {
+      name = "nvtop";
+      desktopName = "Nvtop";
+      class = "ws6-nvtop";
+      command = "nvtop";
+      icon = "nvtop";
+    })
   ];
 
   # btm lit ~/.config/bottom/bottom.toml. le lien n'est que sur games :

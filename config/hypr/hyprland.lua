@@ -430,6 +430,28 @@ hl.window_rule({
     workspace = "5 silent",
 })
 
+-- workspace 6 : suivi du pc. btm et nvtop sont des programmes de
+-- terminal, donc chacun a son lanceur wezterm et sa classe. un btm
+-- tape dans un terminal normal n'est pas deplace. coolercontrol est
+-- la fenetre qt (org.coolercontrol.CoolerControl), pas le service.
+hl.window_rule({
+    name      = "assign-ws6-btm-workspace",
+    match     = { class = "^(ws6-btm)$" },
+    workspace = "6 silent",
+})
+
+hl.window_rule({
+    name      = "assign-ws6-nvtop-workspace",
+    match     = { class = "^(ws6-nvtop)$" },
+    workspace = "6 silent",
+})
+
+hl.window_rule({
+    name      = "assign-coolercontrol-workspace",
+    match     = { class = "^(org.coolercontrol.CoolerControl)$" },
+    workspace = "6 silent",
+})
+
 -- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
 -- signal en plus du haut gauche). le terminal ws3-term est en haut a
 -- droite, fsa en bas a droite. equibop n'a plus de regle. la zone depend
