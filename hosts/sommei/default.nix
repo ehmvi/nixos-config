@@ -114,6 +114,9 @@ in
       "hopper-disassembler"
       "handbrake-app"
       "zen"
+      # t3 code : interface pour les agents. cask par preference, comme les autres apps graphiques.
+      # attention : pas de reglage claude/codex ici, il utilise ce qu'il trouve dans le path.
+      "t3-code"
       # godot 4.5, jdk 17 et le sdk android : modules/programs/godot-android.nix
     ];
   };
