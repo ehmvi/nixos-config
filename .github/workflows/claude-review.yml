@@ -59,7 +59,22 @@ jobs:
           printf '%s' "${{ github.event.pull_request.head.ref }}" > /tmp/pr-head-ref
           chmod 0444 /tmp/pr-head-ref
 
+      # on ne peut pas lire un secret dans un if. on teste seulement s'il est vide,
+      # sans l'afficher. tant que mizu ne l'a pas cree, la revue est sautee.
+      - name: jeton present
+        id: token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "${CLAUDE_CODE_OAUTH_TOKEN}" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::CLAUDE_CODE_OAUTH_TOKEN absent, revue sautee. Mizu l'ajoute dans Settings, Secrets and variables, Actions."
+          fi
+
       - name: revue
+        if: steps.token.outputs.present == 'true'
         uses: anthropics/claude-code-action@925afb53776cf1a2b738c6bdbed37b4d4000ef13 # v1, sha du 2026-10-24 (le tag v1 suit main)
         with:
           # jeton du plan max, cree avec `claude setup-token`. mizu l'ajoute en secret.
