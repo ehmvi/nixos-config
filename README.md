@@ -40,7 +40,10 @@ wayle file is selected through a custom option, `fyrr.wayle.configFile`,
 declared in `modules/desktop/hjem.nix`. on games, a moonlight stream sets
 the scale to `1.333333` (2560×1440 becomes 1920×1080 logical) and reloads
 the lua when the stream ends, which puts scale `1.0` back. the mode stays
-`2560x1440@360`. scale 2 was too large on the mac.
+`2560x1440@360`. sunshine runs the prep-command undo when the moonlight
+app session ends, not on a plain disconnect, so moonlight's "Quit app on
+host PC after ending stream" has to stay on. if that option is off or
+moonlight crashes, run `hyprctl reload` on games to restore scale `1.0`.
 
 **sommei** runs macos. nix-darwin handles the declarative system config, and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks

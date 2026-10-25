@@ -183,6 +183,9 @@ in
     # le script n'en a pas besoin : il ne lit que le socket.
     settings = {
       origin_web_ui_allowed = "pc";
+      # l'undo ne tourne qu'a la fin de la session moonlight, pas sur une
+      # deconnexion. "quit app on host pc after ending stream" doit rester
+      # cochee, sinon hyprctl reload remet l'echelle normale.
       global_prep_cmd = builtins.toJSON [
         {
           do = "${sunshineMonitor} apply";
