@@ -160,8 +160,9 @@ in
   # stream du bureau vers le mac (moonlight), seulement via tailscale.
   # openFirewall reste faux : le module ouvrirait aussi le tcp 47990 et
   # l'udp 48002 et 48010, sur toutes les interfaces.
-  # le paquet par defaut est celui du cache. quel encodeur est choisi
-  # se lit dans le journal, on ne le suppose pas ici.
+  # le paquet par defaut est celui du cache, construit sans cuda :
+  # cudaSupport suit nixpkgs.config.cudaSupport, faux ici. ffmpeg
+  # embarque essaie quand meme h264_nvenc. le journal dit qui a gagne.
   services.sunshine = {
     enable = true;
     autoStart = true;
@@ -190,6 +191,20 @@ in
       ];
     };
   };
+
+  # ffmpeg fait dlopen("libcuda.so.1") et dlopen("libnvidia-encode.so.1").
+  # ces fichiers sont dans /run/opengl-driver/lib (hardware.nvidia les y
+  # met deja). un service utilisateur n'herite pas le LD_LIBRARY_PATH de
+  # la session, donc le chargement echoue. le chargeur renvoie -1, et
+  # ffmpeg ecrit cela "Operation not permitted" : ce n'est pas le bac a
+  # sable, ni /dev/nvidia*. cap_sys_admin reste faux, la capture hyprland
+  # passe par wlroots. sans le cuda compile dans sunshine, l'image copie
+  # gpu, ram, gpu, et l'encodage reste nvenc. cudaSupport = true
+  # recompilerait le paquet avec nvcc (toolkit cuda, unfree, souvent
+  # hors du cache) seulement pour eviter cette copie.
+  # ne marche plus si capSysAdmin = true : le wrapper efface LD_LIBRARY_PATH.
+  systemd.user.services.sunshine.environment.LD_LIBRARY_PATH =
+    "${pkgs.addDriverRunpath.driverLink}/lib";
 
   # le module sunshine allume avahi (mkDefault) pour le reseau local.
   # le mac et le telephone joignent games par le nom ou l'ip tailscale.
