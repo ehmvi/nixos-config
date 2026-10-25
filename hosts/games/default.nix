@@ -54,6 +54,10 @@ in
   ];
 
   networking.hostName = "games";
+  # shields-up reste enregistre par tailscaled. retirer le drapeau ne
+  # le coupe pas : tailscaled-set ne lancerait plus `tailscale set`.
+  # false le coupe a chaque demarrage.
+  services.tailscale.extraSetFlags = [ "--shields-up=false" ];
   console.keyMap = "fr";
   # dual boot : la rtc reste en utc. côté windows, clé registre RealTimeIsUniversal = 1
   services.xserver.xkb.layout = "fr";
