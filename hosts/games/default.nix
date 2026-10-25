@@ -1,6 +1,7 @@
 # host: games
 # desktop pc — gaming/multimedia
 {
+  config,
   pkgs,
   lib,
   username,
@@ -34,6 +35,80 @@ let
         startupWMClass = class;
       }
     );
+
+  # le 27 pouces est en 2560x1440@360, echelle 1
+  # (config/hypr/hyprland.lua). la sortie y est vide : une seule regle
+  # pour chaque ecran. sur le mac 14 pouces l'interface est minuscule.
+  # on ne change que l'echelle, pas le mode. le panneau 16:9 n'a que
+  # ses modes edid : un mode 16:10 du client retombe, et le 360 hz
+  # passerait a 60 pour rien. echelle 2 sur 2560x1440 donne 1280x720
+  # logique. 2, c'est l'echelle retina du mac (3024x1964 ressemble a
+  # 1512x982), proche des ~109 ppp du 27 pouces.
+  # hl.monitor reprend la regle du meme nom et n'ecrit que les champs
+  # donnes. ici le nom est vide, donc output = "". un nom DP-1 ferait
+  # une regle neuve, mode prefere et 60 hz. DP-1 reste le connecteur
+  # du fond (config/wayle/config-games.toml).
+  # le service sunshine a un path vide. hyprland ne lui donne pas
+  # forcement HYPRLAND_INSTANCE_SIGNATURE. le script trouve le socket.
+  # keyword ne fait rien en lua. le script verifie que la reponse
+  # d'eval et de reload est exactement "ok".
+  # l'undo est hyprctl reload : il rejoue hyprland.lua, donc l'echelle
+  # 1 et le dofile de matugen-colors.lua. le mode physique ne bouge
+  # pas. l'interface grossit sur l'ecran pendant le stream.
+  sunshineMonitor = pkgs.writeShellScript "sunshine-monitor" ''
+    set -euo pipefail
+
+    hyprctl=${lib.getExe' config.programs.hyprland.package "hyprctl"}
+
+    runtime="''${XDG_RUNTIME_DIR:-}"
+    if [ -z "$runtime" ]; then
+      echo "sunshine-monitor: XDG_RUNTIME_DIR absent" >&2
+      exit 1
+    fi
+
+    sig="''${HYPRLAND_INSTANCE_SIGNATURE:-}"
+    if [ -z "$sig" ] || [ ! -S "$runtime/hypr/$sig/.socket.sock" ]; then
+      sig=""
+      for sock in "$runtime"/hypr/*/.socket.sock; do
+        if [ -S "$sock" ]; then
+          inst="''${sock%/.socket.sock}"
+          sig="''${inst##*/}"
+          break
+        fi
+      done
+    fi
+
+    if [ -z "$sig" ]; then
+      echo "sunshine-monitor: pas de socket hyprland" >&2
+      exit 1
+    fi
+
+    export HYPRLAND_INSTANCE_SIGNATURE="$sig"
+    export XDG_RUNTIME_DIR="$runtime"
+
+    # la substitution retire le saut de ligne de println. "ok" est la
+    # reponse exacte de eval et de reload.
+    hypr() {
+      reply=$("$hyprctl" "$@" 2>&1 || true)
+      if [ "$reply" != "ok" ]; then
+        echo "sunshine-monitor: $reply" >&2
+        exit 1
+      fi
+    }
+
+    case "''${1:-}" in
+      apply)
+        hypr eval 'hl.monitor({ output = "", scale = 2 })'
+        ;;
+      restore)
+        hypr reload
+        ;;
+      *)
+        echo "sunshine-monitor: apply ou restore" >&2
+        exit 1
+        ;;
+    esac
+  '';
 in
 
 {
@@ -102,7 +177,18 @@ in
     # l'ui ne peut plus y sauver ses options. le mot de passe, les
     # certificats et les clients apparies vont ailleurs
     # (~/.config/sunshine/sunshine_state.json et credentials/).
-    settings.origin_web_ui_allowed = "pc";
+    # global_prep_cmd : chaine json, le module n'accepte pas une liste.
+    # sunshine developpe $(VAR) dans cette chaine avant le lancement.
+    # le script n'en a pas besoin : il ne lit que le socket.
+    settings = {
+      origin_web_ui_allowed = "pc";
+      global_prep_cmd = builtins.toJSON [
+        {
+          do = "${sunshineMonitor} apply";
+          undo = "${sunshineMonitor} restore";
+        }
+      ];
+    };
   };
 
   # le module sunshine allume avahi (mkDefault) pour le reseau local.

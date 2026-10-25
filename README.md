@@ -285,7 +285,8 @@ a fresh install brings back the config, not this. redo it by hand:
 
 - **hjem links point into the nix store**, not into the live repo. editing a
   dotfile and reloading the tool is not enough; the change lands after a rebuild.
-  hyprland needs a full logout, `hyprctl reload` does not re-read the lua.
+  `hyprctl reload` then re-runs `hyprland.lua` from `~/.config/hypr/hyprland.lua`,
+  including its `dofile` of `matugen-colors.lua`. a logout is not required.
 - **hjem links files, not directories**, so it does not clobber things like
   fish's `conf.d/` or `functions/`.
 - **never declare a file the app rewrites itself.** the app replaces the symlink
