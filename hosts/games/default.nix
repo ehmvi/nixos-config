@@ -41,9 +41,9 @@ let
   # pour chaque ecran. sur le mac 14 pouces l'interface est minuscule.
   # on ne change que l'echelle, pas le mode. le panneau 16:9 n'a que
   # ses modes edid : un mode 16:10 du client retombe, et le 360 hz
-  # passerait a 60 pour rien. echelle 2 sur 2560x1440 donne 1280x720
-  # logique. 2, c'est l'echelle retina du mac (3024x1964 ressemble a
-  # 1512x982), proche des ~109 ppp du 27 pouces.
+  # passerait a 60 pour rien. echelle 2 etait trop grande sur le mac.
+  # 1.333333 sur 2560x1440 donne 1920x1080 logique. hl.monitor lit
+  # l'echelle comme une chaine.
   # hl.monitor reprend la regle du meme nom et n'ecrit que les champs
   # donnes. ici le nom est vide, donc output = "". un nom DP-1 ferait
   # une regle neuve, mode prefere et 60 hz. DP-1 reste le connecteur
@@ -98,7 +98,7 @@ let
 
     case "''${1:-}" in
       apply)
-        hypr eval 'hl.monitor({ output = "", scale = 2 })'
+        hypr eval 'hl.monitor({ output = "", scale = "1.333333" })'
         ;;
       restore)
         hypr reload

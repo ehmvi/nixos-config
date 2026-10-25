@@ -37,7 +37,10 @@ reflects where i was in the learning curve when i made it.
 
 per-host values in `hyprland.lua` are picked by reading `/etc/hostname`. the
 wayle file is selected through a custom option, `fyrr.wayle.configFile`,
-declared in `modules/desktop/hjem.nix`.
+declared in `modules/desktop/hjem.nix`. on games, a moonlight stream sets
+the scale to `1.333333` (2560×1440 becomes 1920×1080 logical) and reloads
+the lua when the stream ends, which puts scale `1.0` back. the mode stays
+`2560x1440@360`. scale 2 was too large on the mac.
 
 **sommei** runs macos. nix-darwin handles the declarative system config, and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
