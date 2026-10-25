@@ -181,6 +181,23 @@ in
     fi
   '';
 
+  # caps lock ne verrouille plus les majuscules. il devient commande
+  # gauche, partout, comme super sur games (kb_options caps:super dans
+  # config/hypr/hyprland.lua, pour tous les claviers).
+  # 0x700000039 caps lock, 0x7000000e3 left gui (commande / super).
+  # hidutil tourne a chaque just switch, et encore au boot
+  # (activate-system). pas besoin de se deconnecter pour l'installer.
+  # la table n'est pas un reglage macos durable : une deconnexion peut
+  # la perdre jusqu'au prochain switch ou reboot.
+  # cmd+tab et cmd+espace partent aussi de caps lock.
+  system.keyboard.enableKeyMapping = true;
+  system.keyboard.userKeyMapping = [
+    {
+      HIDKeyboardModifierMappingSrc = 30064771129;
+      HIDKeyboardModifierMappingDst = 30064771299;
+    }
+  ];
+
   # réglages macos déclaratifs
   system.defaults.dock = {
     autohide = false;
