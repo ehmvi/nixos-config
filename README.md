@@ -329,9 +329,10 @@ a fresh install brings back the config, not this. redo it by hand:
 
 ## system
 
-- network: networkmanager, systemd-resolved, tailscale (incoming blocked by
-  shields-up; tailscale0 is not a trusted firewall interface), mullvad
-  (daemon + gui)
+- network: networkmanager, systemd-resolved, tailscale (shields-up stays on
+  for navi; games turns it off, so tailnet ACLs are the gate there; tailscaled
+  accepts tailscale0 before the nixos firewall), mullvad (daemon + gui).
+  the mac's tailscale app is not configured in this repo
 - memory: zram swap (zstd, up to 50 % of ram), no disk swap, no hibernation
 - desktop: sddm → hyprland, wezterm, nushell (login shell) + starship, wayle bar,
   hyprlock + hypridle (auto-lock, lock before sleep), hyprpolkitagent
