@@ -315,16 +315,16 @@ a fresh install brings back the config, not this. redo it by hand:
 - **`TAG+="uaccess"` udev rules must sort before `73-seat-late.rules`.**
   `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
   rules ship as `70-gaming.rules` through `services.udev.packages`.
-- **workspace 3 is a fixed chat layout**, not dwindle. `hyprland.lua`
-  registers a lua layout (`hl.layout.register`, hyprland >= 0.56) that picks
-  the area from the window class: vesktop the full left half, a wezterm
-  started with the session (`ws3-term`: fastfetch, then a normal nushell)
-  top-right, fsa bottom-right. equibop has no workspace rule and opens
-  wherever it wants. open order does not matter, and a closed
-  app leaves its area empty. gajim also lands on workspace 3 but floats,
-  centred, above the grid. any other tiled window fills a free area; when
-  there are more tiled windows than areas, the workspace falls back to a
-  plain grid. resizing tiles there does nothing.
+- **workspaces are assigned in `hyprland.lua`**, the same file on navi
+  and games. 1 is grok bot and one wezterm started with the session
+  (`ws1-term`: fastfetch, then nushell). which one appears first is
+  not guaranteed. a terminal opened later stays on the current
+  workspace. 2 is empty, for windows a demo opens from code. 3 is
+  brave. 4 is steam games (`steam_app_<id>`), gamescope, and the
+  steam and lutris windows. 5 is vesktop, equibop and signal. 6 is
+  bottom and nvtop, each launched with its own class, and coolercontrol.
+  gajim and fsa no longer have a reserved workspace. the old workspace 3
+  chat grid is gone.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.
 
