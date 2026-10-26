@@ -47,10 +47,17 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("wayle panel start")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("systemctl --user start hypridle")
-    -- terminal du workspace 3 : fastfetch, puis un nushell interactif.
-    -- la classe ws3-term ne touche pas un wezterm normal, et
-    -- --always-new-process evite de rejoindre une instance deja ouverte.
-    hl.exec_cmd("wezterm start --always-new-process --class ws3-term -- nu -e fastfetch")
+    -- grok et le terminal partent au login, tous les deux sur le
+    -- workspace 1. exec_cmd n'attend pas : l'appimage est plus lent
+    -- que wezterm, donc l'ordre n'est pas garanti. pas d'autostart
+    -- dans le paquet, on lance grok ici une seule fois. la classe
+    -- est grok-bot (StartupWMClass du .desktop).
+    hl.exec_cmd("grok-bot")
+    -- un seul terminal au login. ws1-term ne vise pas un wezterm
+    -- ouvert ensuite : celui-la reste sur le workspace courant.
+    -- fastfetch, puis un nushell. --always-new-process evite de
+    -- rejoindre une instance deja ouverte.
+    hl.exec_cmd("wezterm start --always-new-process --class ws1-term -- nu -e fastfetch")
 end)
 
 
@@ -376,64 +383,93 @@ hl.window_rule({
     float = true,
 })
 
+-- plan (games, et navi : ce fichier est partage). silent : la fenetre
+-- part sur le workspace sans y changer le focus.
+-- 1 grok et le terminal de session, ordre non garanti. 2 demos de
+-- code, rien d'assigne.
+-- 3 brave. 4 jeux. 5 social. 6 suivi.
+
+-- workspace 1. grok-bot est la classe du .desktop embarque.
+hl.window_rule({
+    name      = "assign-grok-workspace",
+    match     = { class = "^(grok-bot)$" },
+    workspace = "1 silent",
+})
+
+-- seule la classe du terminal de session. pas de regle sur wezterm :
+-- un terminal ouvert ensuite n'est pas deplace.
+hl.window_rule({
+    name      = "assign-ws1-term-workspace",
+    match     = { class = "^(ws1-term)$" },
+    workspace = "1 silent",
+})
+
+-- workspace 2 : demos lancees depuis le code. pas de classe commune,
+-- donc aucune regle. on n'y pose rien d'autre.
+
+-- workspace 3 : brave. la classe est celle du paquet (brave-browser).
 hl.window_rule({
     name      = "assign-brave-workspace",
     match     = { class = "^(brave-browser)$" },
-    workspace = "2 silent",
-})
-
-hl.window_rule({
-    name      = "assign-vesktop-workspace",
-    match     = { class = "^(vesktop)$" },
     workspace = "3 silent",
 })
 
--- terminal lance au demarrage. seule la classe ws3-term est visee.
+-- workspace 4 : les jeux, reconnus a la classe, pas au titre.
+-- steam_app_<id> : fenetre d'un jeu steam. gamescope : un jeu lance
+-- dessous (le paquet n'est pas installe, la classe suffit). le client
+-- steam et lutris sont installes sur games, ils vont avec. heroic
+-- n'est pas installe, pas de regle. un jeu lutris qui n'a aucune de
+-- ces classes reste sur le workspace courant.
 hl.window_rule({
-    name      = "assign-ws3-term-workspace",
-    match     = { class = "^(ws3-term)$" },
-    workspace = "3 silent",
+    name      = "assign-steam-game-workspace",
+    match     = { class = "^steam_app_\\d+$" },
+    workspace = "4 silent",
 })
 
 hl.window_rule({
-    name      = "assign-gajim-workspace",
-    match     = { class = "^(org.gajim.Gajim)$" },
-    workspace = "3 silent",
+    name      = "assign-gamescope-workspace",
+    match     = { class = "^(gamescope)$" },
+    workspace = "4 silent",
 })
 
--- gajim flotte au-dessus de la grille du workspace 3 au lieu d y prendre une case
-hl.window_rule({
-    name   = "float-gajim",
-    match  = { class = "^(org.gajim.Gajim)$" },
-    float  = true,
-    size   = "monitor_w*0.4 monitor_h*0.6",
-    center = true,
-})
-
-hl.window_rule({
-    name      = "assign-fsa-workspace",
-    match     = { class = "^(fsa)$" },
-    workspace = "3 silent",
-})
-
--- steam et lutris ouvrent sur le workspace 5, sans prendre le focus.
--- steam ou Steam seulement : pas les jeux (steam_app_*).
 hl.window_rule({
     name      = "assign-steam-workspace",
     match     = { class = "^([Ss]team)$" },
-    workspace = "5 silent",
+    workspace = "4 silent",
 })
 
 hl.window_rule({
     name      = "assign-lutris-workspace",
     match     = { class = "^(net.lutris.Lutris|[Ll]utris)$" },
+    workspace = "4 silent",
+})
+
+-- workspace 5 : social. vesktop et equibop : StartupWMClass du
+-- paquet, et la casse minuscule que la fenetre wayland pose souvent.
+-- signal : StartupWMClass = signal.
+hl.window_rule({
+    name      = "assign-vesktop-workspace",
+    match     = { class = "^([Vv]esktop)$" },
+    workspace = "5 silent",
+})
+
+hl.window_rule({
+    name      = "assign-equibop-workspace",
+    match     = { class = "^([Ee]quibop)$" },
+    workspace = "5 silent",
+})
+
+hl.window_rule({
+    name      = "assign-signal-workspace",
+    match     = { class = "^(signal)$" },
     workspace = "5 silent",
 })
 
 -- workspace 6 : suivi du pc. btm et nvtop sont des programmes de
--- terminal, donc chacun a son lanceur wezterm et sa classe. un btm
--- tape dans un terminal normal n'est pas deplace. coolercontrol est
--- la fenetre qt (org.coolercontrol.CoolerControl), pas le service.
+-- terminal, donc chacun a son lanceur wezterm et sa classe
+-- (hosts/games/default.nix). un btm tape dans un terminal normal
+-- n'est pas deplace. coolercontrol est la fenetre qt
+-- (org.coolercontrol.CoolerControl), pas le service.
 hl.window_rule({
     name      = "assign-ws6-btm-workspace",
     match     = { class = "^(ws6-btm)$" },
@@ -451,78 +487,3 @@ hl.window_rule({
     match     = { class = "^(org.coolercontrol.CoolerControl)$" },
     workspace = "6 silent",
 })
-
--- workspace 3 : vesktop occupe toute la moitie gauche (l'ancienne case de
--- signal en plus du haut gauche). le terminal ws3-term est en haut a
--- droite, fsa en bas a droite. equibop n'a plus de regle. la zone depend
--- de la classe, pas de l'ordre d'ouverture. une zone dont l'appli est
--- fermee reste vide, sauf pour une fenetre inconnue qui prend une zone
--- libre. au-dela, grille generique.
-local chatGridRoles = {
-    vesktop      = "left",
-    ["ws3-term"] = "top-right",
-    fsa          = "bottom-right",
-}
-
-local chatGridRoleOrder = { "left", "top-right", "bottom-right" }
-
-local function chatGridBox(ctx, role)
-    if role == "left" then
-        return ctx:column(1, 2)
-    elseif role == "top-right" then
-        return ctx:grid_cell(2, 2, 2)
-    else
-        return ctx:grid_cell(4, 2, 2)
-    end
-end
-
-hl.layout.register("chat-grid", {
-    recalculate = function(ctx)
-        local placed, extras = {}, {}
-        for _, target in ipairs(ctx.targets) do
-            local window = target.window
-            local role = window and chatGridRoles[string.lower(window.class or "")]
-            if role and not placed[role] then
-                placed[role] = target
-            else
-                table.insert(extras, target)
-            end
-        end
-
-        -- fenetre inconnue ou deuxieme fenetre d'une appli : zone libre s'il en reste
-        local free = {}
-        for _, role in ipairs(chatGridRoleOrder) do
-            if not placed[role] then
-                table.insert(free, role)
-            end
-        end
-
-        if #extras <= #free then
-            for i, target in ipairs(extras) do
-                placed[free[i]] = target
-            end
-            for role, target in pairs(placed) do
-                target:place(chatGridBox(ctx, role))
-            end
-            return
-        end
-
-        -- plus de fenetres tuilees que de zones : grille generique, les applis connues restent en tete
-        local ordered = {}
-        for _, role in ipairs(chatGridRoleOrder) do
-            if placed[role] then
-                table.insert(ordered, placed[role])
-            end
-        end
-        for _, target in ipairs(extras) do
-            table.insert(ordered, target)
-        end
-        local cols = math.ceil(math.sqrt(#ordered))
-        for i, target in ipairs(ordered) do
-            target:place(ctx:grid_cell(i, cols))
-        end
-    end,
-})
-
--- hl.layout.register prefixe le nom par "lua:"
-hl.workspace_rule({ workspace = "3", layout = "lua:chat-grid" })
