@@ -33,6 +33,16 @@
       url = "github:ehmvi/fsa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # pas dans nixpkgs. on suit notre nixpkgs : le flake amont n'a
+    # pas de nixConfig, donc pas de cache binaire a preserver.
+    # kopuz, lui, en a un. home-manager ne sert qu'aux checks du
+    # flake amont. follows = "" le retire du lock. le module nixos
+    # n'en a pas besoin.
+    hermes-agent = {
+      url = "github:NousResearch/hermes-agent";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "";
+    };
   };
 
   outputs =

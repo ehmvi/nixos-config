@@ -4,6 +4,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   username,
   ...
 }:
@@ -109,11 +110,25 @@ let
         ;;
     esac
   '';
+
+  # le menu et un bind hyprland ne lisent pas le profil du shell, donc
+  # HERMES_HOME pose par le module n'arrive pas : l'appli ouvrirait
+  # ~/.hermes, vide. le paquet enveloppe deja electron et prend
+  # extraEnv pour ca. un deuxieme wrap (symlinkJoin) raterait le
+  # .desktop, qui pointe vers ce binaire. sans backend.mode (il reste
+  # "none"), l'appli demarre son propre backend. l'etat reste celui
+  # du gateway, via HERMES_HOME.
+  hermesDesktop = inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.desktop.override {
+    extraEnv = {
+      HERMES_HOME = "/var/lib/hermes/.hermes";
+    };
+  };
 in
 
 {
   imports = [
     ./hardware.nix
+    inputs.hermes-agent.nixosModules.default
     ../../modules/core
     ../../modules/desktop
     ../../modules/hardware/nvidia.nix
@@ -236,8 +251,53 @@ in
     ];
   };
 
+  # hermes (nous research) : cli et passerelle, un seul etat.
+  # addToSystemPackages pose HERMES_HOME sur /var/lib/hermes/.hermes,
+  # le meme repertoire que le service. ce repertoire est 2770, groupe
+  # hermes. sans le groupe, le cli de paul tombe sur EACCES.
+  # pas de conteneur. backend.mode reste "none" : pas de dashboard,
+  # pas d'api, rien n'ecoute. discord sort en websocket. aucun port
+  # du pare-feu n'est ouvert pour hermes.
+  users.users.${username}.extraGroups = [ "hermes" ];
+  services.hermes-agent = {
+    enable = true;
+    addToSystemPackages = true;
+
+    # anthropic en direct, pas openrouter. l'id est le sonnet le plus
+    # recent de la cle "anthropic" dans
+    # hermes_cli/models_catalog_static.py : claude-sonnet-5. le
+    # format "anthropic/claude-..." est celui d'openrouter. base_url
+    # evite ce defaut quand l'url est vide.
+    settings.model = {
+      provider = "anthropic";
+      default = "claude-sonnet-5";
+      base_url = "https://api.anthropic.com";
+    };
+
+    # plateforme : discord. elle demarre si le fichier contient
+    # DISCORD_BOT_TOKEN. pour passer a autre chose, on change ce
+    # fichier, pas ce bloc. matrix : MATRIX_HOMESERVER,
+    # MATRIX_ACCESS_TOKEN, MATRIX_ALLOWED_USERS. signal :
+    # SIGNAL_HTTP_URL, SIGNAL_ACCOUNT, SIGNAL_ALLOWED_USERS.
+    # retirer les anciennes variables, sinon les deux tournent.
+    #
+    # sops n'est pas pret : les destinataires de .sops.yaml sont
+    # encore des TODO. le fichier se cree a la main, root, 0600.
+    # l'activation (root) le copie dans .hermes/.env en 0640, groupe
+    # hermes. paul est dans ce groupe : il lit la cle api en clair,
+    # sinon le cli ne peut pas s'en servir. on accepte ca tant que
+    # sops n'est pas pret. s'il manque, le module avertit et le
+    # switch continue ; la passerelle demarre sans cle.
+    #   ANTHROPIC_API_KEY
+    #   DISCORD_BOT_TOKEN
+    #   DISCORD_ALLOWED_USERS  (id numerique discord, pas le pseudo)
+    # pas de DISCORD_ALLOW_ALL_USERS.
+    environmentFiles = [ "/var/lib/hermes/secrets.env" ];
+  };
+
   system.stateVersion = "25.11";
   environment.systemPackages = [
+    hermesDesktop
     (pkgs.callPackage ../../pkgs/egctl.nix { })
     # blender sans cuda : cudaSupport = true compile depuis les sources, sans cache binaire
     pkgs.blender
