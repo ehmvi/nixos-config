@@ -37,12 +37,16 @@ reflects where i was in the learning curve when i made it.
 
 per-host values in `hyprland.lua` are picked by reading `/etc/hostname`. the
 wayle file is selected through a custom option, `fyrr.wayle.configFile`,
-declared in `modules/desktop/hjem.nix`. on games, sunshine leaks vram on
-every moonlight session, so its prep-command undo restarts it when the
-session ends. sunshine runs that undo when the moonlight app session ends,
-not on a plain disconnect, so moonlight's "Quit app on host PC after ending
-stream" has to stay on. if that option is off or moonlight crashes, run
-`systemctl --user restart sunshine` on games to free the vram.
+declared in `modules/desktop/hjem.nix`. on games, a moonlight stream
+switches the panel to the resolution the client asks for (1920×1080 for
+the mac's external display), at its highest refresh rate and scale `1`,
+when the panel's edid has that mode. sunshine leaks vram on every moonlight
+session, so the prep-command undo reloads the lua, which restores
+`2560x1440@360`, then restarts sunshine. sunshine runs that undo when the
+moonlight app session ends, not on a plain disconnect, so moonlight's "Quit
+app on host PC after ending stream" has to stay on. if that option is off
+or moonlight crashes, run `hyprctl reload` and
+`systemctl --user restart sunshine` on games.
 
 **sommei** runs macos. nix-darwin handles the declarative system config, and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
