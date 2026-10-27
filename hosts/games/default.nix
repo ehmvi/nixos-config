@@ -59,6 +59,7 @@ let
     set -euo pipefail
 
     hyprctl=${lib.getExe' config.programs.hyprland.package "hyprctl"}
+    systemctl=${lib.getExe' config.systemd.package "systemctl"}
 
     runtime="''${XDG_RUNTIME_DIR:-}"
     if [ -z "$runtime" ]; then
@@ -102,6 +103,11 @@ let
         ;;
       restore)
         hypr reload
+        # sunshine perd de la vram a chaque session (capture wlroots) :
+        # 8 sessions en 3 h ont rempli 11 go sur 12, et wezterm plantait
+        # en ouvrant une fenetre. --no-block rend la main tout de suite,
+        # l'undo se termine avant que systemd arrete sunshine.
+        "$systemctl" --user restart --no-block sunshine.service
         ;;
       *)
         echo "sunshine-monitor: apply ou restore" >&2
@@ -185,6 +191,12 @@ in
     # le script n'en a pas besoin : il ne lit que le socket.
     settings = {
       origin_web_ui_allowed = "pc";
+      # sans capture fixee, sunshine essaie aussi le portail xdg au
+      # demarrage. xdph ouvre alors "select what to share" et sunshine
+      # attend un clic avant d'ecouter. en stream a distance, personne ne
+      # clique : apres le redemarrage de fin de session (restore), moonlight
+      # ne pouvait plus se connecter. wlr capture tout l'ecran sans demander.
+      capture = "wlr";
       # l'undo ne tourne qu'a la fin de la session moonlight, pas sur une
       # deconnexion. "quit app on host pc after ending stream" doit rester
       # cochee, sinon hyprctl reload remet l'echelle normale.
