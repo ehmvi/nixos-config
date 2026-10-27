@@ -27,6 +27,9 @@
     brightnessctl
     wayle
     hyprshot
+    # claude code colle les images (ctrl+v) via wl-paste ou xclip.
+    # hyprshot embarque wl-copy pour lui seul, pas dans le path.
+    wl-clipboard
     matugen # extrait une palette du fond d ecran (lance par wayle, theme-provider)
     awww # moteur de fond d ecran pilote par wayle (wayle lance awww-daemon lui-meme)
     playerctl
