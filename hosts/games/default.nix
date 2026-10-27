@@ -36,84 +36,12 @@ let
       }
     );
 
-  # le 27 pouces est en 2560x1440@360, echelle 1
-  # (config/hypr/hyprland.lua). la sortie y est vide : une seule regle
-  # pour chaque ecran. sur le mac 14 pouces l'interface est minuscule.
-  # on ne change que l'echelle, pas le mode. le panneau 16:9 n'a que
-  # ses modes edid : un mode 16:10 du client retombe, et le 360 hz
-  # passerait a 60 pour rien. echelle 2 etait trop grande sur le mac.
-  # 1.333333 sur 2560x1440 donne 1920x1080 logique. hl.monitor lit
-  # l'echelle comme une chaine.
-  # hl.monitor reprend la regle du meme nom et n'ecrit que les champs
-  # donnes. ici le nom est vide, donc output = "". un nom DP-1 ferait
-  # une regle neuve, mode prefere et 60 hz. DP-1 reste le connecteur
-  # du fond (config/wayle/config-games.toml).
-  # le service sunshine a un path vide. hyprland ne lui donne pas
-  # forcement HYPRLAND_INSTANCE_SIGNATURE. le script trouve le socket.
-  # keyword ne fait rien en lua. le script verifie que la reponse
-  # d'eval et de reload est exactement "ok".
-  # l'undo est hyprctl reload : il rejoue hyprland.lua, donc l'echelle
-  # 1 et le dofile de matugen-colors.lua. le mode physique ne bouge
-  # pas. l'interface grossit sur l'ecran pendant le stream.
-  sunshineMonitor = pkgs.writeShellScript "sunshine-monitor" ''
-    set -euo pipefail
-
-    hyprctl=${lib.getExe' config.programs.hyprland.package "hyprctl"}
-    systemctl=${lib.getExe' config.systemd.package "systemctl"}
-
-    runtime="''${XDG_RUNTIME_DIR:-}"
-    if [ -z "$runtime" ]; then
-      echo "sunshine-monitor: XDG_RUNTIME_DIR absent" >&2
-      exit 1
-    fi
-
-    sig="''${HYPRLAND_INSTANCE_SIGNATURE:-}"
-    if [ -z "$sig" ] || [ ! -S "$runtime/hypr/$sig/.socket.sock" ]; then
-      sig=""
-      for sock in "$runtime"/hypr/*/.socket.sock; do
-        if [ -S "$sock" ]; then
-          inst="''${sock%/.socket.sock}"
-          sig="''${inst##*/}"
-          break
-        fi
-      done
-    fi
-
-    if [ -z "$sig" ]; then
-      echo "sunshine-monitor: pas de socket hyprland" >&2
-      exit 1
-    fi
-
-    export HYPRLAND_INSTANCE_SIGNATURE="$sig"
-    export XDG_RUNTIME_DIR="$runtime"
-
-    # la substitution retire le saut de ligne de println. "ok" est la
-    # reponse exacte de eval et de reload.
-    hypr() {
-      reply=$("$hyprctl" "$@" 2>&1 || true)
-      if [ "$reply" != "ok" ]; then
-        echo "sunshine-monitor: $reply" >&2
-        exit 1
-      fi
-    }
-
-    case "''${1:-}" in
-      apply)
-        hypr eval 'hl.monitor({ output = "", scale = "1.333333" })'
-        ;;
-      restore)
-        hypr reload
-        # sunshine perd de la vram a chaque session (capture wlroots) :
-        # 8 sessions en 3 h ont rempli 11 go sur 12, et wezterm plantait
-        # en ouvrant une fenetre. --no-block rend la main tout de suite,
-        # l'undo se termine avant que systemd arrete sunshine.
-        "$systemctl" --user restart --no-block sunshine.service
-        ;;
-      *)
-        echo "sunshine-monitor: apply ou restore" >&2
-        exit 1
-        ;;
-    esac
+  # sunshine perd de la vram a chaque session (capture wlroots) :
+  # 8 sessions en 3 h ont rempli 11 go sur 12, et wezterm plantait
+  # en ouvrant une fenetre. --no-block rend la main tout de suite,
+  # l'undo se termine avant que systemd arrete sunshine.
+  sunshineRestart = pkgs.writeShellScript "sunshine-restart" ''
+    exec ${lib.getExe' config.systemd.package "systemctl"} --user restart --no-block sunshine.service
   '';
 in
 
@@ -187,23 +115,21 @@ in
     # certificats et les clients apparies vont ailleurs
     # (~/.config/sunshine/sunshine_state.json et credentials/).
     # global_prep_cmd : chaine json, le module n'accepte pas une liste.
-    # sunshine developpe $(VAR) dans cette chaine avant le lancement.
-    # le script n'en a pas besoin : il ne lit que le socket.
     settings = {
       origin_web_ui_allowed = "pc";
       # sans capture fixee, sunshine essaie aussi le portail xdg au
       # demarrage. xdph ouvre alors "select what to share" et sunshine
       # attend un clic avant d'ecouter. en stream a distance, personne ne
-      # clique : apres le redemarrage de fin de session (restore), moonlight
-      # ne pouvait plus se connecter. wlr capture tout l'ecran sans demander.
+      # clique : apres le redemarrage de fin de session, moonlight ne
+      # pouvait plus se connecter. wlr capture tout l'ecran sans demander.
       capture = "wlr";
       # l'undo ne tourne qu'a la fin de la session moonlight, pas sur une
       # deconnexion. "quit app on host pc after ending stream" doit rester
-      # cochee, sinon hyprctl reload remet l'echelle normale.
+      # cochee, sinon sunshine ne redemarre pas et la vram s'accumule.
       global_prep_cmd = builtins.toJSON [
         {
-          do = "${sunshineMonitor} apply";
-          undo = "${sunshineMonitor} restore";
+          do = "";
+          undo = "${sunshineRestart}";
         }
       ];
     };
