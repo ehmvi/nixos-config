@@ -88,10 +88,13 @@ in
   homebrew = {
     enable = true;
     onActivation.cleanup = "uninstall";
+    # tout ce qui est declare ici est garde ; le cleanup "uninstall" ne retire que le reste
+    taps = [ "anomalyco/tap" ];
     brews = [
       "bash"
       "handbrake"
       "mole"
+      "anomalyco/tap/opencode-v2"
     ];
     casks = [
       "brave-browser"
