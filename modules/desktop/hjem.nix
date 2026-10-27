@@ -103,6 +103,13 @@ let
     config.scrollback_lines = 10000
     config.audible_bell = 'Disabled'
 
+    -- games : en wayland natif, wezterm ne recoit pas le clavier virtuel de
+    -- sunshine (stream moonlight). on passe par xwayland, seulement la.
+    -- navi reste en wayland natif : en scale 1.8, xwayland rend le texte flou.
+    if wezterm.hostname() == 'games' then
+      config.enable_wayland = false
+    end
+
     -- couleurs : palette ${theme.variant} + les 16 ANSI
     config.colors = {
       foreground = '${theme.palette.text}',
