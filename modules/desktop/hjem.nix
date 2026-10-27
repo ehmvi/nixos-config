@@ -110,6 +110,11 @@ let
       config.enable_wayland = false
     end
 
+    -- hyprland est tiling : sinon, en x11, zoomer (ctrl +/-) fait demander a
+    -- wezterm un redimensionnement que hyprland refuse, et le rendu ne
+    -- remplit plus la fenetre.
+    config.adjust_window_size_when_changing_font_size = false
+
     -- couleurs : palette ${theme.variant} + les 16 ANSI
     config.colors = {
       foreground = '${theme.palette.text}',
