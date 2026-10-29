@@ -235,6 +235,14 @@ in
   systemd.user.services.sunshine.environment.LD_LIBRARY_PATH =
     "${pkgs.addDriverRunpath.driverLink}/lib";
 
+  # le module limite sunshine a 5 demarrages en 500 s. chaque fin de
+  # session moonlight le redemarre : des reconnexions rapprochees ont
+  # atteint la limite (start-limit-hit), le service est reste arrete, et
+  # un sunshine lance a la main a garde la vram de 5 sessions. 0 coupe la
+  # limite. relancer avec systemctl --user restart sunshine, jamais le
+  # binaire seul : hors du service, rien ne le redemarre apres un stream.
+  systemd.user.services.sunshine.startLimitIntervalSec = lib.mkForce 0;
+
   # le module sunshine allume avahi (mkDefault) pour le reseau local.
   # le mac et le telephone joignent games par le nom ou l'ip tailscale.
   # cups est installe, mais il ne demande pas avahi : seul cups-browsed
