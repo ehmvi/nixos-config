@@ -278,6 +278,8 @@ in
     # decoupe video sans reencodage. nixpkgs suit la derniere release upstream.
     # le paquet source est dans le cache. losslesscut-bin reconstruirait un wrapper fhs en local.
     pkgs.losslesscut
+    # prise de notes. unfree, autorise globalement (modules/shared/nix.nix).
+    pkgs.obsidian
     # suivi du systeme. btm : processus, disques, reseau, temperatures.
     # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
     # les lanceurs remplacent le .desktop d'origine (meme nom de fichier).
