@@ -1,6 +1,6 @@
 # module: desktop/sddm
 # sddm en wayland (session hyprland via uwsm) + xserver pour le clavier et nvidia
-{ lib, ... }:
+_:
 
 {
   # greeter wayland (weston, le defaut du module). weston lit services.xserver.xkb
@@ -16,7 +16,7 @@
   services.displayManager.defaultSession = "hyprland-uwsm";
 
   services.xserver.xkb = {
-    layout = lib.mkDefault "us"; # games le remplace par "fr"
+    layout = "us";
     variant = "";
   };
 }

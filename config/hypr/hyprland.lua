@@ -237,10 +237,10 @@ hl.config({
 
 hl.config({
     input = {
-        kb_layout = hostname == "games" and "fr,us" or "us,fr", -- games : azerty + qwerty, alt+shift pour basculer
+        kb_layout = hostname == "games" and "us" or "us,fr", -- games : qwerty seul. navi : qwerty + azerty, alt+shift pour basculer
         kb_variant = "",
         kb_model   = "",
-        kb_options = hostname == "games" and "caps:super,grp:alt_shift_toggle" or "grp:alt_shift_toggle", -- alt+shift bascule la disposition partout, games : caps lock devient super en plus (clavier 60%)
+        kb_options = hostname == "games" and "caps:super" or "grp:alt_shift_toggle", -- games : caps lock devient super (clavier 60%). navi : alt+shift bascule la disposition
         kb_rules   = "",
         numlock_by_default = true, -- verr num actif au demarrage de la session
         follow_mouse = 1,
@@ -387,7 +387,7 @@ hl.window_rule({
 -- part sur le workspace sans y changer le focus.
 -- 1 grok et le terminal de session, ordre non garanti. 2 demos de
 -- code, rien d'assigne.
--- 3 brave. 4 jeux. 5 social. 6 suivi.
+-- 3 brave. 4 jeux. 5 social et fsa. 6 suivi.
 
 -- workspace 1. grok-bot est la classe du .desktop embarque.
 hl.window_rule({
@@ -446,7 +446,7 @@ hl.window_rule({
 
 -- workspace 5 : social. vesktop et equibop : StartupWMClass du
 -- paquet, et la casse minuscule que la fenetre wayland pose souvent.
--- signal : StartupWMClass = signal.
+-- signal : StartupWMClass = signal. fsa : classe fsa.
 hl.window_rule({
     name      = "assign-vesktop-workspace",
     match     = { class = "^([Vv]esktop)$" },
@@ -462,6 +462,13 @@ hl.window_rule({
 hl.window_rule({
     name      = "assign-signal-workspace",
     match     = { class = "^(signal)$" },
+    workspace = "5 silent",
+})
+
+-- fsa : le traitement du micro, range avec le social.
+hl.window_rule({
+    name      = "assign-fsa-workspace",
+    match     = { class = "^(fsa)$" },
     workspace = "5 silent",
 })
 

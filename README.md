@@ -30,7 +30,7 @@ reflects where i was in the learning curve when i made it.
 | | navi | games |
 |---|---|---|
 | hyprland scale / mode | 1.8 / preferred | 1.0 / `2560x1440@360` |
-| keyboard | `us,fr` | `fr` only |
+| keyboard | `us,fr` | `us` only |
 | `mainMod` | `SUPER` | `SUPER` via caps lock (`caps:super`, 60% keyboard) |
 | wayle config | `config/wayle/config-navi.toml` | `config/wayle/config-games.toml` |
 | extras | power management, `powertop` | nvidia (open kernel module, stable branch), steam + proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot), sunshine (stream the desktop to moonlight on the mac) |
@@ -324,9 +324,9 @@ a fresh install brings back the config, not this. redo it by hand:
   not guaranteed. a terminal opened later stays on the current
   workspace. 2 is empty, for windows a demo opens from code. 3 is
   brave. 4 is steam games (`steam_app_<id>`), gamescope, and the
-  steam and lutris windows. 5 is vesktop, equibop and signal. 6 is
+  steam and lutris windows. 5 is vesktop, equibop, signal and fsa. 6 is
   bottom and nvtop, each launched with its own class, and coolercontrol.
-  gajim and fsa no longer have a reserved workspace. the old workspace 3
+  gajim no longer has a reserved workspace. the old workspace 3
   chat grid is gone.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.

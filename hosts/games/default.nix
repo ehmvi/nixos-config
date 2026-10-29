@@ -154,9 +154,7 @@ in
   services.tailscale.extraSetFlags = [ "--shields-up=false" ];
   # reveil a distance depuis le pi (wake-on-lan)
   networking.interfaces.eno1.wakeOnLan.enable = true;
-  console.keyMap = "fr";
   # dual boot : la rtc reste en utc. côté windows, clé registre RealTimeIsUniversal = 1
-  services.xserver.xkb.layout = "fr";
   # git-lfs pour le depot de fichiers .blend, seulement sur games
   programs.git.lfs.enable = true;
   fyrr.wayle.configFile = ../../config/wayle/config-games.toml;
