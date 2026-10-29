@@ -15,6 +15,9 @@
     imv
     mpv
     obs-studio
+    # notes. licence unfree, deja autorisee globalement. electron vient du
+    # cache ; le wrapper (asar et icones) s'assemble en local.
+    obsidian
     ente-auth
     gajim
     mumble # chat vocal
