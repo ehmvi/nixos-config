@@ -278,6 +278,8 @@ in
     pkgs.losslesscut
     # prise de notes. unfree, autorise globalement (modules/shared/nix.nix).
     pkgs.obsidian
+    # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
+    pkgs.prismlauncher
     # suivi du systeme. btm : processus, disques, reseau, temperatures.
     # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
     # les lanceurs remplacent le .desktop d'origine (meme nom de fichier).
