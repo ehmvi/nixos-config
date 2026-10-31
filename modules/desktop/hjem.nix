@@ -163,6 +163,10 @@ in
         ".config/matugen/config.toml".source = ../../config/matugen/config.toml;
         ".config/matugen/templates/hypr-colors.lua".source = ../../config/matugen/hypr-colors.lua;
         ".config/matugen/templates/rofi-colors.rasi".source = ../../config/matugen/rofi-colors.rasi;
+        ".config/matugen/templates/vesktop-colors.css".source = ../../config/matugen/vesktop-colors.css;
+
+        # theme vesktop. ramiel-colors.theme.css reste hors de hjem : matugen le reecrit
+        ".config/vesktop/themes/ramiel.theme.css".source = ../../config/vesktop/ramiel.theme.css;
 
         ".config/wezterm/wezterm.lua".source = weztermLua;
 

@@ -1,0 +1,37 @@
+/**
+ * @name ramiel (couleurs)
+ * @description palette du fond d ecran pour ramiel, generee par matugen. a activer en plus de ramiel.
+ * @author fyrr
+ * @version 0.1.0
+*/
+
+/* genere par matugen a partir du fond d ecran, ne pas editer a la main */
+/* modele : vesktop-colors.css (a mettre dans config/matugen/ du repo nixos-config) */
+/* :root:root pese plus lourd que le :root de ramiel.theme.css, l ordre de chargement ne compte pas */
+:root:root {
+    --m-surface: {{ colors.surface.default.hex }};
+    --m-surface-lowest: {{ colors.surface_container_lowest.default.hex }};
+    --m-surface-low: {{ colors.surface_container_low.default.hex }};
+    --m-surface-container: {{ colors.surface_container.default.hex }};
+    --m-surface-high: {{ colors.surface_container_high.default.hex }};
+    --m-surface-highest: {{ colors.surface_container_highest.default.hex }};
+
+    --m-on-surface: {{ colors.on_surface.default.hex }};
+    --m-on-surface-variant: {{ colors.on_surface_variant.default.hex }};
+    --m-outline: {{ colors.outline.default.hex }};
+    --m-outline-variant: {{ colors.outline_variant.default.hex }};
+
+    --m-primary: {{ colors.primary.default.hex }};
+    --m-on-primary: {{ colors.on_primary.default.hex }};
+    --m-primary-container: {{ colors.primary_container.default.hex }};
+    --m-on-primary-container: {{ colors.on_primary_container.default.hex }};
+    --m-primary-fixed: {{ colors.primary_fixed.default.hex }};
+
+    --m-secondary: {{ colors.secondary.default.hex }};
+    --m-secondary-container: {{ colors.secondary_container.default.hex }};
+    --m-tertiary: {{ colors.tertiary.default.hex }};
+    --m-tertiary-container: {{ colors.tertiary_container.default.hex }};
+    --m-error: {{ colors.error.default.hex }};
+
+    /* --m-core et --m-ambre ne viennent pas de matugen : on garde ceux de ramiel.theme.css */
+}
