@@ -33,6 +33,8 @@
 
   environment.systemPackages = with pkgs; [
     powertop
+    # messagerie simplex, navi seulement. l'appimage est dans le cache ; le wrapper fhs s'assemble en local
+    simplex-chat-desktop
   ];
 
   system.stateVersion = "25.11";

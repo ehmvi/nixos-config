@@ -385,9 +385,9 @@ hl.window_rule({
 
 -- plan (games, et navi : ce fichier est partage). silent : la fenetre
 -- part sur le workspace sans y changer le focus.
--- 1 grok et le terminal de session, ordre non garanti. 2 demos de
--- code, rien d'assigne.
--- 3 brave. 4 jeux. 5 social et fsa. 6 suivi.
+-- 1 grok et le terminal de session, ordre non garanti. 2 t3 code.
+-- 3 rien. 4 brave. 5 social et fsa. 6 jeux. 7 lanceurs de jeux.
+-- 10 suivi.
 
 -- workspace 1. grok-bot est la classe du .desktop embarque.
 hl.window_rule({
@@ -404,43 +404,18 @@ hl.window_rule({
     workspace = "1 silent",
 })
 
--- workspace 2 : demos lancees depuis le code. pas de classe commune,
--- donc aucune regle. on n'y pose rien d'autre.
+-- workspace 2 : t3 code. la fenetre pose com.t3tools.T3Code, le
+-- .desktop annonce t3code (StartupWMClass) : on prend les deux.
+hl.window_rule({
+    name      = "assign-t3code-workspace",
+    match     = { class = "^(com\\.t3tools\\.T3Code|t3code)$" },
+    workspace = "2 silent",
+})
 
--- workspace 3 : brave. la classe est celle du paquet (brave-browser).
+-- workspace 4 : brave. la classe est celle du paquet (brave-browser).
 hl.window_rule({
     name      = "assign-brave-workspace",
     match     = { class = "^(brave-browser)$" },
-    workspace = "3 silent",
-})
-
--- workspace 4 : les jeux, reconnus a la classe, pas au titre.
--- steam_app_<id> : fenetre d'un jeu steam. gamescope : un jeu lance
--- dessous (le paquet n'est pas installe, la classe suffit). le client
--- steam et lutris sont installes sur games, ils vont avec. heroic
--- n'est pas installe, pas de regle. un jeu lutris qui n'a aucune de
--- ces classes reste sur le workspace courant.
-hl.window_rule({
-    name      = "assign-steam-game-workspace",
-    match     = { class = "^steam_app_\\d+$" },
-    workspace = "4 silent",
-})
-
-hl.window_rule({
-    name      = "assign-gamescope-workspace",
-    match     = { class = "^(gamescope)$" },
-    workspace = "4 silent",
-})
-
-hl.window_rule({
-    name      = "assign-steam-workspace",
-    match     = { class = "^([Ss]team)$" },
-    workspace = "4 silent",
-})
-
-hl.window_rule({
-    name      = "assign-lutris-workspace",
-    match     = { class = "^(net.lutris.Lutris|[Ll]utris)$" },
     workspace = "4 silent",
 })
 
@@ -472,25 +447,63 @@ hl.window_rule({
     workspace = "5 silent",
 })
 
--- workspace 6 : suivi du pc. btm et nvtop sont des programmes de
+-- workspace 6 : les jeux, reconnus a la classe, pas au titre.
+-- steam_app_<id> : fenetre d'un jeu steam. gamescope : un jeu lance
+-- dessous (le paquet n'est pas installe, la classe suffit). un jeu
+-- lutris ou battle.net (wine, classe <jeu>.exe) n'a aucune de ces
+-- classes et reste sur le workspace courant.
+hl.window_rule({
+    name      = "assign-steam-game-workspace",
+    match     = { class = "^steam_app_\\d+$" },
+    workspace = "6 silent",
+})
+
+hl.window_rule({
+    name      = "assign-gamescope-workspace",
+    match     = { class = "^(gamescope)$" },
+    workspace = "6 silent",
+})
+
+-- workspace 7 : les lanceurs. le client steam, lutris, et battle.net
+-- (lance par lutris sous wine, classe battle.net.exe). heroic n'est
+-- pas installe, pas de regle.
+hl.window_rule({
+    name      = "assign-steam-workspace",
+    match     = { class = "^([Ss]team)$" },
+    workspace = "7 silent",
+})
+
+hl.window_rule({
+    name      = "assign-lutris-workspace",
+    match     = { class = "^(net.lutris.Lutris|[Ll]utris)$" },
+    workspace = "7 silent",
+})
+
+hl.window_rule({
+    name      = "assign-battlenet-workspace",
+    match     = { class = "^([Bb]attle\\.net(\\.exe)?)$" },
+    workspace = "7 silent",
+})
+
+-- workspace 10 : suivi du pc. btm et nvtop sont des programmes de
 -- terminal, donc chacun a son lanceur wezterm et sa classe
 -- (hosts/games/default.nix). un btm tape dans un terminal normal
 -- n'est pas deplace. coolercontrol est la fenetre qt
 -- (org.coolercontrol.CoolerControl), pas le service.
 hl.window_rule({
-    name      = "assign-ws6-btm-workspace",
-    match     = { class = "^(ws6-btm)$" },
-    workspace = "6 silent",
+    name      = "assign-ws10-btm-workspace",
+    match     = { class = "^(ws10-btm)$" },
+    workspace = "10 silent",
 })
 
 hl.window_rule({
-    name      = "assign-ws6-nvtop-workspace",
-    match     = { class = "^(ws6-nvtop)$" },
-    workspace = "6 silent",
+    name      = "assign-ws10-nvtop-workspace",
+    match     = { class = "^(ws10-nvtop)$" },
+    workspace = "10 silent",
 })
 
 hl.window_rule({
     name      = "assign-coolercontrol-workspace",
     match     = { class = "^(org.coolercontrol.CoolerControl)$" },
-    workspace = "6 silent",
+    workspace = "10 silent",
 })

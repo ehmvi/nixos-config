@@ -10,7 +10,7 @@
 let
   # le .desktop du paquet ouvre le programme dans un terminal quelconque,
   # sans classe, donc hyprland ne peut pas le placer. celui-ci passe devant
-  # et ouvre wezterm avec une classe a lui, envoyee sur le workspace 6.
+  # et ouvre wezterm avec une classe a lui, envoyee sur le workspace 10.
   monitorLauncher =
     {
       name,
@@ -286,14 +286,14 @@ in
     (monitorLauncher {
       name = "bottom";
       desktopName = "Bottom";
-      class = "ws6-btm";
+      class = "ws10-btm";
       command = "btm";
       icon = "bottom-system-monitor";
     })
     (monitorLauncher {
       name = "nvtop";
       desktopName = "Nvtop";
-      class = "ws6-nvtop";
+      class = "ws10-nvtop";
       command = "nvtop";
       icon = "nvtop";
     })
