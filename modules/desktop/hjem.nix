@@ -24,6 +24,14 @@ let
     hash = "sha256-OnyTyFxrUVyGyjyG6ZEqdUvIFkDhb3lpSXChBhRrlUI=";
   };
 
+  # wayle ne relance matugen que si le chemin du fond change, pas son contenu.
+  # on lui donne donc le chemin du store : nouveau fond = nouveau chemin = nouvelles couleurs,
+  # sans reconnexion (wayle relit sa config tout seul)
+  wayleConfig = pkgs.writeText "wayle-config.toml" (
+    builtins.replaceStrings [ "/home/${username}/.config/hypr/wallpaper.png" ] [ "${desktopWallpaper}" ]
+      (builtins.readFile config.fyrr.wayle.configFile)
+  );
+
   # hyprlock.conf généré depuis theme.nix — plus de couleurs en dur
   hyprlockConf = pkgs.writeText "hyprlock.conf" ''
     background {
@@ -166,7 +174,7 @@ in
         ".config/starship.toml".source = ../../config/starship/starship.toml;
 
         ".config/wayle/tombi.toml".source = ../../config/wayle/tombi.toml;
-        ".config/wayle/config.toml".source = config.fyrr.wayle.configFile;
+        ".config/wayle/config.toml".source = wayleConfig;
         ".config/wayle/schema.json".source = ../../config/wayle/schema.json;
 
         ".config/git/config".source = ../../config/git/config;
