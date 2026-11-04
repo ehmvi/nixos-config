@@ -29,6 +29,10 @@
     (t3code.override {
       enableClaude = true;
       enableCodex = false;
+      # les images derriere un lien symbolique qui sort du workspace (docs/ d'un worktree) s'ouvrent
+      t3code-unwrapped = t3code.unwrapped.overrideAttrs (old: {
+        patches = (old.patches or [ ]) ++ [ ../../pkgs/t3code-symlinked-workspace-images.patch ];
+      });
     })
     kdePackages.kate
     kdePackages.qttools

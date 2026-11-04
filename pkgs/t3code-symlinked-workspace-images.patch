@@ -1,0 +1,79 @@
+diff --git a/apps/server/src/assets/AssetAccess.test.ts b/apps/server/src/assets/AssetAccess.test.ts
+index bf0f443..d33f6d6 100644
+--- a/apps/server/src/assets/AssetAccess.test.ts
++++ b/apps/server/src/assets/AssetAccess.test.ts
+@@ -919,6 +919,54 @@ describe("AssetAccess", () => {
+     }).pipe(Effect.provide(layerTest)),
+   );
+ 
++  it.effect.skipIf(!symlinksSupported)(
++    "previews an image through a symlink leaving the workspace, and nothing else",
++    () =>
++      Effect.gen(function* () {
++        const fs = yield* FileSystem.FileSystem;
++        const path = yield* Path.Path;
++        const root = yield* fs.makeTempDirectoryScoped({ prefix: "t3-asset-link-root-" });
++        const outside = yield* fs.makeTempDirectoryScoped({ prefix: "t3-asset-link-outside-" });
++        yield* fs.makeDirectory(path.join(outside, "previews"));
++        const imagePath = path.join(outside, "previews", "sheet.png");
++        yield* fs.writeFile(imagePath, new Uint8Array([137, 80, 78, 71]));
++        yield* fs.writeFileString(path.join(outside, "report.html"), "<p>outside</p>");
++        yield* fs.writeFileString(path.join(outside, "secret.txt"), "private information");
++        yield* fs.symlink(outside, path.join(root, "docs"));
++        yield* fs.symlink(path.join(outside, "secret.txt"), path.join(root, "disguised.png"));
++
++        const issue = (requested: string) =>
++          issueAssetUrl({
++            resource: {
++              _tag: "workspace-file",
++              threadId: ThreadId.make("thread-1"),
++              path: requested,
++            },
++            workspaceRoot: root,
++          });
++        const result = yield* issue("docs/previews/sheet.png");
++        const suffix = result.relativeUrl.slice(`${ASSET_ROUTE_PREFIX}/`.length);
++        const separator = suffix.indexOf("/");
++        expect(
++          yield* resolveAsset(suffix.slice(0, separator), suffix.slice(separator + 1)),
++        ).toMatchObject({
++          kind: "file",
++          path: yield* fs.realPath(imagePath),
++          mimeType: "image/png",
++        });
++
++        expect(yield* issue("docs/report.html").pipe(Effect.flip)).toMatchObject({
++          _tag: "AssetWorkspaceAssetNotFoundError",
++        });
++        expect(yield* issue("docs/previews/missing.png").pipe(Effect.flip)).toMatchObject({
++          _tag: "AssetWorkspaceAssetNotFoundError",
++        });
++        expect(yield* issue("disguised.png").pipe(Effect.flip)).toMatchObject({
++          _tag: "AssetPreviewTypeValidationError",
++        });
++      }).pipe(Effect.provide(layerTest)),
++  );
++
+   it.effect("previews workspace files with literal fragment characters in their paths", () =>
+     Effect.gen(function* () {
+       const fileSystem = yield* FileSystem.FileSystem;
+diff --git a/apps/server/src/assets/AssetAccess.ts b/apps/server/src/assets/AssetAccess.ts
+index 4c30f10..202f5cf 100644
+--- a/apps/server/src/assets/AssetAccess.ts
++++ b/apps/server/src/assets/AssetAccess.ts
+@@ -461,6 +461,15 @@ const finalizeWorkspaceFileAsset = Effect.fn("AssetAccess.finalizeWorkspaceFileA
+       ),
+     );
+     if (!canonicalFile) {
++      // An image reached through a symlink that leaves the workspace (a worktree's shared docs):
++      // served as the exact media file it is, as any absolute path in the chat already is.
++      if (isWorkspaceImagePreviewPath(resolved.relativePath)) {
++        return yield* finalizeAbsoluteMediaFileAsset({
++          requestedPath: resolved.absolutePath,
++          resource: input.resource,
++          expiresAt: input.expiresAt,
++        });
++      }
+       return yield* new AssetWorkspaceAssetNotFoundError({
+         resource: input.resource,
+       });
