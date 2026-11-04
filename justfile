@@ -52,6 +52,36 @@ scan:
 bump input:
     nix flake update {{input}}
 
-# met à jour tous les inputs
+# met a jour tous les inputs et les paquets suivis sur les releases github
 update:
     nix flake update
+    just bump-release pkgs/artcraft-launcher.nix
+
+# passe un paquet de pkgs/ a la derniere release github : reecrit version et hash.
+# releases/latest ignore les pre-releases. rien n'est ecrit si le telechargement echoue.
+bump-release file:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    file="{{file}}"
+    template=$(sed -nE 's|^ *url = "(https://github\.com/.*)";$|\1|p' "$file")
+    if [ -z "$template" ] || [ "$(printf '%s\n' "$template" | wc -l)" -ne 1 ]; then
+        echo "$file : il faut une seule url github" >&2
+        exit 1
+    fi
+    repo=$(printf '%s\n' "$template" | cut -d/ -f4-5)
+    latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
+    version=${latest##*/v}
+    if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+        echo "$repo : tag inattendu : $latest" >&2
+        exit 1
+    fi
+    current=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$file")
+    if [ "$version" = "$current" ]; then
+        echo "$file : deja en $version"
+        exit 0
+    fi
+    url=${template//'${finalAttrs.version}'/$version}
+    hash=$(nix hash convert --hash-algo sha256 --to sri "$(nix-prefetch-url --type sha256 "$url")")
+    sed -E -i.bak -e "s|^( *version = \").*(\";)$|\\1$version\\2|" -e "s|^( *hash = \").*(\";)$|\\1$hash\\2|" "$file"
+    rm "$file.bak"
+    echo "$file : $current -> $version"

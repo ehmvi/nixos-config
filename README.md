@@ -196,7 +196,8 @@ just build     # build only, no activation, no sudo
 just fmt       # run nixfmt over every .nix file (writes)
 just lint      # statix + deadnix
 just check     # format check + lint, mirrors what ci should do
-just update    # nix flake update (bumps every input)
+just update    # nix flake update, then bump-release on pkgs/artcraft-launcher.nix
+just bump-release <file>  # move a pkgs/ package to its latest github release
 ```
 
 the recipes detect the platform with `uname` and the machine name on their own,

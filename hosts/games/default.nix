@@ -4,6 +4,7 @@
   config,
   pkgs,
   lib,
+  inputs,
   username,
   ...
 }:
@@ -266,6 +267,14 @@ in
     ];
   };
 
+  # artcraft launcher installe les apps en appimage dans ~/Applications et les
+  # lance directement. binfmt les fait passer par appimage-run : sans lui, nixos
+  # refuse de les demarrer (pas de /lib64/ld-linux).
+  programs.appimage = {
+    enable = true;
+    binfmt = true;
+  };
+
   system.stateVersion = "25.11";
   environment.systemPackages = [
     (pkgs.callPackage ../../pkgs/egctl.nix { })
@@ -280,6 +289,14 @@ in
     pkgs.obsidian
     # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
     pkgs.prismlauncher
+    # lanceur de la suite craft (photocraft, filmcraft...). release linux officielle.
+    (pkgs.callPackage ../../pkgs/artcraft-launcher.nix { })
+    # daw. nixpkgs suit la derniere release upstream. unfree, donc hors du
+    # cache : le .deb se telecharge et le paquet se construit en local.
+    pkgs.bitwig-studio
+    # hermes desktop (nous research) : electron, avec le runtime hermes du
+    # meme flake. l'etat reste dans ~/.hermes.
+    inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     # suivi du systeme. btm : processus, disques, reseau, temperatures.
     # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
     # les lanceurs remplacent le .desktop d'origine (meme nom de fichier).
