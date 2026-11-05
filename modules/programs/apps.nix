@@ -43,6 +43,10 @@
     (callPackage ../../pkgs/grok-bot.nix { })
   ];
 
+  # bitwarden reecrit ~/.config/autostart tant que son option "start at login" est
+  # cochee : on masque l'unite que systemd en tire. le lancer a la main marche toujours.
+  systemd.user.units."app-bitwarden@autostart.service".enable = false;
+
   # file type (mime) → default application associations
   xdg.mime.defaultApplications = {
     "image/png" = "imv.desktop";

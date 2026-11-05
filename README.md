@@ -321,10 +321,8 @@ a fresh install brings back the config, not this. redo it by hand:
   `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
   rules ship as `70-gaming.rules` through `services.udev.packages`.
 - **workspaces are assigned in `hyprland.lua`**, the same file on navi
-  and games. 1 is grok bot and one wezterm started with the session
-  (`ws1-term`: fastfetch, then nushell). which one appears first is
-  not guaranteed. a terminal opened later stays on the current
-  workspace. 2 is empty, for windows a demo opens from code. 3 is
+  and games. no app starts with the session. 1 is grok bot. a terminal
+  stays on the current workspace. 2 is empty, for windows a demo opens from code. 3 is
   brave. 4 is steam games (`steam_app_<id>`), gamescope, and the
   steam and lutris windows. 5 is vesktop, equibop, signal and fsa. 6 is
   bottom and nvtop, each launched with its own class, and coolercontrol.
@@ -362,7 +360,7 @@ hardware is expensive, so the config stays light without giving up an app:
 
 | host | what keeps it light |
 |---|---|
-| all nixos | zram tuning, 256 mb journal, nix at idle cpu priority, no speech-dispatcher service or voices (734 mb on `games`), no wait for the network at boot, wayle cpu module polled every 5 s, no cursor fade in wezterm, no shell spawned by the hyprlock clock |
+| all nixos | no app started at login, zram tuning, 256 mb journal, nix at idle cpu priority, no speech-dispatcher service or voices (734 mb on `games`), no wait for the network at boot, wayle cpu module polled every 5 s, no cursor fade in wezterm, no shell spawned by the hyprlock clock |
 | `games` | btrfs `compress=zstd:1` + `noatime`, coolercontrol polled every 2 s, ollama unloads its model after 2 min, no split lock penalty in games |
 | `sommei` | no sdk tools or jdk 8, zen saves its session every 60 s |
 | `navi` | gpu video decoding in mpv, `noatime` |
