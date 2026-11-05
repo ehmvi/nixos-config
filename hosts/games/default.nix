@@ -198,6 +198,8 @@ in
     package = pkgs.ollama-vulkan;
     host = "127.0.0.1";
     openFirewall = false;
+    # le modele quitte la vram 2 min apres sa derniere reponse (defaut 5 min), pour les jeux
+    environmentVariables.OLLAMA_KEEP_ALIVE = "2m";
   };
 
   # stream du bureau vers le mac (moonlight), seulement via tailscale.
