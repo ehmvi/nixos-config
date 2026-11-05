@@ -162,6 +162,19 @@ in
 
   boot.kernelModules = [ "nct6775" ];
 
+  # compresse ce qui s'ecrit a partir de maintenant, sans lourdeur sur ce cpu (niveau 1).
+  # btrfs saute seul ce qui se compresse mal (videos, modeles). une partie des jeux reste
+  # compressee : lire 100 mo/s coute alors environ 7 % d'un coeur. une option de montage
+  # vaut pour tout le volume, donc / et /home. noatime : pas d'ecriture a chaque lecture.
+  fileSystems."/".options = [
+    "compress=zstd:1"
+    "noatime"
+  ];
+  fileSystems."/home".options = [
+    "compress=zstd:1"
+    "noatime"
+  ];
+
   programs.coolercontrol.enable = true;
 
   # glm-4.7-flash en local. ollama 0.40.2 gere glm4moelite
