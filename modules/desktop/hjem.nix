@@ -62,7 +62,8 @@ let
 
     label {
         monitor =
-        text = cmd[update:1000] echo "$(date +'%H:%M')"
+        # variable interne : pas de shell lance a chaque seconde
+        text = $TIME
         color = rgba(${hex theme.accentHex}, 1.0)
         font_size = 24
         font_family = JetBrainsMono Nerd Font
