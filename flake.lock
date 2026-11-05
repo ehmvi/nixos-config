@@ -158,6 +158,26 @@
         "type": "github"
       }
     },
+    "msga": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1793912180,
+        "narHash": "sha256-w2/77QJhlrrrygvuDK/MV0YpVcxTAKsRNV1iN3FSzn8=",
+        "owner": "punarinta",
+        "repo": "make-slack-great-again",
+        "rev": "89564992c0a6c2f476a51d8f24bc45d6561cc857",
+        "type": "github"
+      },
+      "original": {
+        "owner": "punarinta",
+        "repo": "make-slack-great-again",
+        "type": "github"
+      }
+    },
     "nix-darwin": {
       "inputs": {
         "nixpkgs": [
@@ -319,6 +339,7 @@
         "hermes-agent": "hermes-agent",
         "hjem": "hjem",
         "kopuz": "kopuz",
+        "msga": "msga",
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",

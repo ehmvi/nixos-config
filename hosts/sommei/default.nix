@@ -89,7 +89,10 @@ in
     enable = true;
     onActivation.cleanup = "uninstall";
     # tout ce qui est declare ici est garde ; le cleanup "uninstall" ne retire que le reste
-    taps = [ "anomalyco/tap" ];
+    taps = [
+      "anomalyco/tap"
+      "punarinta/msga"
+    ];
     brews = [
       "bash"
       "handbrake"
@@ -114,6 +117,9 @@ in
       "mullvad-browser"
       "mullvad-vpn"
       "obsidian"
+      # msga : client slack natif (c++), pas electron. non notarise : au premier
+      # lancement, reglages > confidentialite et securite > "ouvrir quand meme".
+      "punarinta/msga/msga"
       "utm"
       "xquartz"
       "hopper-disassembler"

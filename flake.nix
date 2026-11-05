@@ -25,6 +25,12 @@
     # pas de follows non plus : l'amont ne teste son paquet qu'avec son nixpkgs
     # (python verrouille par uv2nix, electron), et son doc nix l'importe ainsi
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    # msga : client slack natif. pas de cache amont, donc rien a perdre a suivre
+    # notre nixpkgs. son flake ne couvre que linux : games seulement.
+    msga = {
+      url = "github:punarinta/make-slack-great-again";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";

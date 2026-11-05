@@ -320,6 +320,9 @@ in
     pkgs.losslesscut
     # prise de notes. unfree, autorise globalement (modules/shared/nix.nix).
     pkgs.obsidian
+    # msga : client slack natif (c++), pas electron. paquet du flake amont,
+    # construit en local (pas de cache). mise a jour : nix flake update msga.
+    inputs.msga.packages.${pkgs.stdenv.hostPlatform.system}.default
     # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
     pkgs.prismlauncher
     # cles usb multiboot. ventoy en terminal, ventoy-web pour l'interface web
