@@ -32,6 +32,9 @@
       SUBSYSTEM=="hidraw", ENV{MELGEEK_MADE68}=="1", ATTRS{bInterfaceNumber}=="01", TAG+="uaccess"
     '')
   ];
+  # un jeu qui fait un split lock n'est plus endormi 10 ms par le noyau (reglage de steamos)
+  boot.kernel.sysctl."kernel.split_lock_mitigate" = 0;
+
   # ntsync : primitives de sync windows cote noyau, utilisees par proton-ge (/dev/ntsync)
   boot.kernelModules = [
     "hid-nintendo"
