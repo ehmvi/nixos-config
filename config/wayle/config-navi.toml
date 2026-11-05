@@ -60,6 +60,7 @@ button-bg-color = "bg-base"
 dropdown-show-seconds = true
 
 [modules.cpu]
+poll-interval-ms = 5000
 border-show = true
 border-color = "#d2a6ff"
 icon-color = "bg-base"
