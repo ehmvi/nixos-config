@@ -176,6 +176,16 @@ in
   ];
 
   programs.coolercontrol.enable = true;
+  # 5 % d'un coeur en continu a 1 s. 2 s suffit a des courbes de ventilo.
+  # le demon garde son config.toml dans /etc, modifiable depuis son interface : on ne
+  # touche qu'a cette cle, a chaque demarrage. le commentaire et la vraie cle peuvent
+  # coexister, et une cle en double l'empecherait de demarrer : on efface les deux, puis
+  # on la remet une fois. si sed echoue, le demon demarre quand meme avec sa valeur.
+  systemd.services.coolercontrold.preStart = ''
+    if [ -f /etc/coolercontrol/config.toml ]; then
+      sed -i -E -e '/^#? *poll_rate *=/d' -e '/^\[settings\]/a poll_rate = 2.0' /etc/coolercontrol/config.toml || true
+    fi
+  '';
 
   # glm-4.7-flash en local. ollama 0.40.2 gere glm4moelite
   # (llama.cpp b11351). le paquet cuda manque dans cache.nixos.org et
