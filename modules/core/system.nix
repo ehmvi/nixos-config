@@ -38,6 +38,12 @@
   # le cache kopuz est dans modules/shared/nix.nix (nixos et darwin).
   nix.settings.auto-optimise-store = true;
 
+  # builds et gc passent apres le reste : une mise a jour ne fait pas saccader
+  # un jeu ou un stream. ils gardent tout le cpu quand rien d'autre ne tourne.
+  # pas de priorite d'e/s : les nvme sont en ordonnanceur none, qui l'ignore.
+  nix.daemonCPUSchedPolicy = "idle";
+  systemd.services.nix-gc.serviceConfig.CPUSchedulingPolicy = "idle";
+
   # swap compressé en ram (zram) : filet de sécurité quand la ram est pleine, zéro écriture disque
   zramSwap.enable = true;
 
