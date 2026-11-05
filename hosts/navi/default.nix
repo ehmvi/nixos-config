@@ -1,6 +1,6 @@
 # host: navi
 # personal thinkpad — intel laptop hardware
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
   imports = [
@@ -30,6 +30,9 @@
 
   # va-api : decodage video par le gpu intel au lieu du cpu
   hardware.graphics.extraPackages = [ pkgs.intel-media-driver ];
+  # mpv s'en sert. pas sur games : nvdec fait passer la rtx de p8 a p2, 18 w de plus
+  # (mesure en 1440p h264) pour 0,4 coeur gagne.
+  hjem.users.${username}.files.".config/mpv/mpv.conf".source = ../../config/mpv/mpv.conf;
 
   # fwupd : mises a jour firmware (bios, thunderbolt, ssd) via lvfs, ou lenovo publie
   services.fwupd.enable = true;
