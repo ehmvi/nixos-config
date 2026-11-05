@@ -149,9 +149,9 @@ checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
   the directory name is historical; the sampled `llvm-readobj` is universal,
   so the compiler runs natively. rosetta is not required for the ndk.
 - cmdline-tools 22.0 is the macos arm64 archive.
-- `composeAndroidPackages` also links the obsolete sdk tools 26.1.1 package
-  (2017, including `tools/lib/monitor-x86_64`) and wraps those scripts with
-  jdk 8. godot 4.5 does not call them.
+- `composeAndroidPackages` links the obsolete sdk tools 26.1.1 package by
+  default (2017, wrapped with jdk 8). godot 4.5 does not call them, so the
+  module sets `toolsVersion = null` to keep both out of the closure.
 
 `just check` evaluates the darwin configuration and does not build it.
 godot 4.5.1 is substituted from the binary cache. it is not compiled on the mac.
@@ -222,7 +222,8 @@ two habits worth keeping:
 ### rebuilding by hand
 
 ```sh
-# nixos (navi, games)
+# nixos (navi, games). `just switch` adds NIX_REMOTE=daemon, so that builds keep
+# the daemon's idle cpu priority. without it, root builds at normal priority.
 sudo nixos-rebuild switch --flake .#<hostname>
 
 # darwin (sommei) — activation must run as root
@@ -344,14 +345,31 @@ a fresh install brings back the config, not this. redo it by hand:
   for navi; games turns it off, so tailnet ACLs are the gate there; tailscaled
   accepts tailscale0 before the nixos firewall), mullvad (daemon + gui).
   the mac's tailscale app is not configured in this repo
-- memory: zram swap (zstd, up to 50 % of ram), no disk swap, no hibernation
+- memory: zram swap (zstd, up to 50 % of ram), no disk swap, no hibernation.
+  the kernel is tuned for it (`vm.swappiness` 180, `vm.page-cluster` 0)
 - desktop: sddm → hyprland, wezterm, nushell (login shell) + starship, wayle bar,
   hyprlock + hypridle (auto-lock, lock before sleep), hyprpolkitagent
 - printing: cups
-- nix: weekly garbage collection (older than 7 days), store auto-optimisation
+- nix: weekly garbage collection (older than 7 days), store auto-optimisation,
+  builds and gc at idle cpu priority
 - locale: `en_US.UTF-8` with french regional settings, timezone `Europe/Paris`
 - `sommei`: touch id for sudo, declarative dock / finder / trackpad / keyboard
   repeat / screenshot settings
+
+## resources
+
+hardware is expensive, so the config stays light without giving up an app:
+
+| host | what keeps it light |
+|---|---|
+| all nixos | zram tuning, 256 mb journal, nix at idle cpu priority, no speech-dispatcher service or voices (734 mb on `games`), no wait for the network at boot, wayle cpu module polled every 5 s, no cursor fade in wezterm, no shell spawned by the hyprlock clock |
+| `games` | btrfs `compress=zstd:1` + `noatime`, coolercontrol polled every 2 s, ollama unloads its model after 2 min, no split lock penalty in games |
+| `sommei` | no sdk tools or jdk 8, zen saves its session every 60 s |
+| `navi` | gpu video decoding in mpv, `noatime` |
+
+btrfs only compresses what gets written after the switch, so the store shrinks
+as updates replace it. rewriting it all at once would cost as many ssd writes as
+the store is big, for a gain that comes anyway.
 
 ## known gaps
 
