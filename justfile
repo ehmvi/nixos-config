@@ -5,12 +5,13 @@ flake := justfile_directory()
 default:
     @just --list
 
+# NIX_REMOTE : en root, nix construit sans passer par le demon, donc sans sa priorite cpu idle.
 # rebuild + switch ce host
 switch:
     @if [ "$(uname)" = "Darwin" ]; then \
         sudo darwin-rebuild switch --flake {{flake}}#$(scutil --get LocalHostName); \
     else \
-        sudo nixos-rebuild switch --flake {{flake}}#$(hostname); \
+        sudo env NIX_REMOTE=daemon nixos-rebuild switch --flake {{flake}}#$(hostname); \
     fi
 
 # build seul, pas d'activation
