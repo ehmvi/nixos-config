@@ -47,17 +47,7 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("wayle panel start")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("systemctl --user start hypridle")
-    -- grok et le terminal partent au login, tous les deux sur le
-    -- workspace 1. exec_cmd n'attend pas : l'appimage est plus lent
-    -- que wezterm, donc l'ordre n'est pas garanti. pas d'autostart
-    -- dans le paquet, on lance grok ici une seule fois. la classe
-    -- est grok-bot (StartupWMClass du .desktop).
-    hl.exec_cmd("grok-bot")
-    -- un seul terminal au login. ws1-term ne vise pas un wezterm
-    -- ouvert ensuite : celui-la reste sur le workspace courant.
-    -- fastfetch, puis un nushell. --always-new-process evite de
-    -- rejoindre une instance deja ouverte.
-    hl.exec_cmd("wezterm start --always-new-process --class ws1-term -- nu -e fastfetch")
+    -- seulement la session : aucune appli ne part au login, pas meme un terminal.
 end)
 
 
@@ -385,7 +375,7 @@ hl.window_rule({
 
 -- plan (games, et navi : ce fichier est partage). silent : la fenetre
 -- part sur le workspace sans y changer le focus.
--- 1 grok et le terminal de session, ordre non garanti. 2 t3 code.
+-- 1 grok. 2 t3 code.
 -- 3 rien. 4 brave. 5 social et fsa. 6 jeux. 7 lanceurs de jeux.
 -- 10 suivi.
 
@@ -393,14 +383,6 @@ hl.window_rule({
 hl.window_rule({
     name      = "assign-grok-workspace",
     match     = { class = "^(grok-bot)$" },
-    workspace = "1 silent",
-})
-
--- seule la classe du terminal de session. pas de regle sur wezterm :
--- un terminal ouvert ensuite n'est pas deplace.
-hl.window_rule({
-    name      = "assign-ws1-term-workspace",
-    match     = { class = "^(ws1-term)$" },
     workspace = "1 silent",
 })
 
