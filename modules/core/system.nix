@@ -53,6 +53,9 @@
     "kernel.nmi_watchdog" = 0;
   };
 
+  # 256 mo de journaux suffisent ici, le defaut monte a 4 go
+  services.journald.settings.Journal.SystemMaxUse = "256M";
+
   # mounts removable drives (usb sticks); not enabled outside plasma, so i enable it explicitly
   services.udisks2.enable = true;
 
