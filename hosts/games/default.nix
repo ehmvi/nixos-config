@@ -302,6 +302,12 @@ in
     binfmt = true;
   };
 
+  # nixpkgs marque ventoy "insecure" a cause de ses blobs binaires, quelle que
+  # soit la version (nixpkgs#404663). le filtre porte sur le nom : une liste
+  # permittedInsecurePackages casserait l'eval a chaque release. ce predicat
+  # remplace cette liste : elle serait ignoree ici.
+  nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "ventoy";
+
   system.stateVersion = "25.11";
   environment.systemPackages = [
     (pkgs.callPackage ../../pkgs/egctl.nix { })
@@ -316,6 +322,9 @@ in
     pkgs.obsidian
     # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
     pkgs.prismlauncher
+    # cles usb multiboot. ventoy en terminal, ventoy-web pour l'interface web
+    # sur localhost. les deux demandent root. unfree et insecure, voir plus haut.
+    pkgs.ventoy
     # t3 code nightly, a cote de la stable (modules/programs/apps.nix). donnees
     # separees dans ~/.t3-nightly, voir le paquet.
     (pkgs.callPackage ../../pkgs/t3code-nightly.nix { })
