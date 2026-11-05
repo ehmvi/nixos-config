@@ -57,9 +57,11 @@ bump input:
 update:
     nix flake update
     just bump-release pkgs/artcraft-launcher.nix
+    just bump-release pkgs/t3code-nightly.nix
 
 # passe un paquet de pkgs/ a la derniere release github : reecrit version et hash.
-# releases/latest ignore les pre-releases. rien n'est ecrit si le telechargement echoue.
+# releases/latest ignore les pre-releases : un paquet en version -nightly. prend
+# la derniere nightly de la liste. rien n'est ecrit si le telechargement echoue.
 bump-release file:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -70,13 +72,20 @@ bump-release file:
         exit 1
     fi
     repo=$(printf '%s\n' "$template" | cut -d/ -f4-5)
-    latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
+    current=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$file")
+    if [[ "$current" == *-nightly.* ]]; then
+        latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=30" | grep -oE '"tag_name": *"v[^"]*-nightly\.[^"]*"' | sed -n 1p | cut -d'"' -f4 || true)
+        pattern='^[0-9]+(\.[0-9]+)+-nightly\.[0-9]+\.[0-9]+$'
+    else
+        latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
+        pattern='^[0-9]+(\.[0-9]+)+$'
+    fi
     version=${latest##*/v}
-    if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+    version=${version#v}
+    if ! [[ "$version" =~ $pattern ]]; then
         echo "$repo : tag inattendu : $latest" >&2
         exit 1
     fi
-    current=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$file")
     if [ "$version" = "$current" ]; then
         echo "$file : deja en $version"
         exit 0
