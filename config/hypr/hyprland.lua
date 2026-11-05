@@ -218,6 +218,14 @@ hl.config({
     },
 })
 
+hl.config({
+    render = {
+        -- pas de bascule hdr auto au plein ecran : elle force un modeset,
+        -- donc environ 1s d'ecran noir en plein ecran sur youtube.
+        cm_auto_hdr = 0,
+    },
+})
+
 
 -- this section configures keyboard layout, mouse sensitivity, and touchpad behavior.
 -- the gesture entry below sets up a 3-finger swipe to switch workspaces.
