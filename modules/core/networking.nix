@@ -8,6 +8,9 @@
 
 {
   networking.networkmanager.enable = true;
+  # sddm n'attend pas le reseau. seuls tailscaled et graphical.target attendaient,
+  # 7,6 s sur games, et tailscaled retente tout seul : il demarre plus tot sans ca.
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   services.mullvad-vpn.enable = true;
   services.mullvad-vpn.gui.enable = true;
