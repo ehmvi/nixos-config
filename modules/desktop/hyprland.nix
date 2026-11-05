@@ -22,6 +22,10 @@
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.sddm.enableGnomeKeyring = true;
 
+  # synthese vocale active par defaut sur tout bureau nixos. personne ne l'utilise
+  # ici, et elle tire espeak et toutes les voix mbrola (700 mo de store).
+  services.speechd.enable = false;
+
   environment.systemPackages = with pkgs; [
     rofi
     brightnessctl
