@@ -122,6 +122,9 @@ in
       # t3 code : interface pour les agents. cask par preference, comme les autres apps graphiques.
       # attention : pas de reglage claude/codex ici, il utilise ce qu'il trouve dans le path.
       "t3-code"
+      # a cote de la beta, mais memes donnees (~/.t3/userdata) : une seule des deux
+      # ouverte a la fois, et la nightly y applique ses migrations. elle se met a jour seule.
+      "t3-code@nightly"
       # godot 4.5, jdk 17 et le sdk android : modules/programs/godot-android.nix
     ];
   };

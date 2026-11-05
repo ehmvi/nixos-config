@@ -316,6 +316,9 @@ in
     pkgs.obsidian
     # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
     pkgs.prismlauncher
+    # t3 code nightly, a cote de la stable (modules/programs/apps.nix). donnees
+    # separees dans ~/.t3-nightly, voir le paquet.
+    (pkgs.callPackage ../../pkgs/t3code-nightly.nix { })
     # lanceur de la suite craft (photocraft, filmcraft...). release linux officielle.
     (pkgs.callPackage ../../pkgs/artcraft-launcher.nix { })
     # daw. nixpkgs suit la derniere release upstream. unfree, donc hors du
