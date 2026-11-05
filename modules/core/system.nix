@@ -41,6 +41,18 @@
   # swap compressé en ram (zram) : filet de sécurité quand la ram est pleine, zéro écriture disque
   zramSwap.enable = true;
 
+  boot.kernel.sysctl = {
+    # zram relit une page en ram, bien plus vite qu'un fichier sur ssd : le noyau
+    # compresse d'abord ce qui dort et garde le cache disque. valeurs du wiki arch (zram).
+    "vm.swappiness" = 180;
+    # pas de lecture groupee : zram n'a aucun temps d'acces a economiser
+    "vm.page-cluster" = 0;
+    "vm.watermark_boost_factor" = 0;
+    "vm.watermark_scale_factor" = 125;
+    # le watchdog nmi reveille chaque coeur et occupe un compteur de perf, pour du debug noyau
+    "kernel.nmi_watchdog" = 0;
+  };
+
   # mounts removable drives (usb sticks); not enabled outside plasma, so i enable it explicitly
   services.udisks2.enable = true;
 
