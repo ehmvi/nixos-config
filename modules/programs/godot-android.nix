@@ -36,6 +36,8 @@ let
 
   androidComposition = androidEnv.composeAndroidPackages {
     inherit cmdLineToolsVersion platformToolsVersion;
+    # sdk tools 26.1.1 (2017) et son jdk 8 : godot 4.5 ne les appelle pas
+    toolsVersion = null;
     buildToolsVersions = [ buildToolsVersion ];
     platformVersions = [ platformVersion ];
     includeEmulator = false;
