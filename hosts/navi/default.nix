@@ -16,6 +16,9 @@
 
   networking.hostName = "navi";
 
+  # pas d'ecriture sur le ssd a chaque lecture
+  fileSystems."/".options = [ "noatime" ];
+
   fyrr.wayle.configFile = ../../config/wayle/config-navi.toml;
 
   # upower : etat de la batterie pour les autres programmes (module battery de wayle)
