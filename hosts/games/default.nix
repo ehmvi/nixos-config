@@ -71,6 +71,10 @@ in
 
   boot.kernelModules = [ "nct6775" ];
 
+  # fwupd : firmware via lvfs (ssd, peripheriques usb, parfois la carte mere).
+  # un timer rafraichit la liste lvfs. rien ne s'installe sans `fwupdmgr update`.
+  services.fwupd.enable = true;
+
   # compresse ce qui s'ecrit a partir de maintenant, sans lourdeur sur ce cpu (niveau 1).
   # btrfs saute seul ce qui se compresse mal (videos, modeles). une partie des jeux reste
   # compressee : lire 100 mo/s coute alors environ 7 % d'un coeur. une option de montage
