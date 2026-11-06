@@ -248,3 +248,9 @@ what keeps each host light, and why: [docs/resources.md](docs/resources.md).
   carry hand-written colour files instead of reading `theme.nix`.
 - **git history carries several author names.** the identity itself is declared
   in `config/git/config`, linked by hjem.
+- **no disk encryption.** navi is a laptop on plain ext4, games is btrfs without
+  luks. encrypting means reformatting: back up, reinstall on luks, then
+  `systemd-cryptenroll --tpm2-device=auto` for a passwordless unlock at boot.
+- **no declarative backups.** restic is only a package on sommei. a
+  `services.restic.backups` job needs a repository and its password as a sops
+  secret first.
