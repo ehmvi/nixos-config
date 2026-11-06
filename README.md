@@ -75,8 +75,9 @@ nixos-config/
 │   ├── shared/            # nix settings + sops age key (nixos and darwin)
 │   ├── core/              # boot, locale, nix daemon, zram, networking, users (no gui)
 │   ├── desktop/           # hyprland, sddm, audio, fonts, cursor, printing, hjem
-│   ├── hardware/          # intel, nvidia, bluetooth
-│   └── programs/          # cli, apps, office, gaming, spicetify, godot-android (sommei)
+│   ├── hardware/          # intel, nvidia, bluetooth, health, coolercontrol
+│   └── programs/          # cli, apps, office, gaming, spicetify, sunshine, ollama, godot-android (sommei)
+├── pkgs/                  # packages and scripts outside nixpkgs (sunshine-monitor, ...)
 └── config/                # native dotfiles (hyprland.lua, wayle, kitty, ...)
 ```
 
