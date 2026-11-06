@@ -51,7 +51,7 @@ or moonlight crashes, run `hyprctl reload` and
 **sommei** runs macos. nix-darwin handles the declarative system config, and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
 that nix handles poorly on mac. godot 4.5 and the android toolchain for a meta
-quest 3 export are nix packages; see [godot on sommei](#godot-on-sommei).
+quest 3 export are nix packages; see [docs/godot.md](docs/godot.md).
 Kopuz comes from its own flake, so `nix flake update` follows upstream while
 nixpkgs lags. nix-darwin links `Kopuz.app` into `/Applications/Nix Apps`.
 
@@ -66,7 +66,7 @@ nixos-config/
 ├── theme.nix              # colour palette, single source for the whole theme
 ├── treefmt.nix            # formatter config (nixfmt)
 ├── statix.toml            # linter exclusions
-├── docs/secrets.md        # sops-nix workflow, in French
+├── docs/                  # conventions, secrets (in French), gotchas, godot, resources
 ├── hosts/
 │   ├── navi/{default,hardware}.nix
 │   ├── games/{default,hardware}.nix
@@ -92,70 +92,7 @@ by `sommei`.
 
 ## godot on sommei
 
-`modules/programs/godot-android.nix` installs godot 4.5.1 (`pkgs.godot_4_5`,
-which nixpkgs provides for `aarch64-darwin`), jdk 17, and an android sdk from
-`androidenv.composeAndroidPackages`. on this platform `pkgs.jdk17` is the azul
-zulu 17 binary. the android sdk license is accepted with
-`androidenv.override { licenseAccepted = true; }` on that package set only.
-`nixpkgs.config.android_sdk.accept_license` is not set for the rest of the
-system.
-
-godot 4.5.1's `platform/android/java/app/config.gradle` pins ndk
-`28.1.13356709`, build-tools `35.0.0` and platform `android-35`. ndk
-`23.2.8568313` with build-tools 34 and `android-34` is the godot 4.4 set; a
-4.5 gradle export fails if that is all that is installed. platform-tools in
-this nixpkgs revision is `37.0.1` (godot asks for >= 35). cmdline-tools is
-`22.0`, the arm64 macos build, with `cmdline-tools/latest` linked to it.
-cmake is not installed. the 3.10.2 macos package is x86_64-only, and a 4.5
-template export does not call it. `includeCmake` defaults to true on darwin,
-so the module sets it to false.
-
-store paths change on each rebuild. nix-darwin `environment.etc` keeps two
-symlinks. paste them into godot, editor settings → export → android:
-
-| setting | path |
-|---|---|
-| java sdk path | `/etc/godot/jdk` |
-| android sdk path | `/etc/godot/android-sdk` |
-
-the ndk sits under the sdk path:
-`/etc/godot/android-sdk/ndk/28.1.13356709`. `adb` is
-`/etc/godot/android-sdk/platform-tools/adb` and is also on `PATH`.
-
-`JAVA_HOME`, `ANDROID_HOME` and `ANDROID_SDK_ROOT` are those same directories.
-fish, the login shell on sommei, reads `environment.variables` from
-`/etc/fish/nixos-env-preinit.fish`. godot itself does not take the export
-paths from the environment: the editor settings are the two `/etc/godot`
-paths above. nix-darwin already links the bundle into `/Applications/Nix Apps`
-(the package names it `GodotMono.app` even without mono).
-
-export templates are not managed. the editor rewrites
-`~/Library/Application Support/Godot/export_templates/4.5.1.stable`, same
-reason zen's `profiles.ini` is only seeded once. install them from the editor
-(manage export templates).
-
-quest 3 is an android device. use an android export preset with arm64 and
-deploy with `adb` after developer mode is on. no separate meta sdk is
-installed.
-
-on aarch64-darwin, `godot_4_5` crashes with the metal renderer: spirv-cross
-and moltenvk collide. launch with `--rendering-driver vulkan`, or set
-`rendering/rendering_device/driver.macos` to `vulkan` in the project settings.
-
-checked against the sdk zips this nixpkgs fetches, on aarch64-darwin:
-
-- `adb` and build-tools 35.0.0 are universal (x86_64 and arm64). they run
-  natively.
-- ndk r28b keeps its host tools in `toolchains/llvm/prebuilt/darwin-x86_64`.
-  the directory name is historical; the sampled `llvm-readobj` is universal,
-  so the compiler runs natively. rosetta is not required for the ndk.
-- cmdline-tools 22.0 is the macos arm64 archive.
-- `composeAndroidPackages` links the obsolete sdk tools 26.1.1 package by
-  default (2017, wrapped with jdk 8). godot 4.5 does not call them, so the
-  module sets `toolsVersion = null` to keep both out of the closure.
-
-`just check` evaluates the darwin configuration and does not build it.
-godot 4.5.1 is substituted from the binary cache. it is not compiled on the mac.
+godot, jdk 17 and the android sdk for the quest 3 export, all from nix: [docs/godot.md](docs/godot.md).
 
 ## flake inputs
 
@@ -279,64 +216,7 @@ a fresh install brings back the config, not this. redo it by hand:
 
 ## gotchas
 
-**nix and flakes**
-
-- **flakes only see git-tracked files.** after creating a file, `git add` before
-  rebuilding, or nix fails with `Path '...' does not exist in the Git repository`.
-- **read nix errors from the bottom.** look for `Failed assertions:` or the last
-  `error:`; everything above is the evaluation trace.
-- **`permittedInsecurePackages` pins an exact version** and silently stops
-  applying at the next bump.
-- **deadnix flags unused arguments** (`{ pkgs, lib, ... }:`). removing the last
-  use of `lib` or `inputs` means removing it from the header too.
-- **bootstrapping a tool that drives rebuilds** is circular: adding `just` to a
-  host's packages does nothing until a rebuild has run. break the loop once with
-  `nix run nixpkgs#just -- switch`.
-
-**dotfiles (hjem)**
-
-- **hjem links point into the nix store**, not into the live repo. editing a
-  dotfile and reloading the tool is not enough; the change lands after a rebuild.
-  `hyprctl reload` then re-runs `hyprland.lua` from `~/.config/hypr/hyprland.lua`,
-  including its `dofile` of `matugen-colors.lua`. a logout is not required.
-- **hjem links files, not directories**, so it does not clobber things like
-  fish's `conf.d/` or `functions/`.
-- **never declare a file the app rewrites itself.** the app replaces the symlink
-  with a real file and the next rebuild conflicts with it. seen with zen's
-  `profiles.ini` (seeded once by an activation script on `sommei`) and wayle's
-  `runtime.toml` (left to wayle, only `config.toml` is declared).
-
-**desktop**
-
-- **hyprland ignores `services.xserver.xkb`.** the session keyboard lives in
-  `hyprland.lua`; the xkb option only covers sddm.
-- **keybinds on digits use keycodes** (`code:10` … `code:19`). on azerty the
-  unshifted top row is `& é " ...`, so `mainMod + 1` would never fire.
-- **the nixos hyprland wrapper grants `cap_sys_nice`**, which puts glibc in
-  secure mode: it strips `TZDIR` (and makes the process unreadable in `/proc`).
-  `hyprland.lua` sets `TZDIR` back, otherwise every app falls back to utc.
-- **hyprland ships no polkit agent.** `hyprpolkitagent` is exposed through
-  `systemd.packages` and started from `hyprland.lua`, since
-  `graphical-session.target` is never reached here.
-- **`TAG+="uaccess"` udev rules must sort before `73-seat-late.rules`.**
-  `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
-  rules ship as `70-gaming.rules` through `services.udev.packages`.
-- **workspaces are assigned in `hyprland.lua`**, the same file on navi
-  and games. no app starts with the session. 1 is grok bot. a terminal
-  stays on the current workspace. 2 is empty, for windows a demo opens from code. 3 is
-  brave. 4 is steam games (`steam_app_<id>`), gamescope, and the
-  steam and lutris windows. 5 is vesktop, equibop, signal and fsa. 6 is
-  bottom and nvtop, each launched with its own class, and coolercontrol.
-  gajim no longer has a reserved workspace. the old workspace 3
-  chat grid is gone.
-- **`pkexec` is not setuid by default** on current nixos
-  (`security.polkit.enablePkexecWrapper`). use `sudo`.
-
-**darwin**
-
-- **`homebrew.onActivation.cleanup = "uninstall"`** removes any cask that is not
-  in the declared list. brew now prints a deprecation warning for the underlying
-  flag.
+nix, hjem, desktop and darwin pitfalls met in this repo: [docs/gotchas.md](docs/gotchas.md).
 
 ## system
 
@@ -357,18 +237,7 @@ a fresh install brings back the config, not this. redo it by hand:
 
 ## resources
 
-hardware is expensive, so the config stays light without giving up an app:
-
-| host | what keeps it light |
-|---|---|
-| all nixos | no app started at login, zram tuning, 256 mb journal, nix at idle cpu priority, no speech-dispatcher service or voices (734 mb on `games`), no wait for the network at boot, wayle cpu module polled every 5 s, no cursor fade in wezterm, no shell spawned by the hyprlock clock |
-| `games` | btrfs `compress=zstd:1` + `noatime`, coolercontrol polled every 3 s, ollama unloads its model after 2 min, no split lock penalty in games |
-| `sommei` | no sdk tools or jdk 8, zen saves its session every 60 s |
-| `navi` | gpu video decoding in mpv, `noatime` |
-
-btrfs only compresses what gets written after the switch, so the store shrinks
-as updates replace it. rewriting it all at once would cost as many ssd writes as
-the store is big, for a gain that comes anyway.
+what keeps each host light, and why: [docs/resources.md](docs/resources.md).
 
 ## known gaps
 
