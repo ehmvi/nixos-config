@@ -83,6 +83,15 @@ in
     "compress=zstd:1"
     "noatime"
   ];
+  # scrub mensuel : relit chaque bloc et verifie sa somme de controle, seul moyen
+  # de voir une corruption silencieuse. / et /home sont le meme volume, un seul
+  # scrub couvre les deux. le trim hebdomadaire est deja actif (fstrim par defaut).
+  # le module le lance en cpu idle. sa priorite d'e/s ne compte pas en ordonnanceur
+  # none : un scrub pendant un jeu peut ralentir ses chargements, quelques minutes.
+  services.btrfs.autoScrub = {
+    enable = true;
+    fileSystems = [ "/" ];
+  };
 
   # artcraft launcher installe les apps en appimage dans ~/Applications et les
   # lance directement. binfmt les fait passer par appimage-run : sans lui, nixos
