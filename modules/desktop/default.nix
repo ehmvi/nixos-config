@@ -10,6 +10,7 @@
     ./fonts.nix
     ./cursor.nix
     ./printing.nix
+    ./options.nix
     ./hjem.nix
   ];
 }

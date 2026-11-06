@@ -2,7 +2,6 @@
 # declarative dotfiles for the main user (username, symlinks via hjem)
 {
   config,
-  lib,
   pkgs,
   theme,
   username,
@@ -150,46 +149,39 @@ let
   '';
 in
 {
-  options.fyrr.wayle.configFile = lib.mkOption {
-    type = lib.types.path;
-    description = "config.toml de wayle propre au host (runtime.toml reste inscriptible par wayle)";
-  };
+  hjem.users.${username} = {
+    files = {
+      ".config/hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
+      ".config/hypr/hypr-theme.lua".source = hyprThemeLua;
+      ".config/hypr/hyprlock.conf".source = hyprlockConf;
+      ".config/hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
+      ".config/hypr/wallpaper.png".source = desktopWallpaper;
 
-  config = {
-    hjem.users.${username} = {
-      files = {
-        ".config/hypr/hyprland.lua".source = ../../config/hypr/hyprland.lua;
-        ".config/hypr/hypr-theme.lua".source = hyprThemeLua;
-        ".config/hypr/hyprlock.conf".source = hyprlockConf;
-        ".config/hypr/hypridle.conf".source = ../../config/hypr/hypridle.conf;
-        ".config/hypr/wallpaper.png".source = desktopWallpaper;
+      ".config/matugen/config.toml".source = ../../config/matugen/config.toml;
+      ".config/matugen/templates/hypr-colors.lua".source = ../../config/matugen/hypr-colors.lua;
+      ".config/matugen/templates/rofi-colors.rasi".source = ../../config/matugen/rofi-colors.rasi;
+      ".config/matugen/templates/vesktop-colors.css".source = ../../config/matugen/vesktop-colors.css;
 
-        ".config/matugen/config.toml".source = ../../config/matugen/config.toml;
-        ".config/matugen/templates/hypr-colors.lua".source = ../../config/matugen/hypr-colors.lua;
-        ".config/matugen/templates/rofi-colors.rasi".source = ../../config/matugen/rofi-colors.rasi;
-        ".config/matugen/templates/vesktop-colors.css".source = ../../config/matugen/vesktop-colors.css;
+      # theme vesktop. ramiel-colors.theme.css reste hors de hjem : matugen le reecrit
+      ".config/vesktop/themes/ramiel.theme.css".source = ../../config/vesktop/ramiel.theme.css;
 
-        # theme vesktop. ramiel-colors.theme.css reste hors de hjem : matugen le reecrit
-        ".config/vesktop/themes/ramiel.theme.css".source = ../../config/vesktop/ramiel.theme.css;
+      ".config/wezterm/wezterm.lua".source = weztermLua;
 
-        ".config/wezterm/wezterm.lua".source = weztermLua;
+      ".config/fastfetch/config.jsonc".source = ../../config/fastfetch/config.jsonc;
 
-        ".config/fastfetch/config.jsonc".source = ../../config/fastfetch/config.jsonc;
+      ".config/nushell/config.nu".source = ../../config/nushell/config.nu;
+      ".config/nushell/env.nu".source = ../../config/nushell/env.nu;
 
-        ".config/nushell/config.nu".source = ../../config/nushell/config.nu;
-        ".config/nushell/env.nu".source = ../../config/nushell/env.nu;
+      ".config/starship.toml".source = ../../config/starship/starship.toml;
 
-        ".config/starship.toml".source = ../../config/starship/starship.toml;
+      ".config/wayle/tombi.toml".source = ../../config/wayle/tombi.toml;
+      ".config/wayle/config.toml".source = wayleConfig;
+      ".config/wayle/schema.json".source = ../../config/wayle/schema.json;
 
-        ".config/wayle/tombi.toml".source = ../../config/wayle/tombi.toml;
-        ".config/wayle/config.toml".source = wayleConfig;
-        ".config/wayle/schema.json".source = ../../config/wayle/schema.json;
+      ".config/git/config".source = ../../config/git/config;
 
-        ".config/git/config".source = ../../config/git/config;
-
-        ".config/rofi/config.rasi".source = ../../config/rofi/config.rasi;
-        ".config/rofi/ayu-dark.rasi".source = ../../config/rofi/ayu-dark.rasi;
-      };
+      ".config/rofi/config.rasi".source = ../../config/rofi/config.rasi;
+      ".config/rofi/ayu-dark.rasi".source = ../../config/rofi/ayu-dark.rasi;
     };
   };
 }
