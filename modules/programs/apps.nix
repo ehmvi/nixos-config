@@ -34,6 +34,9 @@
         patches = (old.patches or [ ]) ++ [ ../../pkgs/t3code-symlinked-workspace-images.patch ];
       });
     })
+    # mistral vibe : agent de code, fournit vibe et vibe-acp (que t3 code lance
+    # via le registre acp). connexion par navigateur = forfait mistral, pas de cle api.
+    mistral-vibe
     kdePackages.kate
     kdePackages.qttools
     kdePackages.kdenlive
