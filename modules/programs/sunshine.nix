@@ -13,6 +13,9 @@ let
   };
 in
 {
+  # sunshine-monitor pilote hyprland : le module importe ce dont il depend
+  imports = [ ../desktop/hyprland.nix ];
+
   # stream du bureau vers le mac (moonlight), seulement via tailscale.
   # openFirewall reste faux : le module ouvrirait aussi le tcp 47990 et
   # l'udp 48002 et 48010, sur toutes les interfaces.
