@@ -311,6 +311,22 @@
         "type": "github"
       }
     },
+    "ramiel": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794427623,
+        "narHash": "sha256-nL1XTPQ7hSpG2u4C+v53ZD3X9/L2C+ouEzVs2qdFcbU=",
+        "ref": "refs/heads/main",
+        "rev": "e53b92b0efada7661bec215dcd0e3f78e30da707",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/ehmvi/ramiel"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/ehmvi/ramiel"
+      }
+    },
     "root": {
       "inputs": {
         "fsa": "fsa",
@@ -321,6 +337,7 @@
         "nix-darwin": "nix-darwin",
         "nix-homebrew": "nix-homebrew",
         "nixpkgs": "nixpkgs_3",
+        "ramiel": "ramiel",
         "sops-nix": "sops-nix",
         "spicetify-nix": "spicetify-nix",
         "treefmt-nix": "treefmt-nix"

@@ -2,6 +2,7 @@
 # declarative dotfiles for the main user (username, symlinks via hjem)
 {
   config,
+  inputs,
   lib,
   pkgs,
   theme,
@@ -51,6 +52,9 @@ let
       blue = "${theme.palette.blue}"
     ''
   );
+
+  # themes discord : depot prive ehmvi/ramiel (entree flake), un fichier par variante
+  ramielThemes = builtins.mapAttrs pkgs.writeText (import "${inputs.ramiel}/themes.nix");
 
   # hyprlock.conf généré depuis theme.nix — plus de couleurs en dur
   hyprlockConf = pkgs.writeText "hyprlock.conf" ''
@@ -183,10 +187,18 @@ in
       ".config/matugen/config.toml".source = ../../config/matugen/config.toml;
       ".config/matugen/templates/hypr-colors.lua".source = ../../config/matugen/hypr-colors.lua;
       ".config/matugen/templates/rofi-colors.rasi".source = ../../config/matugen/rofi-colors.rasi;
-      ".config/matugen/templates/vesktop-colors.css".source = ../../config/matugen/vesktop-colors.css;
+      ".config/matugen/templates/vesktop-colors.css".source =
+        "${inputs.ramiel}/matugen/ramiel-colors.css";
 
       # theme vesktop. ramiel-colors.theme.css reste hors de hjem : matugen le reecrit
-      ".config/vesktop/themes/ramiel.theme.css".source = ../../config/vesktop/ramiel.theme.css;
+      ".config/vesktop/themes/ramiel.theme.css".source = ramielThemes."ramiel.theme.css";
+
+      # theme equibop : ramiel en orange fige pour distinguer les deux clients
+      # (pas de matugen ici, voulu). clobber : remplace une copie posee a la main
+      ".config/equibop/themes/ramiel-orange.theme.css" = {
+        source = ramielThemes."ramiel-orange.theme.css";
+        clobber = true;
+      };
 
       ".config/wezterm/wezterm.lua".source = weztermLua;
 

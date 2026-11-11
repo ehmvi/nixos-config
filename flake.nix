@@ -42,6 +42,13 @@
       url = "github:ehmvi/fsa";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # theme discord ramiel (vesktop + equibop). depot prive : git+ssh avec la cle
+    # de paul. `nix flake update ramiel` en tant que paul (pas sudo) : root retrouve
+    # ensuite la source dans le store grace au narHash du verrou, sans cle ssh.
+    ramiel = {
+      url = "git+ssh://git@github.com/ehmvi/ramiel";
+      flake = false;
+    };
   };
 
   outputs =
