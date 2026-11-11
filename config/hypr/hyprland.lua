@@ -235,8 +235,9 @@ hl.config({
 
 hl.config({
     input = {
-        kb_layout = hostname == "games" and "us" or "us,fr", -- games : qwerty seul. navi : qwerty + azerty, alt+shift pour basculer
-        kb_variant = "",
+        -- qwerty-fr (modules/desktop/sddm.nix) : qwerty us + accents sur altgr (alt droit)
+        kb_layout = hostname == "games" and "us_qwerty-fr" or "us_qwerty-fr,fr", -- games : qwerty-fr seul. navi : qwerty-fr + azerty, alt+shift pour basculer
+        kb_variant = hostname == "games" and "qwerty-fr" or "qwerty-fr,",
         kb_model   = "",
         kb_options = hostname == "games" and "caps:super" or "grp:alt_shift_toggle", -- games : caps lock devient super (clavier 60%). navi : alt+shift bascule la disposition
         kb_rules   = "",
