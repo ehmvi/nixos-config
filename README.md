@@ -63,7 +63,7 @@ nixos-config/
 ├── flake.lock
 ├── .sops.yaml             # sops-nix age recipients (placeholders) + creation rules
 ├── justfile               # task runner: switch, build, fmt, lint, check, update
-├── theme.nix              # colour palette, single source for the whole theme
+├── theme.nix              # colour palettes + `render`, single source for the whole theme
 ├── treefmt.nix            # formatter config (nixfmt)
 ├── statix.toml            # linter exclusions
 ├── docs/                  # conventions, secrets (in French), gotchas, godot, resources
@@ -74,11 +74,11 @@ nixos-config/
 ├── modules/
 │   ├── shared/            # nix settings + sops age key (nixos and darwin)
 │   ├── core/              # boot, locale, nix daemon, zram, networking, users (no gui)
-│   ├── desktop/           # hyprland, sddm, audio, fonts, cursor, printing, hjem
+│   ├── desktop/           # hyprland, sddm, audio, fonts, theming (gtk, qt, cursor), printing, hjem
 │   ├── hardware/          # intel, nvidia, bluetooth, health, coolercontrol
 │   └── programs/          # cli, apps, office, gaming, spicetify, sunshine, ollama, godot-android (sommei)
 ├── pkgs/                  # packages and scripts outside nixpkgs (sunshine-monitor, ...)
-└── config/                # native dotfiles (hyprland.lua, wayle, kitty, ...)
+└── config/                # native dotfiles (hyprland.lua, wayle, gtk, kde, ...)
 ```
 
 modules are opt-in: each host imports only what it needs, and a module imports
@@ -114,15 +114,91 @@ the player locally. sops-nix follows `nixpkgs`.
 
 ## theming
 
-`theme.nix` sits at the repo root and holds two palettes, `blood` (default) and
-`copland` — a serial experiments lain reference. a single `variant` string picks
-one. both palettes expose the same 26 semantic keys (catppuccin convention) plus
-the 16 ansi colours, so any consumer that interpolates `theme.palette.<key>`
-rethemes automatically.
+the whole desktop follows **ramiel**: dark green-black surfaces, a teal accent,
+muted text that brightens on hover, square corners, 2px borders and
+JetBrainsMono Nerd Font in a light weight, in a tui style. the reference
+implementations are the vesktop theme (`config/vesktop/ramiel.theme.css`), the
+obsidian vault theme and kopuz's custom theme. the red-orange of the angel's
+core (`#e8502a`) is the only warm colour, and stays rare: errors, destructive
+actions, mentions, dnd. amber (`#d9c27a`) is the second off-palette colour
+(warnings, idle).
 
-the file is imported once in `flake.nix` and threaded to every host through
-`specialArgs` as `theme`. `wezterm.lua`, `hyprlock.conf` and `hypr-theme.lua`
-(hyprland border colours) are generated from it with `pkgs.writeText`.
+### palette: `theme.nix`
+
+`theme.nix` sits at the repo root and holds three palettes: `ramiel`
+(default), `blood` and `copland` (a serial experiments lain reference). a
+single `variant` string picks one. every palette exposes the same 26 semantic
+keys (catppuccin convention) plus the 16 ansi colours, so any consumer that
+interpolates `theme.palette.<key>` rethemes automatically. `ramiel` is
+matugen's output on the pinned `Ramiel-wall.png` (dark scheme, tonal-spot),
+plus the core and amber accents. the roles: `base`/`mantle`/`surface0..2`
+are the matugen surfaces, `text` is on_surface, `subtext1` is the body text,
+`subtext0` is the outline, `mauve` (the accent slot) and `green` are primary,
+`teal` is primary fixed, `blue` is tertiary, `lavender` is secondary, `red` is
+the core, `maroon` is matugen's error, and `yellow` is amber.
+
+the file is imported once in `flake.nix` and passed to every host through
+`specialArgs` as `theme`. two ways to consume it:
+
+- **inline nix**: `wezterm.lua`, `hyprlock.conf`, `hypr-theme.lua` (border
+  fallback) and the wayle `[styling]` section are written in
+  `modules/desktop/hjem.nix`; the spotify colour scheme in
+  `modules/programs/spicetify.nix`.
+- **native files with markers**: `theme.render <file>` reads a file from
+  `config/` and fills `@key@` (`#rrggbb`), `@key.hex@` (`rrggbb`),
+  `@key.rgb@` (`r,g,b`) and `@variant@`. keys are the 26 palette keys,
+  `accent` and `ansi0`..`ansi15`. used for starship, fastfetch, rofi, btm,
+  the zed theme, `gtk.css` and kdeglobals. the file stays readable as is.
+
+### two layers, one owner each
+
+| layer | when | owns |
+|---|---|---|
+| `theme.nix` | build time | everything static, below |
+| matugen | runtime, driven by wayle on the wallpaper | hyprland borders, rofi colours, vesktop `--m-*` vars, wayle bar palette |
+
+matugen only runs when the variant is dynamic (`theme.dynamic`, true for
+`ramiel`). wayle then uses `theme-provider = "matugen"`, `hyprland.lua` prefers
+`matugen-colors.lua` and rofi imports `matugen-colors.rasi`. since `ramiel`
+is matugen's own output for the pinned wallpaper, both layers agree; they only
+diverge if the wallpaper changes. with `blood` or `copland`, wayle keeps its
+static palette and the matugen files, even stale ones, are ignored.
+
+| app | colours come from |
+|---|---|
+| hyprland borders | matugen (`matugen-colors.lua`), fallback `hypr-theme.lua` |
+| wayle bar | `[styling]` generated in `hjem.nix`, then matugen at runtime. square buttons and popovers |
+| rofi | `config/rofi/config.rasi` (rendered), then `matugen-colors.rasi` |
+| wezterm, hyprlock | generated in `hjem.nix` |
+| starship, fastfetch | `config/starship/starship.toml`, `config/fastfetch/config.jsonc` (rendered; starship on sommei too) |
+| btm (games) | `[styles]` in `config/bottom/bottom.toml` (rendered) |
+| zed | `config/zed/theme.json` → `~/.config/zed/themes/theme-nix.json`, theme name `theme.nix` |
+| gtk 3 / 4 | `adw-gtk3-dark` + libadwaita, recoloured by `config/gtk/gtk.css` (+ `gtk4.css`); dconf sets `prefer-dark`, the theme, icons, cursor and fonts (`modules/desktop/theming.nix`) |
+| electron, brave, libadwaita dark mode | `color-scheme = prefer-dark` through xdg-desktop-portal-gtk |
+| qt / kde (dolphin, kate, ark, kdenlive…) | `qt.platformTheme = "kde"` + breeze style, colours/fonts/icons/terminal from `config/kde/kdeglobals`, installed as `/etc/xdg/kdeglobals` |
+| spotify (games) | `config/spicetify/ramiel/user.css` (structure only) + `customColorScheme` from `theme.nix` |
+| vesktop | `ramiel.theme.css` + matugen's `ramiel-colors.theme.css` |
+| obsidian, kopuz | their own ramiel theme, outside this repo (vault theme, kopuz settings) |
+
+kdeglobals goes in `/etc/xdg` and gtk settings in the system dconf database on
+purpose: kde apps rewrite `~/.config/kdeglobals` (file dialog state), and a
+hjem link there would break. user-level values still win, key by key.
+
+### fonts
+
+JetBrainsMono Nerd Font is the interface font everywhere (gtk, qt, rofi,
+terminals, vesktop, obsidian). fontconfig defaults: monospace = JetBrainsMono
+Nerd Font, sans-serif = Inter (web pages and documents only), serif = DejaVu,
+emoji = Noto Color Emoji. Noto CJK covers japanese.
+
+### one-time steps in app uis
+
+these settings live in files the apps rewrite, so hjem cannot set them:
+
+- zed: `theme selector: toggle` → `theme.nix`
+- brave: appearance → theme `GTK` or `Classic`, mode `Device`
+- signal, bitwarden, obsidian: theme `System` (follows `prefer-dark`)
+- onlyoffice: interface theme `Dark`; mumble: theme `Dark`
 
 ## daily workflow
 
@@ -244,8 +320,10 @@ what keeps each host light, and why: [docs/resources.md](docs/resources.md).
 - **sops-nix is the chosen secrets approach.** it is wired on all three hosts, but no secret is defined yet. age recipients in `.sops.yaml` are still placeholders. workflow: `docs/secrets.md`.
 - **`just check` evaluates the hosts but does not build them**: a wrong option
   or a typo fails, a package that fails to compile still passes.
-- **theming is only half declarative.** kitty, rofi, spicetify and wayle still
-  carry hand-written colour files instead of reading `theme.nix`.
+- **a few theme pieces stay outside `theme.nix`.** kitty (sommei only) keeps
+  its own eva24 file. the obsidian and kopuz ramiel themes live in the vault and
+  in kopuz's settings. vesktop's fallback colours are hand-written, and matugen
+  overrides them anyway. breeze (qt) keeps its small rounded corners.
 - **git history carries several author names.** the identity itself is declared
   in `config/git/config`, linked by hjem.
 - **no disk encryption.** navi is a laptop on plain ext4, games is btrfs without

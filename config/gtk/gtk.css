@@ -1,0 +1,56 @@
+/* gtk : couleurs de theme.nix, les @cle@ sont remplis par theme.render.
+   gtk3 passe par adw-gtk3, gtk4 par libadwaita : les deux lisent ces
+   couleurs nommees. lie dans gtk-3.0/ et gtk-4.0/ par modules/desktop/theming.nix */
+
+/* accent et etats. le rouge (core) reste aux actions destructrices et aux erreurs */
+@define-color accent_color @accent@;
+@define-color accent_bg_color @accent@;
+@define-color accent_fg_color @crust@;
+@define-color destructive_color @red@;
+@define-color destructive_bg_color @red@;
+@define-color destructive_fg_color @crust@;
+@define-color success_color @green@;
+@define-color success_bg_color @green@;
+@define-color success_fg_color @crust@;
+@define-color warning_color @yellow@;
+@define-color warning_bg_color @yellow@;
+@define-color warning_fg_color @crust@;
+@define-color error_color @red@;
+@define-color error_bg_color @red@;
+@define-color error_fg_color @crust@;
+
+/* surfaces : un seul fond, comme system24. texte courant sourd, titres vifs */
+@define-color window_bg_color @base@;
+@define-color window_fg_color @text@;
+@define-color view_bg_color @base@;
+@define-color view_fg_color @subtext1@;
+@define-color headerbar_bg_color @base@;
+@define-color headerbar_fg_color @text@;
+@define-color headerbar_border_color @surface0@;
+@define-color headerbar_backdrop_color @base@;
+@define-color headerbar_shade_color @crust@;
+@define-color sidebar_bg_color @mantle@;
+@define-color sidebar_fg_color @subtext1@;
+@define-color sidebar_backdrop_color @mantle@;
+@define-color sidebar_shade_color @crust@;
+@define-color card_bg_color @surface0@;
+@define-color card_fg_color @text@;
+@define-color card_shade_color @crust@;
+@define-color dialog_bg_color @surface0@;
+@define-color dialog_fg_color @text@;
+@define-color popover_bg_color @surface0@;
+@define-color popover_fg_color @text@;
+@define-color popover_shade_color @crust@;
+@define-color thumbnail_bg_color @surface0@;
+@define-color thumbnail_fg_color @text@;
+@define-color shade_color @crust@;
+@define-color scrollbar_outline_color @crust@;
+
+/* tui : coins carres partout. les boutons radio restent ronds,
+   sinon on ne les distingue plus des cases a cocher */
+* {
+    border-radius: 0;
+}
+radio {
+    border-radius: 9999px;
+}

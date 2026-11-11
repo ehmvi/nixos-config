@@ -31,41 +31,30 @@ right = [
     "notifications",
 ]
 
-[styling.palette]
-bg = "#0b0e14"
-surface = "#1a1b26"
-elevated = "#202230"
-fg = "#c0caf5"
-fg-muted = "#a9b1d6"
-primary = "#ff8f40"
-red = "#f7768e"
-yellow = "#e0af68"
-green = "#9ece6a"
-blue = "#7dcfff"
-
 [modules.battery]
 border-show = true
-border-color = "status-info"
-icon-bg-color = "status-info"
-label-color = "status-info"
+border-color = "accent"
+icon-bg-color = "accent"
+icon-color = "bg-base"
+label-color = "accent"
 button-bg-color = "bg-base"
 
 [modules.clock]
 border-show = true
-border-color = "#d2a6ff"
-icon-color = "#0b0e14"
-icon-bg-color = "#d2a6ff"
-label-color = "#d2a6ff"
+border-color = "accent"
+icon-color = "bg-base"
+icon-bg-color = "accent"
+label-color = "accent"
 button-bg-color = "bg-base"
 dropdown-show-seconds = true
 
 [modules.cpu]
 poll-interval-ms = 5000
 border-show = true
-border-color = "#d2a6ff"
+border-color = "accent"
 icon-color = "bg-base"
-icon-bg-color = "#d2a6ff"
-label-color = "#d2a6ff"
+icon-bg-color = "accent"
+label-color = "accent"
 button-bg-color = "bg-base"
 
 [modules.dashboard]
@@ -77,17 +66,17 @@ icon-bg-color = "bg-base"
 [modules.hyprland-workspaces]
 min-workspace-count = 3
 active-indicator = "underline"
-active-color = "#d2a6ff"
-occupied-color = "status-error-hover"
+active-color = "accent"
+occupied-color = "fg-muted"
 container-bg-color = "bg-base"
 border-show = true
 border-color = "fg-muted"
 
 [modules.network]
 border-show = true
-border-color = "#d2a6ff"
-icon-bg-color = "#d2a6ff"
-label-color = "#d2a6ff"
+border-color = "accent"
+icon-bg-color = "accent"
+label-color = "accent"
 button-bg-color = "bg-base"
 
 [modules.notification]
@@ -120,7 +109,12 @@ button-bg-color = "bg-base"
 location = "Dijon"
 
 [wallpaper]
-engine-enabled = false
+engine-enabled = true
 transition-type = "none"
 cycling-interval-mins = 1440
 cycling-same-image = true
+
+[[wallpaper.monitors]]
+name = "eDP-1"
+wallpaper = "/home/paul/.config/hypr/wallpaper.png"
+fit-mode = "fill"

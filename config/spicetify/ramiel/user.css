@@ -1,62 +1,42 @@
 /**
- * eva24 — theme spicetify par fyrr
- * style tui (terminal) sur la palette eva24, pendant spotify de eva24/system24 discord.
+ * ramiel — theme spicetify par fyrr
+ * style tui (terminal), pendant spotify de ramiel (vesktop, obsidian).
  *
- * deux blocs :
- *   1. user settings (:root)  -> tes reglages, modifiables sans toucher au reste
- *   2. application du theme    -> regles css qui consomment --spice-* et les variables ci-dessous
- *
- * note : spicetify convertit chaque cle de color.ini en variable --spice-<cle>.
- *        ex : main = 1a1a1a  ->  var(--spice-main)
+ * aucune couleur ici : spicetify fait de chaque cle du color.ini une
+ * variable --spice-<cle>, et ce color.ini est genere depuis theme.nix
+ * (customColorScheme dans modules/programs/spicetify.nix).
  */
 
 /* ============================================================
-   1. user settings — a ajuster a ta guise
+   1. reglages
    ============================================================ */
 :root {
-    /* police mono, comme ton theme discord (DM Mono) */
-    --font-family: "DM Mono", "JetBrains Mono", monospace;
+    /* police : jetbrains mono nerd font, legere, comme ramiel */
+    --font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
     --font-size: 14px;
     --font-weight: 300;
     --line-height: 1.3;
     --letter-spacing: -0.05ch;
 
-    /* bordures tui : coins carres, trait fin */
+    /* bordures tui : coins carres, 2px comme border_size dans hyprland */
     --border-radius: 0px;
-    --border-width: 1px;
-    --border-style: solid; /* dotted | dashed | solid | double */
-    --border-color: #b487d526; /* violet eva01 tres discret, comme ton zed */
-    --border-color-hover: #b487d5; /* violet plein au survol */
+    --border-width: 2px;
+    --border-style: solid;
     --border-transition: 0.2s ease;
-
-    /* accents (rappel palette eva24) */
-    --eva-purple: #b487d5; /* eva01 — accent principal */
-    --eva-purple-light: #c9a0e3;
-    --eva-blue: #81bbeb; /* rei — liens */
-    --eva-cyan: #9ccfd8; /* foam — succes / online */
-    --eva-gold: #f6c177; /* gold — warning / idle */
-    --eva-red: #eb6f92; /* love — erreur / dnd */
-    --eva-asuka: #e6122b; /* rouge vif — hover bouton lecture */
-    --eva-text: #d4d0ea;
-    --eva-text-bright: #e0def4;
-    --eva-muted: #6e6a86;
 }
 
 /* ============================================================
    neutraliser le vert de marque spotify
    ------------------------------------------------------------
    spotify pose son vert (#1ed760 / #1db954) via ses propres
-   variables globales. on les reecrit vers l accent eva24 pour
-   que les boutons (play liked songs, etc.) suivent le theme.
+   variables globales. on les reecrit vers l accent.
    ============================================================ */
 :root {
-    --spice-button: #b487d5;
-    --spice-button-active: #b487d5;
-    --spice-green: #b487d5;
-    --green: #b487d5;
-    --essential-bright-accent: #b487d5;
-    --background-base-press: #b487d5;
-    --text-bright-accent: #b487d5;
+    --spice-green: var(--spice-accent);
+    --green: var(--spice-accent);
+    --essential-bright-accent: var(--spice-accent);
+    --background-base-press: var(--spice-accent);
+    --text-bright-accent: var(--spice-accent);
 }
 
 /* ============================================================
@@ -82,12 +62,13 @@ body {
     border-radius: var(--border-radius) !important;
 }
 
-/* --- bordures sur les grands conteneurs (effet "fenetres terminal") --- */
+/* --- bordures sur les grands conteneurs (effet "fenetres terminal") :
+       sourdes au repos, accent au survol, comme hyprland --- */
 .Root__nav-bar,
 .Root__main-view,
 .Root__right-sidebar,
 .Root__now-playing-bar {
-    border: var(--border-width) var(--border-style) var(--border-color);
+    border: var(--border-width) var(--border-style) var(--spice-border);
     transition: border-color var(--border-transition);
 }
 
@@ -95,39 +76,39 @@ body {
 .Root__main-view:hover,
 .Root__right-sidebar:hover,
 .Root__now-playing-bar:hover {
-    border-color: var(--border-color-hover);
+    border-color: var(--spice-accent);
 }
 
 /* --- texte --- */
-/* titres et en-tetes : teinte claire eva24 */
+/* titres : texte vif */
 h1,
 h2,
 h3,
 h4,
 .main-entityHeader-title,
 .main-shelf-title {
-    color: var(--eva-text-bright) !important;
+    color: var(--spice-heading) !important;
 }
 
-/* liens en bleu rei */
+/* liens : accent clair */
 a {
-    color: var(--eva-blue) !important;
+    color: var(--spice-link) !important;
 }
 a:hover {
-    color: var(--eva-purple-light) !important;
+    color: var(--spice-accent) !important;
 }
 
 /* ============================================================
    boutons de lecture
    ------------------------------------------------------------
    un seul bloc gere tous les boutons play/pause (entete de
-   playlist, liked songs, cartes). repos = violet eva01,
-   survol = rouge asuka. on cible par classe ET par la valeur
-   verte que spotify injecte en inline, pour attraper liked
-   songs dont le vert vient de la cover.
+   playlist, liked songs, cartes). repos = accent, survol =
+   accent clair. on cible par classe ET par la valeur verte
+   que spotify injecte en inline, pour attraper liked songs
+   dont le vert vient de la cover.
    ============================================================ */
 
-/* repos : violet eva01 */
+/* repos : accent */
 .main-playButton-PlayButton,
 button.main-playButton-PlayButton,
 .main-actionBar .main-playButton-PlayButton,
@@ -136,12 +117,12 @@ button.main-playButton-PlayButton,
 [style*="rgb(30, 215, 96)"],
 [style*="#1ed760"],
 [style*="#1db954"] {
-    background-color: var(--eva-purple) !important;
-    color: #1a1a1a !important;
+    background-color: var(--spice-accent) !important;
+    color: var(--spice-shadow) !important;
     transition: background-color var(--border-transition);
 }
 
-/* survol : rouge asuka */
+/* survol : accent clair */
 .main-playButton-PlayButton:hover,
 button.main-playButton-PlayButton:hover,
 .main-actionBar .main-playButton-PlayButton:hover,
@@ -150,40 +131,40 @@ button.main-playButton-PlayButton:hover,
 [style*="rgb(30, 215, 96)"]:hover,
 [style*="#1ed760"]:hover,
 [style*="#1db954"]:hover {
-    background-color: var(--eva-asuka) !important;
+    background-color: var(--spice-accent-soft) !important;
 }
 
-/* --- barre laterale : items discrets, blanc au survol (comme ton discord) --- */
+/* --- barre laterale : items sourds, texte vif au survol --- */
 .main-yourLibraryX-listItem,
 .spicetify-playlist-list li {
-    color: var(--eva-muted);
+    color: var(--spice-sidebar-text);
     transition: color var(--border-transition);
 }
 .main-yourLibraryX-listItem:hover,
 .spicetify-playlist-list li:hover {
-    color: #ffffff !important;
+    color: var(--spice-heading) !important;
 }
 
-/* --- scrollbar fine, teinte violette --- */
+/* --- barres de defilement fines, carrees --- */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-    background-color: #b487d533;
+    background-color: var(--spice-scrollbar);
 }
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #b487d566;
+    background-color: var(--spice-scrollbar-hover);
 }
 ::-webkit-scrollbar-track {
     background-color: transparent;
 }
 
-/* --- barre de progression / volume : accent eva01 --- */
+/* --- barre de progression / volume, piste en cours : accent --- */
 .x-progressBar-fillColor {
-    background-color: var(--eva-purple) !important;
+    background-color: var(--spice-accent) !important;
 }
 .main-trackList-rowSectionStart .main-trackList-active,
 .main-trackList-active {
-    color: var(--eva-purple) !important;
+    color: var(--spice-accent) !important;
 }

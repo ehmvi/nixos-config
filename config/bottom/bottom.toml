@@ -2,6 +2,30 @@
 # deux lignes. la premiere est trois fois plus haute : la liste des processus.
 # la seconde partage trois colonnes egales.
 
+# couleurs : palette de theme.nix, les @cle@ sont remplis par theme.render.
+# bordures sourdes, accent sur le widget actif, comme hyprland.
+[styles.network]
+rx_color = "@accent@"
+tx_color = "@blue@"
+rx_total_color = "@teal@"
+tx_total_color = "@sky@"
+
+[styles.tables]
+headers = { color = "@subtext0@", bold = true }
+
+[styles.graphs]
+graph_color = "@surface1@"
+legend_text = { color = "@subtext0@" }
+
+[styles.widgets]
+border_color = "@surface0@"
+selected_border_color = "@accent@"
+widget_title = { color = "@subtext0@" }
+text = { color = "@subtext1@" }
+selected_text = { color = "@crust@", bg_color = "@accent@" }
+disabled_text = { color = "@overlay1@" }
+thread_text = { color = "@lavender@" }
+
 [[row]]
 ratio = 3
 [[row.child]]

@@ -24,8 +24,11 @@
   fish's `conf.d/` or `functions/`.
 - **never declare a file the app rewrites itself.** the app replaces the symlink
   with a real file and the next rebuild conflicts with it. seen with zen's
-  `profiles.ini` (seeded once by an activation script on `sommei`) and wayle's
-  `runtime.toml` (left to wayle, only `config.toml` is declared).
+  `profiles.ini` (seeded once by an activation script on `sommei`), wayle's
+  `runtime.toml` (left to wayle, only `config.toml` is declared) and kde's
+  `kdeglobals` (the colour scheme goes to `/etc/xdg/kdeglobals` instead; kde
+  apps read both, `~/.config` first). same for zed's `settings.json`: only the
+  theme file in `~/.config/zed/themes/` is linked.
 
 **desktop**
 

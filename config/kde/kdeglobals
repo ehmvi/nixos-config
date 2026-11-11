@@ -1,0 +1,145 @@
+# kdeglobals systeme (/etc/xdg/kdeglobals) : couleurs de theme.nix, les @cle.rgb@
+# sont remplis par theme.render. lu par dolphin, kate, ark, kdenlive... a travers le
+# theme de plateforme kde (qt.platformTheme). ~/.config/kdeglobals reste aux applis,
+# qui y ecrivent leurs reglages : il passe devant celui-ci, cle par cle.
+
+[General]
+ColorScheme=theme.nix
+# pas de konsole : dolphin ouvre wezterm (f4, "ouvrir un terminal ici")
+TerminalApplication=wezterm
+TerminalService=org.wezfurlong.wezterm.desktop
+# police tui, legere comme ramiel (format qt6 : graisse 300 = light)
+font=JetBrainsMono Nerd Font,10,-1,5,300,0,0,0,0,0,0,0,0,0,0,1
+menuFont=JetBrainsMono Nerd Font,10,-1,5,300,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=JetBrainsMono Nerd Font,10,-1,5,300,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=JetBrainsMono Nerd Font,8,-1,5,300,0,0,0,0,0,0,0,0,0,0,1
+fixed=JetBrainsMono Nerd Font,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+
+[Icons]
+Theme=breeze-dark
+
+[KDE]
+widgetStyle=Breeze
+
+[WM]
+activeBackground=@base.rgb@
+activeForeground=@text.rgb@
+inactiveBackground=@base.rgb@
+inactiveForeground=@subtext0.rgb@
+activeBlend=@accent.rgb@
+inactiveBlend=@surface0.rgb@
+
+# fenetres : un seul fond, texte courant sourd
+[Colors:Window]
+BackgroundNormal=@base.rgb@
+BackgroundAlternate=@mantle.rgb@
+ForegroundNormal=@subtext1.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+# listes, champs de texte, vues de fichiers
+[Colors:View]
+BackgroundNormal=@base.rgb@
+BackgroundAlternate=@mantle.rgb@
+ForegroundNormal=@subtext1.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+[Colors:Button]
+BackgroundNormal=@surface0.rgb@
+BackgroundAlternate=@surface1.rgb@
+ForegroundNormal=@text.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+# selection : aplat d accent, texte sombre
+[Colors:Selection]
+BackgroundNormal=@accent.rgb@
+BackgroundAlternate=@teal.rgb@
+ForegroundNormal=@crust.rgb@
+ForegroundInactive=@surface0.rgb@
+ForegroundActive=@crust.rgb@
+ForegroundLink=@crust.rgb@
+ForegroundVisited=@crust.rgb@
+ForegroundNegative=@crust.rgb@
+ForegroundNeutral=@crust.rgb@
+ForegroundPositive=@crust.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+[Colors:Tooltip]
+BackgroundNormal=@surface1.rgb@
+BackgroundAlternate=@surface0.rgb@
+ForegroundNormal=@text.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+[Colors:Header]
+BackgroundNormal=@base.rgb@
+BackgroundAlternate=@mantle.rgb@
+ForegroundNormal=@text.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+[Colors:Header][Inactive]
+BackgroundNormal=@base.rgb@
+BackgroundAlternate=@mantle.rgb@
+ForegroundNormal=@subtext0.rgb@
+ForegroundInactive=@overlay1.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
+
+[Colors:Complementary]
+BackgroundNormal=@mantle.rgb@
+BackgroundAlternate=@base.rgb@
+ForegroundNormal=@text.rgb@
+ForegroundInactive=@subtext0.rgb@
+ForegroundActive=@accent.rgb@
+ForegroundLink=@teal.rgb@
+ForegroundVisited=@lavender.rgb@
+ForegroundNegative=@red.rgb@
+ForegroundNeutral=@yellow.rgb@
+ForegroundPositive=@green.rgb@
+DecorationFocus=@accent.rgb@
+DecorationHover=@accent.rgb@
