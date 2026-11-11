@@ -140,6 +140,8 @@ in
     # daw. nixpkgs suit la derniere release upstream. unfree, donc hors du
     # cache : le .deb se telecharge et le paquet se construit en local.
     pkgs.bitwig-studio
+    # client torrent (qt). son .desktop prend les liens magnet et les .torrent.
+    pkgs.qbittorrent
     # hermes desktop (nous research) : electron, avec le runtime hermes du
     # meme flake. l'etat reste dans ~/.hermes.
     inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.desktop

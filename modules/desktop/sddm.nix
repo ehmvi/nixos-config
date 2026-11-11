@@ -1,6 +1,6 @@
 # module: desktop/sddm
 # sddm en wayland (session hyprland via uwsm) + xserver pour le clavier et nvidia
-_:
+{ pkgs, ... }:
 
 {
   # greeter wayland (weston, le defaut du module). weston lit services.xserver.xkb
@@ -18,5 +18,16 @@ _:
   services.xserver.xkb = {
     layout = "us";
     variant = "";
+
+    # qwerty-fr (accents sur altgr, qwerty us intact). absent de xkeyboard-config :
+    # extraLayouts le greffe dans une copie et exporte XKB_CONFIG_ROOT, que lit hyprland.
+    extraLayouts."us_qwerty-fr" = {
+      description = "qwerty us avec les symboles francais sur altgr";
+      languages = [
+        "eng"
+        "fra"
+      ];
+      symbolsFile = "${pkgs.qwerty-fr}/share/X11/xkb/symbols/us_qwerty-fr";
+    };
   };
 }
