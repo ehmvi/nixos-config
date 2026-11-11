@@ -1,8 +1,13 @@
 -- détecte la machine via /etc/hostname pour les réglages per-host
 local hostname = io.open("/etc/hostname"):read("*l")
--- bordures : couleurs extraites du fond d ecran par matugen (config/matugen/), sinon theme.nix
-local ok, wallTheme = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/matugen-colors.lua")
-local theme = ok and wallTheme or require("hypr-theme")
+-- bordures : theme.nix (hypr-theme.lua). si le variant est dynamique, les couleurs
+-- extraites du fond par matugen (config/matugen/) passent devant. sinon le fichier
+-- matugen, meme reste d'un ancien variant, est ignore.
+local theme = require("hypr-theme")
+if theme.dynamic then
+    local ok, wallTheme = pcall(dofile, os.getenv("HOME") .. "/.config/hypr/matugen-colors.lua")
+    if ok then theme = wallTheme end
+end
 
 -- scale moniteur : adapté à l'écran de chaque machine
 local monitorScale = hostname == "games" and 1.0 or 1.8

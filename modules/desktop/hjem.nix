@@ -2,6 +2,7 @@
 # declarative dotfiles for the main user (username, symlinks via hjem)
 {
   config,
+  lib,
   pkgs,
   theme,
   username,
@@ -25,10 +26,30 @@ let
 
   # wayle ne relance matugen que si le chemin du fond change, pas son contenu.
   # on lui donne donc le chemin du store : nouveau fond = nouveau chemin = nouvelles couleurs,
-  # sans reconnexion (wayle relit sa config tout seul)
+  # sans reconnexion (wayle relit sa config tout seul).
+  # la section [styling] vient de theme.nix, commune aux deux hosts. matugen ne la remplace
+  # a l'execution que si le variant est dynamique (ramiel).
   wayleConfig = pkgs.writeText "wayle-config.toml" (
     builtins.replaceStrings [ "/home/${username}/.config/hypr/wallpaper.png" ] [ "${desktopWallpaper}" ]
       (builtins.readFile config.fyrr.wayle.configFile)
+    + ''
+
+      [styling]
+      theme-provider = "${if theme.dynamic then "matugen" else "wayle"}"
+      rounding = "none"
+
+      [styling.palette]
+      bg = "${theme.palette.base}"
+      surface = "${theme.palette.surface0}"
+      elevated = "${theme.palette.surface1}"
+      fg = "${theme.palette.text}"
+      fg-muted = "${theme.palette.subtext0}"
+      primary = "${theme.accentHex}"
+      red = "${theme.palette.red}"
+      yellow = "${theme.palette.yellow}"
+      green = "${theme.palette.green}"
+      blue = "${theme.palette.blue}"
+    ''
   );
 
   # hyprlock.conf généré depuis theme.nix — plus de couleurs en dur
@@ -77,6 +98,8 @@ let
     -- hypr-theme.lua — variant "${theme.variant}"
     -- généré par nix depuis theme.nix, ne pas éditer à la main
     return {
+        -- vrai : hyprland.lua prefere les couleurs du fond (matugen-colors.lua)
+        dynamic = ${if theme.dynamic then "true" else "false"},
         active_border = "rgb(${hex theme.accentHex})",
         inactive_border = "rgb(${hex theme.palette.surface0})",
     }
@@ -167,12 +190,17 @@ in
 
       ".config/wezterm/wezterm.lua".source = weztermLua;
 
-      ".config/fastfetch/config.jsonc".source = ../../config/fastfetch/config.jsonc;
+      # .text = theme.render : le fichier natif avec ses @cle@ remplis par theme.nix
+      ".config/fastfetch/config.jsonc".text = theme.render ../../config/fastfetch/config.jsonc;
 
       ".config/nushell/config.nu".source = ../../config/nushell/config.nu;
       ".config/nushell/env.nu".source = ../../config/nushell/env.nu;
 
-      ".config/starship.toml".source = ../../config/starship/starship.toml;
+      ".config/starship.toml".text = theme.render ../../config/starship/starship.toml;
+
+      # theme zed "theme.nix". settings.json reste a zed (il le reecrit) : le theme
+      # se choisit une fois dans zed (theme selector: toggle)
+      ".config/zed/themes/theme-nix.json".text = theme.render ../../config/zed/theme.json;
 
       ".config/wayle/tombi.toml".source = ../../config/wayle/tombi.toml;
       ".config/wayle/config.toml".source = wayleConfig;
@@ -180,8 +208,14 @@ in
 
       ".config/git/config".source = ../../config/git/config;
 
-      ".config/rofi/config.rasi".source = ../../config/rofi/config.rasi;
-      ".config/rofi/ayu-dark.rasi".source = ../../config/rofi/ayu-dark.rasi;
+      # rofi : palette de theme.nix, puis celle du fond par-dessus si le variant est dynamique
+      ".config/rofi/config.rasi".text =
+        theme.render ../../config/rofi/config.rasi
+        + lib.optionalString theme.dynamic ''
+
+          /* couleurs du fond d ecran (generees par matugen), par-dessus celles de theme.nix */
+          @import "~/.config/rofi/matugen-colors.rasi"
+        '';
     };
   };
 }

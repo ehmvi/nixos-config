@@ -8,7 +8,86 @@ configuration {
     font: "JetBrainsMono Nerd Font 12";
 }
 
-@theme "ayu-dark"
+/* couleurs : palette de theme.nix, les @cle@ sont remplis par theme.render.
+   memes roles que le modele matugen (config/matugen/rofi-colors.rasi) :
+   avec ramiel, les deux donnent les memes valeurs. */
+* {
+    bg:           @base@ee;
+    bg-alt:       @surface1@;
+    fg:           @text@;
+    fg-dim:       @subtext0@;
+    accent:       @accent@;
+    accent-alt:   @blue@;
+    blue:         @lavender@;
+    urgent:       @maroon@;
 
-/* couleurs du fond d ecran (generees par matugen), par-dessus celles de ayu-dark */
-@import "~/.config/rofi/matugen-colors.rasi"
+    background-color: transparent;
+    text-color:       @fg;
+    spacing:          0;
+}
+
+/* tui : coins carres, bordure de 2px comme hyprland */
+window {
+    background-color: @bg;
+    border:           2px;
+    border-color:     @accent;
+    border-radius:    0px;
+    width:            30%;
+    padding:          20px;
+}
+
+mainbox {
+    children: [ inputbar, listview ];
+    spacing:  12px;
+}
+
+inputbar {
+    children:         [ prompt, entry ];
+    background-color: @bg-alt;
+    padding:          8px 12px;
+    border-radius:    0px;
+}
+
+prompt {
+    text-color: @accent;
+}
+
+entry {
+    text-color:       @fg;
+    placeholder-color: @fg-dim;
+}
+
+listview {
+    lines:      10;
+    scrollbar:  true;
+    spacing:    2px;
+}
+
+element {
+    padding:       8px 12px;
+    border-radius: 0px;
+}
+
+element normal.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element selected.normal {
+    background-color: @bg-alt;
+    text-color:       @accent;
+}
+
+element alternate.normal {
+    background-color: transparent;
+    text-color:       @fg;
+}
+
+element-text {
+    text-color: inherit;
+}
+
+scrollbar {
+    handle-width: 4px;
+    handle-color: @fg-dim;
+}

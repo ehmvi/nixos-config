@@ -1,18 +1,66 @@
 # theme.nix : colonne vertébrale colorimétrique, sélection par variant.
 #
 # `variant` est le SEUL knob qui retourne toute la machine :
-#   "blood"   -> near-black + plum-rose sourd (défaut)
+#   "ramiel"  -> vert-noir + sarcelle, la palette du fond ramiel (defaut)
+#   "blood"   -> near-black + plum-rose sourd
 #   "copland" -> ambre chaud, tube CRT copland-os (serial experiments lain)
 #
 # `mauve` est le SLOT accent — or en copland, plum-rose en blood — pas une couleur fixe.
-# les deux palettes partagent les mêmes 26 clés sémantiques (convention catppuccin) par contrat,
+# les palettes partagent les mêmes 26 clés sémantiques (convention catppuccin) par contrat,
 # donc tout consommateur qui interpole `theme.palette.<clé>` se rethème automatiquement.
+#
+# deux couches, pas plus :
+#   - theme.nix (a la construction) : tout ce qui est statique. les fichiers natifs de
+#     config/ portent des marqueurs @cle@ que `render` remplace (voir en bas).
+#   - matugen (a l'execution, lance par wayle sur le fond d ecran) : bordures hyprland,
+#     rofi, vesktop et la barre wayle. seulement si `dynamic` est vrai : ramiel est
+#     justement la sortie de matugen sur le fond epingle, les deux couches donnent donc
+#     les memes couleurs tant que le fond ne change pas.
 #
 # importé une fois dans flake.nix et threadé partout comme specialArg `theme`.
 let
-  variant = "blood"; # "blood" | "copland"
+  variant = "ramiel"; # "ramiel" | "blood" | "copland"
+
+  # variants qui suivent le fond d ecran a l'execution (matugen). les autres restent
+  # figes : wayle garde sa palette statique, hyprland et rofi ignorent les fichiers matugen.
+  dynamic = variant == "ramiel";
 
   palettes = {
+    # ramiel : la palette des themes ramiel (vesktop, obsidian, kopuz), soit la sortie de
+    # matugen (schema sombre, tonal-spot) sur Ramiel-wall.png, plus deux couleurs hors
+    # matugen. surfaces vert-noir, accent sarcelle, texte sourd au repos.
+    # red = le rouge-orange du core, seule couleur chaude du fond : a garder rare
+    # (erreurs, danger, mentions, dnd). yellow = ambre (idle, avertissements).
+    # pas de violet dans le fond : lavender est le secondary matugen (gris-vert).
+    ramiel = {
+      rosewater = "#cde8e0"; # secondary fixe, pale
+      flamingo = "#ffdad6"; # on_error_container
+      pink = "#ee7a5a"; # core eclairci
+      mauve = "#85d6c1"; # ACCENT : primary, sarcelle
+      red = "#e8502a"; # core : rare, erreurs / danger uniquement
+      maroon = "#ffb4ab"; # error matugen, rouge doux
+      peach = "#e18952"; # core et ambre a parts egales
+      yellow = "#d9c27a"; # ambre, avertissements / idle
+      green = "#85d6c1"; # primary : pas d'autre vert dans le fond, succes = accent
+      teal = "#a0f2dd"; # primary fixe (on_primary_container)
+      sky = "#cbe6ff"; # tertiary fixe
+      sapphire = "#819aad"; # tertiary assombri
+      blue = "#aacbe4"; # tertiary, structure / dossiers / liens externes
+      lavender = "#b1ccc4"; # secondary
+      text = "#dee4e0"; # on_surface, texte vif (survol, titres)
+      subtext1 = "#bfc9c4"; # on_surface_variant, texte courant
+      subtext0 = "#89938f"; # outline, icones et texte sourd
+      overlay2 = "#737d79";
+      overlay1 = "#5d6763"; # commentaires, heures (text-5 de vesktop)
+      overlay0 = "#3f4946"; # outline_variant, bordure de panneau actif
+      surface2 = "#303634"; # surface_container_highest
+      surface1 = "#252b29"; # surface_container_high, selection
+      surface0 = "#1b211f"; # surface_container, bordure au repos
+      base = "#0e1513"; # surface, fond
+      mantle = "#090f0e"; # surface_container_lowest
+      crust = "#050908";
+    };
+
     # copland amber : le tube tachibana labs / copland os. ambre chaud sur noir chaud,
     # un CRT phosphore-P1 analogique. la luminosité porte la hiérarchie, pas la teinte ;
     # rust-red est le seul contraste (erreurs), jaune-vert chaud = « la machine a répondu ».
@@ -82,6 +130,26 @@ let
   # les 16 couleurs ANSI par variant (index 0..15 : black, red, green, yellow, blue,
   # magenta, cyan, white, puis les 8 bright).
   terminal16 = {
+    # ramiel : peu de teintes, comme le fond. cyan = melange primary / tertiary,
+    # magenta = secondary (pas de violet). le rouge est le core.
+    ramiel = [
+      "#252b29"
+      "#e8502a"
+      "#85d6c1"
+      "#d9c27a"
+      "#aacbe4"
+      "#b1ccc4"
+      "#97d1d3"
+      "#bfc9c4"
+      "#5d6763"
+      "#ee7a5a"
+      "#a0f2dd"
+      "#e0cd92"
+      "#cbe6ff"
+      "#cde8e0"
+      "#b5e6ea"
+      "#dee4e0"
+    ];
     copland = [
       "#28200f"
       "#d9442f"
@@ -122,9 +190,76 @@ let
 
   accent = "mauve"; # le SLOT accent (or en copland, plum-rose en blood)
   palette = palettes.${variant};
+  ansi16 = terminal16.${variant};
+
+  # "#rrggbb" -> "r,g,b" (format des couleurs kde)
+  hexDigits = {
+    "0" = 0;
+    "1" = 1;
+    "2" = 2;
+    "3" = 3;
+    "4" = 4;
+    "5" = 5;
+    "6" = 6;
+    "7" = 7;
+    "8" = 8;
+    "9" = 9;
+    "a" = 10;
+    "b" = 11;
+    "c" = 12;
+    "d" = 13;
+    "e" = 14;
+    "f" = 15;
+  };
+  byte =
+    c: i: hexDigits.${builtins.substring i 1 c} * 16 + hexDigits.${builtins.substring (i + 1) 1 c};
+  rgb = c: "${toString (byte c 1)},${toString (byte c 3)},${toString (byte c 5)}";
+
+  # couleurs nommees pour `render` : les 26 cles, `accent`, et ansi0 .. ansi15
+  named =
+    palette
+    // {
+      accent = palette.${accent};
+    }
+    // builtins.listToAttrs (
+      builtins.genList (i: {
+        name = "ansi${toString i}";
+        value = builtins.elemAt ansi16 i;
+      }) 16
+    );
+  names = builtins.attrNames named;
 in
 {
-  inherit variant accent palette;
+  inherit
+    variant
+    dynamic
+    accent
+    palette
+    ansi16
+
+    ;
   accentHex = palette.${accent};
-  ansi16 = terminal16.${variant};
+
+  # lit un fichier natif et remplace ses marqueurs par la palette du variant :
+  #   @cle@     -> "#rrggbb"   (ex. @base@, @accent@, @ansi4@)
+  #   @cle.hex@ -> "rrggbb"    (sans diese, ex. hyprland ou spicetify)
+  #   @cle.rgb@ -> "r,g,b"     (kde)
+  #   @variant@ -> nom du variant
+  # le fichier reste lisible tel quel dans config/, nix ne fait que remplir les trous.
+  render =
+    path:
+    builtins.replaceStrings
+      (
+        map (n: "@${n}@") names
+        ++ map (n: "@${n}.hex@") names
+        ++ map (n: "@${n}.rgb@") names
+        ++ [ "@variant@" ]
+      )
+      (
+        map (n: named.${n}) names
+        ++ map (n: builtins.substring 1 6 named.${n}) names
+        ++ map (n: rgb named.${n}) names
+        ++ [ variant ]
+      )
+      (builtins.readFile path);
 }

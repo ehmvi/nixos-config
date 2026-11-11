@@ -11,7 +11,6 @@
     kdePackages.kio # kio plumbing (required)
     kdePackages.kio-extras # extra protocols (sftp, etc.)
     kdePackages.kio-fuse # mount remote filesystems
-    kdePackages.breeze-icons # icon theme (avoids blank icons)
     imv
     mpv
     obs-studio

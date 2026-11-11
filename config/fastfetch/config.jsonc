@@ -5,7 +5,8 @@
   "display": {
     "separator": "  ",
     "color": {
-      "keys": "38;2;191;117;147",
+      // accent de theme.nix, rempli par theme.render
+      "keys": "@accent@",
     },
   },
   "modules": [

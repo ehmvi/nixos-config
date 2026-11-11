@@ -8,7 +8,7 @@
     ./sddm.nix
     ./audio.nix
     ./fonts.nix
-    ./cursor.nix
+    ./theming.nix
     ./printing.nix
     ./options.nix
     ./hjem.nix

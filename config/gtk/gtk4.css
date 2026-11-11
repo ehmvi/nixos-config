@@ -1,0 +1,48 @@
+
+/* gtk4 seulement : libadwaita 1.6+ lit des variables css, plus les
+   couleurs nommees ci-dessus. gtk3 ne les comprend pas, d'ou ce fichier
+   a part, ajoute a la suite de gtk.css dans gtk-4.0/ */
+:root {
+    --accent-color: @accent@;
+    --accent-bg-color: @accent@;
+    --accent-fg-color: @crust@;
+    --destructive-color: @red@;
+    --destructive-bg-color: @red@;
+    --destructive-fg-color: @crust@;
+    --success-color: @green@;
+    --success-bg-color: @green@;
+    --success-fg-color: @crust@;
+    --warning-color: @yellow@;
+    --warning-bg-color: @yellow@;
+    --warning-fg-color: @crust@;
+    --error-color: @red@;
+    --error-bg-color: @red@;
+    --error-fg-color: @crust@;
+
+    --window-bg-color: @base@;
+    --window-fg-color: @text@;
+    --view-bg-color: @base@;
+    --view-fg-color: @subtext1@;
+    --headerbar-bg-color: @base@;
+    --headerbar-fg-color: @text@;
+    --headerbar-border-color: @surface0@;
+    --headerbar-backdrop-color: @base@;
+    --headerbar-shade-color: @crust@;
+    --sidebar-bg-color: @mantle@;
+    --sidebar-fg-color: @subtext1@;
+    --sidebar-backdrop-color: @mantle@;
+    --sidebar-border-color: @surface0@;
+    --sidebar-shade-color: @crust@;
+    --card-bg-color: @surface0@;
+    --card-fg-color: @text@;
+    --card-shade-color: @crust@;
+    --dialog-bg-color: @surface0@;
+    --dialog-fg-color: @text@;
+    --popover-bg-color: @surface0@;
+    --popover-fg-color: @text@;
+    --popover-shade-color: @crust@;
+    --thumbnail-bg-color: @surface0@;
+    --thumbnail-fg-color: @text@;
+    --shade-color: @crust@;
+    --scrollbar-outline-color: @crust@;
+}

@@ -4,6 +4,7 @@
   pkgs,
   lib,
   inputs,
+  theme,
   username,
   ...
 }:
@@ -164,6 +165,7 @@ in
   ];
 
   # btm lit ~/.config/bottom/bottom.toml. le lien n'est que sur games :
-  # navi n'a pas le paquet.
-  hjem.users.${username}.files.".config/bottom/bottom.toml".source = ../../config/bottom/bottom.toml;
+  # navi n'a pas le paquet. ses couleurs viennent de theme.nix (theme.render).
+  hjem.users.${username}.files.".config/bottom/bottom.toml".text =
+    theme.render ../../config/bottom/bottom.toml;
 }

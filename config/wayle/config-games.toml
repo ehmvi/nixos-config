@@ -9,9 +9,9 @@ background-opacity = 95
 border-location = "all"
 border-width = 2
 border-color = "bg-overlay"
-button-rounding = "sm"
+button-rounding = "none"
 button-gap = 0.25
-button-group-rounding = "sm"
+button-group-rounding = "none"
 
 [[bar.layout]]
 monitor = "*"
@@ -29,21 +29,6 @@ right = [
     "systray",
     "notifications",
 ]
-
-[styling]
-theme-provider = "matugen"
-
-[styling.palette]
-bg = "#0d0a0e"
-surface = "#151019"
-elevated = "#1e1824"
-fg = "#c2b6c0"
-fg-muted = "#948a98"
-primary = "#bf7593"
-red = "#c0667e"
-yellow = "#c4a878"
-green = "#82a08c"
-blue = "#8a7aa6"
 
 [modules.clock]
 border-show = true
