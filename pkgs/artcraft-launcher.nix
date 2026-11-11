@@ -22,11 +22,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "artcraft-launcher";
-  version = "0.14.0";
+  version = "0.19.0";
 
   src = fetchurl {
     url = "https://github.com/storytold/craft-launcher/releases/download/v${finalAttrs.version}/artcraft-launcher-${finalAttrs.version}-linux-x86_64.tar.gz";
-    hash = "sha256-aDltkY+tkKuvMuE5gK3kNCEK6xJRAFyY3rqfLvnDPKo=";
+    hash = "sha256-USs+EciidWbepuQUlpPKZv4/CPbqxQFHHVQHtjWmg0I=";
   };
 
   nativeBuildInputs = [ autoPatchelfHook ];
