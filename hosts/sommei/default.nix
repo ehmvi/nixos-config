@@ -2,7 +2,6 @@
 # macbook pro m1 — nix-darwin/daily driver
 {
   pkgs,
-  inputs,
   theme,
   username,
   ...
@@ -20,22 +19,6 @@ let
     Path=Profiles/default
     Default=1
   '';
-
-  # flake amont, packages.${system}.default. pas de inputs.nixpkgs.follows :
-  # le cache ne contient que les binaires construits avec leur nixpkgs.
-  kopuz = inputs.kopuz.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  # le flake pose Kopuz.app dans $out/bin. nix-darwin ne publie dans
-  # /Applications/Nix Apps que les bundles sous $out/Applications.
-  # kopuzd est le binaire headless : l app desktop demarre le coeur
-  # elle-meme, donc pas de service launchd.
-  kopuzApp = pkgs.symlinkJoin {
-    name = "kopuz";
-    paths = [ kopuz ];
-    postBuild = ''
-      mkdir -p $out/Applications
-      ln -s ${kopuz}/bin/kopuz.app $out/Applications/Kopuz.app
-    '';
-  };
 in
 {
   imports = [
@@ -136,34 +119,31 @@ in
     ];
   };
 
-  environment.systemPackages =
-    with pkgs;
-    [
-      git
-      curl
-      htop
-      tmux
-      cmux
-      age
-      tree
-      neovim
-      fastfetch
-      screenfetch
-      ffmpeg
-      yt-dlp
-      imagemagick
-      exiftool
-      figlet
-      restic
-      poppler-utils
-      nodejs_22
-      grc
-      vcprompt
-      wimlib
-      just
-      starship
-    ]
-    ++ [ kopuzApp ];
+  environment.systemPackages = with pkgs; [
+    git
+    curl
+    htop
+    tmux
+    cmux
+    age
+    tree
+    neovim
+    fastfetch
+    screenfetch
+    ffmpeg
+    yt-dlp
+    imagemagick
+    exiftool
+    figlet
+    restic
+    poppler-utils
+    nodejs_22
+    grc
+    vcprompt
+    wimlib
+    just
+    starship
+  ];
 
   # hjem — declarative dotfiles
   hjem.users.${username} = {

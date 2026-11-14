@@ -26,7 +26,7 @@ let
   dynamic = variant == "ramiel";
 
   palettes = {
-    # ramiel : la palette des themes ramiel (vesktop, obsidian, kopuz), soit la sortie de
+    # ramiel : la palette des themes ramiel (vesktop, obsidian), soit la sortie de
     # matugen (schema sombre, tonal-spot) sur Ramiel-wall.png, plus deux couleurs hors
     # matugen. surfaces vert-noir, accent sarcelle, texte sourd au repos.
     # red = le rouge-orange du core, seule couleur chaude du fond : a garder rare

@@ -35,7 +35,6 @@
 
   # auto-optimise-store est volontairement nixos-only : sur darwin l option
   # peut corrompre le store, sommei utilise nix.optimise.automatic a la place.
-  # le cache kopuz est dans modules/shared/nix.nix (nixos et darwin).
   nix.settings.auto-optimise-store = true;
 
   # builds et gc passent apres le reste : une mise a jour ne fait pas saccader

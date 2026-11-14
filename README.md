@@ -52,8 +52,6 @@ or moonlight crashes, run `hyprctl reload` and
 homebrew — itself installed and pinned by nix-homebrew — covers the gui casks
 that nix handles poorly on mac. godot 4.5 and the android toolchain for a meta
 quest 3 export are nix packages; see [docs/godot.md](docs/godot.md).
-Kopuz comes from its own flake, so `nix flake update` follows upstream while
-nixpkgs lags. nix-darwin links `Kopuz.app` into `/Applications/Nix Apps`.
 
 ## structure
 
@@ -105,12 +103,9 @@ godot, jdk 17 and the android sdk for the quest 3 export, all from nix: [docs/go
 | `spicetify-nix` | patched spotify on `games` |
 | `treefmt-nix` | formatter + `nix flake check` gate |
 | `sops-nix` | age-encrypted secrets on every host; `sops` and `age` in the dev shell |
-| `kopuz` | music player from upstream. on `sommei` it is a Nix app; `navi` and `games` install the same package |
 
 inputs that ship a `nixpkgs` or `nix-darwin` input follow ours, so the lock
-keeps a single copy of each. `kopuz` keeps its own nixpkgs: `kopuz.cachix.org`
-only stores binaries built against that copy, and following ours would compile
-the player locally. sops-nix follows `nixpkgs`.
+keeps a single copy of each. sops-nix follows `nixpkgs`.
 
 ## theming
 
@@ -118,7 +113,7 @@ the whole desktop follows **ramiel**: dark green-black surfaces, a teal accent,
 muted text that brightens on hover, square corners, 2px borders and
 JetBrainsMono Nerd Font in a light weight, in a tui style. the reference
 implementations are the vesktop theme (`config/vesktop/ramiel.theme.css`), the
-obsidian vault theme and kopuz's custom theme. the red-orange of the angel's
+obsidian vault theme. the red-orange of the angel's
 core (`#e8502a`) is the only warm colour, and stays rare: errors, destructive
 actions, mentions, dnd. amber (`#d9c27a`) is the second off-palette colour
 (warnings, idle).
@@ -178,7 +173,7 @@ static palette and the matugen files, even stale ones, are ignored.
 | qt / kde (dolphin, kate, ark, kdenlive…) | `qt.platformTheme = "kde"` + breeze style, colours/fonts/icons/terminal from `config/kde/kdeglobals`, installed as `/etc/xdg/kdeglobals` |
 | spotify (games) | `config/spicetify/ramiel/user.css` (structure only) + `customColorScheme` from `theme.nix` |
 | vesktop | `ramiel.theme.css` + matugen's `ramiel-colors.theme.css` |
-| obsidian, kopuz | their own ramiel theme, outside this repo (vault theme, kopuz settings) |
+| obsidian | its own ramiel theme, outside this repo (vault theme) |
 
 kdeglobals goes in `/etc/xdg` and gtk settings in the system dconf database on
 purpose: kde apps rewrite `~/.config/kdeglobals` (file dialog state), and a
@@ -288,7 +283,6 @@ a fresh install brings back the config, not this. redo it by hand:
 | sops age user key | `~/.config/sops/age/keys.txt` | `age-keygen`; back it up off-machine — losing it makes secrets unrecoverable unless a host key remains |
 | mumble audio backend (nixos) | `~/.config/Mumble/Mumble/mumble_settings.json` | input/output system = `PulseAudio`, otherwise mumble 1.5 gets SIGKILLed with pipewire >= 1.4 |
 | game prefixes | `~/Games`, steam library | reinstall from steam / lutris |
-| manual Kopuz.app (`sommei`) | `/Applications/Kopuz.app` | delete it after switching, so Launch Services opens `/Applications/Nix Apps/Kopuz.app` |
 
 ## gotchas
 
@@ -321,8 +315,8 @@ what keeps each host light, and why: [docs/resources.md](docs/resources.md).
 - **`just check` evaluates the hosts but does not build them**: a wrong option
   or a typo fails, a package that fails to compile still passes.
 - **a few theme pieces stay outside `theme.nix`.** kitty (sommei only) keeps
-  its own eva24 file. the obsidian and kopuz ramiel themes live in the vault and
-  in kopuz's settings. vesktop's fallback colours are hand-written, and matugen
+  its own eva24 file. the obsidian ramiel theme lives in the vault.
+  vesktop's fallback colours are hand-written, and matugen
   overrides them anyway. breeze (qt) keeps its small rounded corners.
 - **git history carries several author names.** the identity itself is declared
   in `config/git/config`, linked by hjem.

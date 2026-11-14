@@ -19,9 +19,6 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # pas de follows ici : le cache kopuz.cachix.org ne contient que les binaires
-    # construits avec leur nixpkgs. suivre le notre = tout recompiler en local
-    kopuz.url = "github:Kopuz-org/kopuz";
     # pas de follows non plus : l'amont ne teste son paquet qu'avec son nixpkgs
     # (python verrouille par uv2nix, electron), et son doc nix l'importe ainsi
     hermes-agent.url = "github:NousResearch/hermes-agent";
