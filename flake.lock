@@ -268,15 +268,15 @@
       "locked": {
         "lastModified": 1794427623,
         "narHash": "sha256-nL1XTPQ7hSpG2u4C+v53ZD3X9/L2C+ouEzVs2qdFcbU=",
-        "ref": "refs/heads/main",
+        "owner": "ehmvi",
+        "repo": "ramiel",
         "rev": "e53b92b0efada7661bec215dcd0e3f78e30da707",
-        "revCount": 1,
-        "type": "git",
-        "url": "ssh://git@github.com/ehmvi/ramiel"
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/ehmvi/ramiel"
+        "owner": "ehmvi",
+        "repo": "ramiel",
+        "type": "github"
       }
     },
     "root": {
