@@ -27,6 +27,11 @@
   ];
   fyrr.hyprlock.battery = "BAT0";
 
+  # terminus 16x32, la plus grande : la police par defaut est minuscule a cette densite
+  console.font = "ter-v32n";
+  # pas de dual boot ici : 2 s suffisent pour choisir une generation precedente
+  boot.loader.timeout = 2;
+
   # upower : etat de la batterie pour les autres programmes (module battery de wayle)
   services.upower.enable = true;
   # profils d energie (economie / equilibre / performance) : powerprofilesctl

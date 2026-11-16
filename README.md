@@ -299,6 +299,8 @@ nix, hjem, desktop and darwin pitfalls met in this repo: [docs/gotchas.md](docs/
 - desktop: sddm (where-is-my-sddm-theme, wallpaper and colours from
   `theme.nix`) → hyprland, wezterm, nushell (login shell) + starship, wayle bar,
   hyprlock + hypridle (auto-lock, lock before sleep), hyprpolkitagent
+- console: terminus font loaded from the initrd (`ter-v32n` on navi, `ter-v24n`
+  on games), tty colours from `theme.ansi16`
 - printing: cups
 - nix: weekly garbage collection (older than 7 days), store auto-optimisation,
   builds and gc at idle cpu priority
