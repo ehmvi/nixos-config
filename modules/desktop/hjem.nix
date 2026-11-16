@@ -14,16 +14,8 @@ let
   # "#rrggbb" -> "rrggbb"
   hex = c: builtins.substring 1 6 c;
 
-  # fonds evangelion (github.com/Aleph1-9012/Evangelion), epingles sur un commit precis.
-  # nix ne telecharge que ces 2 images, et verifie leur contenu grace au hash.
-  lockWallpaper = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/Aleph1-9012/Evangelion/fb785c3009a9346173d4b893d6aa36dd22052335/wallpapers/Ayanami-wall.png";
-    hash = "sha256-GdWym23O1irCSb62XTq2EU+9NnhAwE/JW9hVjeMe8M4=";
-  };
-  desktopWallpaper = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/Aleph1-9012/Evangelion/fb785c3009a9346173d4b893d6aa36dd22052335/wallpapers/Ramiel-wall.png";
-    hash = "sha256-OnyTyFxrUVyGyjyG6ZEqdUvIFkDhb3lpSXChBhRrlUI=";
-  };
+  # fonds partages avec sddm.nix, epingles dans wallpapers.nix
+  inherit (import ./wallpapers.nix { inherit (pkgs) fetchurl; }) lockWallpaper desktopWallpaper;
 
   # wayle ne relance matugen que si le chemin du fond change, pas son contenu.
   # on lui donne donc le chemin du store : nouveau fond = nouveau chemin = nouvelles couleurs,
