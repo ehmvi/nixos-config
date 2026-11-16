@@ -296,7 +296,7 @@ nix, hjem, desktop and darwin pitfalls met in this repo: [docs/gotchas.md](docs/
   the mac's tailscale app is not configured in this repo
 - memory: zram swap (zstd, up to 50 % of ram), no disk swap, no hibernation.
   the kernel is tuned for it (`vm.swappiness` 180, `vm.page-cluster` 0)
-- desktop: sddm (where-is-my-sddm-theme, wallpaper and colours from
+- desktop: sddm (where-is-my-sddm-theme, the lock wallpaper, colours from
   `theme.nix`) → hyprland, wezterm, nushell (login shell) + starship, wayle bar,
   hyprlock + hypridle (auto-lock, lock before sleep), hyprpolkitagent
 - console: terminus font loaded from the initrd (`ter-v32n` on navi, `ter-v24n`

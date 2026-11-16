@@ -3,7 +3,9 @@
 { pkgs, theme, ... }:
 
 let
-  inherit (import ./wallpapers.nix { inherit (pkgs) fetchurl; }) desktopWallpaper;
+  # meme fond que hyprlock (ayanami) : les deux ecrans de mot de passe se ressemblent,
+  # le bureau garde ramiel
+  inherit (import ./wallpapers.nix { inherit (pkgs) fetchurl; }) lockWallpaper;
 
   # where-is-my-sddm-theme : un seul champ de mot de passe, qt6, et pour toute
   # dependance qt5compat + qtsvg. sddm-astronaut tire qtmultimedia et
@@ -11,7 +13,7 @@ let
   # l'utilisateur et la session sont ceux de la derniere connexion (f2 / f3 pour changer, f1 aide)
   sddmTheme = pkgs.where-is-my-sddm-theme.override {
     themeConfig.General = {
-      background = "${desktopWallpaper}";
+      background = "${lockWallpaper}";
       backgroundMode = "aspect";
       # derriere l'image, et a sa place si elle ne charge pas
       backgroundFill = theme.palette.base;
