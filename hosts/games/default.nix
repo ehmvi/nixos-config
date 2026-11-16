@@ -71,6 +71,8 @@ in
   fyrr.wayle.configFile = ../../config/wayle/config-games.toml;
 
   boot.kernelModules = [ "nct6775" ];
+  # terminus 12x24 : lisible en 1440p sans trop perdre de colonnes
+  console.font = "ter-v24n";
 
   # fwupd : firmware via lvfs (ssd, peripheriques usb, parfois la carte mere).
   # un timer rafraichit la liste lvfs. rien ne s'installe sans `fwupdmgr update`.

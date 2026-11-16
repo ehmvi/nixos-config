@@ -1,12 +1,24 @@
 # module: core/system
 # boot, locale, nix daemon, zram, shared cli packages
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  theme,
+  ...
+}:
 
 {
   boot.loader.systemd-boot.enable = true;
   # 10 générations max dans le menu de boot : évite de remplir l esp (/boot)
   boot.loader.systemd-boot.configurationLimit = lib.mkDefault 10;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # console : police terminus (chaque host choisit sa taille avec console.font),
+  # chargee des l'initrd pour que le texte de boot soit lisible lui aussi.
+  # couleurs du tty = les 16 ansi du theme, comme wezterm
+  console.earlySetup = true;
+  console.packages = [ pkgs.terminus_font ];
+  console.colors = map (c: builtins.substring 1 6 c) theme.ansi16;
 
   # mkDefault : valeurs partagees, un host peut les surcharger sans mkForce
   time.timeZone = lib.mkDefault "Europe/Paris";
