@@ -14,7 +14,7 @@
     pkgs.lutris
   ];
 
-  # regles udev : manettes nintendo, souris endgame gear, clavier melgeek
+  # regles udev : manettes nintendo, souris endgame gear et xbab, clavier melgeek
   # uaccess = acces pour la session active seulement. fichier 70-* car uaccess doit
   # etre pose avant 73-seat-late.rules (extraRules finit en 99-local.rules : trop tard)
   services.udev.packages = [
@@ -30,6 +30,10 @@
       # les ATTRS d'une meme regle doivent viser le meme parent, d'ou deux regles.
       SUBSYSTEM=="hidraw", ATTRS{idVendor}=="0416", ATTRS{idProduct}=="0114", ENV{MELGEEK_MADE68}="1"
       SUBSYSTEM=="hidraw", ENV{MELGEEK_MADE68}=="1", ATTRS{bInterfaceNumber}=="01", TAG+="uaccess"
+      # souris xbab xa25 (16c0:27da), configuree par webhid sur ctrl.xbabtech.com.
+      # l'interface 00 porte les mouvements, la 01 (page vendeur 0xffab) le canal de config.
+      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="27da", ENV{XBAB_XA25}="1"
+      SUBSYSTEM=="hidraw", ENV{XBAB_XA25}=="1", ATTRS{bInterfaceNumber}=="01", TAG+="uaccess"
     '')
   ];
   # un jeu qui fait un split lock n'est plus endormi 10 ms par le noyau (reglage de steamos)
