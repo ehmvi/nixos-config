@@ -20,6 +20,12 @@
   fileSystems."/".options = [ "noatime" ];
 
   fyrr.wayle.configFile = ../../config/wayle/config-navi.toml;
+  # hyprlock : memes dispositions que kb_layout dans hyprland.lua, et la batterie
+  fyrr.hyprlock.layouts = [
+    "us"
+    "fr"
+  ];
+  fyrr.hyprlock.battery = "BAT0";
 
   # upower : etat de la batterie pour les autres programmes (module battery de wayle)
   services.upower.enable = true;
