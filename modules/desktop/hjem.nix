@@ -45,7 +45,7 @@ let
     ''
   );
 
-  # themes discord : depot prive ehmvi/ramiel (entree flake), un fichier par variante
+  # themes discord : depot ehmvi/ramiel (entree flake), un fichier par variante
   ramielThemes = builtins.mapAttrs pkgs.writeText (import "${inputs.ramiel}/themes.nix");
 
   # hyprlock.conf généré depuis theme.nix — plus de couleurs en dur
