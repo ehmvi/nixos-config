@@ -69,8 +69,8 @@ let
         placeholder_text = <span foreground="##${hex theme.palette.subtext0}">Password...</span>
         font_color = rgb(${hex theme.palette.text})
         inner_color = rgb(${hex theme.palette.base})
-        # bordure du champ de mot de passe : blanc
-        outer_color = rgb(ffffff)
+        # bordure du champ de mot de passe : l'accent, comme la bordure active de hyprland
+        outer_color = rgb(${hex theme.accentHex})
         check_color = rgb(${hex theme.palette.green})
         fail_color = rgb(${hex theme.palette.red})
         shadow_passes = 2
@@ -83,9 +83,53 @@ let
         color = rgba(${hex theme.accentHex}, 1.0)
         font_size = 24
         font_family = JetBrainsMono Nerd Font
-        position = 0, 100
+        position = 0, 110
         halign = center
         valign = center
+    }
+
+    label {
+        monitor =
+        # date : cmd[] lance un /bin/sh, une fois par minute et non par seconde
+        text = cmd[update:60000] ${pkgs.coreutils}/bin/date +'%A %-d %B'
+        color = rgb(${hex theme.palette.subtext1})
+        font_size = 13
+        font_family = JetBrainsMono Nerd Font
+        position = 0, 65
+        halign = center
+        valign = center
+    }
+    ${hyprlockLayout}${hyprlockBattery}
+  '';
+
+  # labels de hyprlock propres au host (options fyrr.hyprlock, poses par navi).
+  # la disposition active : $LAYOUT est interne, hyprlock le rafraichit a chaque bascule
+  hyprlockLayout = lib.optionalString (config.fyrr.hyprlock.layouts != [ ]) ''
+
+    label {
+        monitor =
+        text = $LAYOUT[${lib.concatStringsSep "," config.fyrr.hyprlock.layouts}]
+        color = rgb(${hex theme.palette.subtext0})
+        font_size = 12
+        font_family = JetBrainsMono Nerd Font
+        position = 0, -60
+        halign = center
+        valign = center
+    }
+  '';
+  # batterie : lue dans sysfs par le shell lui-meme (read), sans autre binaire,
+  # une fois par minute
+  hyprlockBattery = lib.optionalString (config.fyrr.hyprlock.battery != null) ''
+
+    label {
+        monitor =
+        text = cmd[update:60000] read c < /sys/class/power_supply/${config.fyrr.hyprlock.battery}/capacity && echo "󰁹 $c%"
+        color = rgb(${hex theme.palette.subtext0})
+        font_size = 12
+        font_family = JetBrainsMono Nerd Font
+        position = -30, 30
+        halign = right
+        valign = bottom
     }
   '';
 
