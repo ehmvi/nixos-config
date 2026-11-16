@@ -244,7 +244,7 @@ hl.config({
         kb_layout = hostname == "games" and "us_qwerty-fr" or "us_qwerty-fr,fr", -- games : qwerty-fr seul. navi : qwerty-fr + azerty, alt+shift pour basculer
         kb_variant = hostname == "games" and "qwerty-fr" or "qwerty-fr,",
         kb_model   = "",
-        kb_options = hostname == "games" and "caps:super" or "grp:alt_shift_toggle", -- games : caps lock devient super (clavier 60%). navi : alt+shift bascule la disposition
+        kb_options = hostname == "games" and "caps:super" or "caps:super,grp:alt_shift_toggle", -- caps lock devient super partout (clavier 60% sur games). navi : alt+shift bascule aussi la disposition
         kb_rules   = "",
         numlock_by_default = true, -- verr num actif au demarrage de la session
         follow_mouse = 1,
