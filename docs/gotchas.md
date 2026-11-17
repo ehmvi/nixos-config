@@ -40,8 +40,9 @@
   secure mode: it strips `TZDIR` (and makes the process unreadable in `/proc`).
   `hyprland.lua` sets `TZDIR` back, otherwise every app falls back to utc.
 - **hyprland ships no polkit agent.** `hyprpolkitagent` is exposed through
-  `systemd.packages` and started from `hyprland.lua`, since
-  `graphical-session.target` is never reached here.
+  `systemd.packages`, which installs the unit but ignores its
+  `WantedBy=graphical-session.target`, so `hyprland.lua` starts it. uwsm
+  does reach that target, so a `wantedBy` on the unit would work too.
 - **`TAG+="uaccess"` udev rules must sort before `73-seat-late.rules`.**
   `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
   rules ship as `70-gaming.rules` through `services.udev.packages`.
