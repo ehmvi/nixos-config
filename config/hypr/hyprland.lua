@@ -250,6 +250,9 @@ hl.config({
         kb_options = "caps:super", -- caps lock devient super partout (clavier 60% sur games)
         kb_rules   = "",
         numlock_by_default = true, -- verr num actif au demarrage de la session
+        -- touche maintenue : repetition apres 300 ms, puis 40 par seconde (defauts 600 et 25)
+        repeat_delay = 300,
+        repeat_rate = 40,
         follow_mouse = 1,
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
