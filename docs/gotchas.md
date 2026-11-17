@@ -55,6 +55,10 @@
   chat grid is gone.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.
+- **`~/.config/mimeapps.list` wins over `/etc/xdg/mimeapps.list`.** apps
+  write their own defaults there ("set as default browser"), so a type
+  declared in `xdg.mime.defaultApplications` can stay ignored. check with
+  `xdg-mime query default <type>` and drop the stale line from the user file.
 
 **darwin**
 
