@@ -1,2 +1,2 @@
-mkdir ~/.cache/starship
-starship init nu | save -f ~/.cache/starship/init.nu
+# vide : starship, zoxide, carapace et direnv arrivent en autoload vendor
+# (programs.nushell, voir modules/core/users.nix)

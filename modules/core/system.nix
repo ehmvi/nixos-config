@@ -84,7 +84,18 @@
     unzip
     claude-code
     # paquet seul et pas programs.starship : le module nixos n initialise que
-    # bash/zsh/fish/xonsh, pas nushell. l init nu est faite dans config/nushell/
+    # bash/zsh/fish/xonsh, pas nushell. l'init nu est l'autoload ci-dessous
     starship
+  ];
+
+  # init starship generee au build en autoload vendor (programs.nushell, core/users),
+  # au lieu de `starship init nu | save` a chaque demarrage de shell.
+  # nom en -init : le paquet fournit deja starship.nu (ses completions)
+  programs.nushell.autoloads = [
+    (pkgs.runCommand "starship-nushell-autoload" { } ''
+      export HOME=$TMPDIR
+      mkdir -p $out/share/nushell/vendor/autoload
+      ${lib.getExe pkgs.starship} init nu > $out/share/nushell/vendor/autoload/starship-init.nu
+    '')
   ];
 }

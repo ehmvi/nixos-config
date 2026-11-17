@@ -19,5 +19,3 @@ $env.config.cursor_shape.emacs = "line"
 
 # pied de tableau (noms des colonnes) seulement quand l'en-tete sort de l'ecran
 $env.config.footer_mode = "auto"
-
-source ~/.cache/starship/init.nu
