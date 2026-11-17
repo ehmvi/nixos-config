@@ -63,6 +63,9 @@ gui apps that nix packages poorly on mac, and nix-homebrew installs and pins
 homebrew itself. godot 4.5, jdk 17 and the android sdk for meta quest 3 exports
 all come from nix. see [docs/godot.md](docs/godot.md).
 
+to set up a new mac from this repo, from the factory reset to the first
+`just switch`, follow [docs/darwin-bootstrap.md](docs/darwin-bootstrap.md).
+
 ## structure
 
 ```
@@ -74,7 +77,7 @@ nixos-config/
 ├── theme.nix              # colour palettes and `render`, used by the whole theme
 ├── treefmt.nix            # formatter config (nixfmt)
 ├── statix.toml            # linter exclusions
-├── docs/                  # conventions, secrets (in french), gotchas, godot, resources
+├── docs/                  # conventions, secrets (in french), gotchas, godot, darwin bootstrap, resources
 ├── hosts/
 │   ├── navi/{default,hardware}.nix
 │   ├── games/{default,hardware,rgb-off}.nix
@@ -271,6 +274,8 @@ sudo nixos-rebuild switch --flake .#<hostname>
 # darwin (sommei). activation has to run as root.
 sudo darwin-rebuild switch --flake .#sommei
 ```
+
+on a mac without nix-darwin yet, see [docs/darwin-bootstrap.md](docs/darwin-bootstrap.md).
 
 `just switch` also sets `NIX_REMOTE=daemon` on nixos. this makes builds go
 through the daemon at idle cpu priority. a plain `sudo nixos-rebuild` builds as

@@ -67,3 +67,8 @@
 - **`homebrew.onActivation.cleanup = "uninstall"`** removes any cask that is not
   in the declared list. brew now prints a deprecation warning for the underlying
   flag.
+- **don't add fish to `/etc/shells` by hand before the first switch.** nix-darwin
+  only replaces `/etc/shells` when it matches the stock macos file. an edited
+  one aborts activation with `Unexpected files in /etc`, and has to be renamed
+  to `/etc/shells.before-nix-darwin` first. the fish shell comes from
+  `environment.shells` anyway.
