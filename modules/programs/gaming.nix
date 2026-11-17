@@ -1,6 +1,6 @@
 # module: programs/gaming
 # steam + proton-ge + nintendo controller support
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   programs.steam = {
@@ -12,7 +12,17 @@
     pkgs.archipelago
     pkgs.poptracker # progression tracker for archipelago randomizers
     pkgs.lutris
+    # replay-buffer toggle|save, sur super+f9 et super+f10 (hyprland.lua)
+    (pkgs.callPackage ../../pkgs/replay-buffer.nix {
+      gpu-screen-recorder = config.programs.gpu-screen-recorder.package;
+    })
   ];
+
+  # gpu-screen-recorder : installe gsr et le wrapper gsr-kms-server
+  # (cap_sys_admin), qui capture l'ecran par kms sans passer par le portail.
+  # pas d'interface (ui.enable) : gsr-ui garde un processus en memoire.
+  # sunshine encode aussi en nvenc. deux sessions en meme temps passent sur la 4070.
+  programs.gpu-screen-recorder.enable = true;
 
   # regles udev : manettes nintendo, souris endgame gear et xbab, clavier melgeek
   # uaccess = acces pour la session active seulement. fichier 70-* car uaccess doit

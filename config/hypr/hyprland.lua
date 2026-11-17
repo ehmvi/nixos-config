@@ -334,6 +334,15 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("hyprshot -m region"))
 -- sans non_consuming, hyprland garde la touche et les applis ne la voient pas.
 hl.bind("Home",                          hl.dsp.exec_cmd("hyprshot -m region"))
 
+-- replay (games) : gpu-screen-recorder garde les 30 dernieres secondes en ram.
+-- f9 lance ou arrete le tampon, f10 sauve dans ~/Videos/Replays.
+-- jamais lance au demarrage : l'encodage gpu continu garde la 4070 hors de p8
+-- (pkgs/replay-buffer.nix).
+if hostname == "games" then
+    hl.bind(mainMod .. " + F9",  hl.dsp.exec_cmd("replay-buffer toggle"))
+    hl.bind(mainMod .. " + F10", hl.dsp.exec_cmd("replay-buffer save"))
+end
+
 
 -- window rules apply specific behaviors to windows matching certain criteria (class, title, float state, etc.).
 -- workspace rules control how workspaces behave, such as removing gaps when only one window is open.
