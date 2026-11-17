@@ -335,6 +335,8 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("hyprshot -m region"))
 hl.bind("Home",                          hl.dsp.exec_cmd("hyprshot -m region"))
 -- shift+print : capture de zone a annoter dans satty (reglages dans satty/config.toml)
 hl.bind("SHIFT + Print",                  hl.dsp.exec_cmd("hyprshot -m region --raw | satty --filename -"))
+-- pipette : copie en hex la couleur cliquee
+hl.bind(mainMod .. " + SHIFT + X",       hl.dsp.exec_cmd("hyprpicker -a"))
 
 
 -- window rules apply specific behaviors to windows matching certain criteria (class, title, float state, etc.).
