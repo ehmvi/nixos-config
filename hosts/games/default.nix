@@ -148,9 +148,6 @@ in
     pkgs.bitwig-studio
     # client torrent (qt). son .desktop prend les liens magnet et les .torrent.
     pkgs.qbittorrent
-    # hermes desktop (nous research) : electron, avec le runtime hermes du
-    # meme flake. l'etat reste dans ~/.hermes.
-    inputs.hermes-agent.packages.${pkgs.stdenv.hostPlatform.system}.desktop
     # suivi du systeme. btm : processus, disques, reseau, temperatures.
     # nvtop : la rtx 4070. la config de btm est liee juste en dessous.
     # les lanceurs remplacent le .desktop d'origine (meme nom de fichier).

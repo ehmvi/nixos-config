@@ -5,6 +5,5 @@ fish_add_path --global --append /opt/homebrew/bin /opt/homebrew/sbin # homebrew 
 fish_add_path --global --append $HOME/.npm-global/bin # npm global
 fish_add_path --global --append $HOME/scripts # scripts perso
 fish_add_path --global --append $HOME/.opencode/bin # opencode
-fish_add_path --global --append $HOME/.local/bin # hermes agent
 
 starship init fish | source

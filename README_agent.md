@@ -104,13 +104,11 @@ godot, jdk 17 and the android sdk for the quest 3 export, all from nix: [docs/go
 | `treefmt-nix` | formatter + `nix flake check` gate |
 | `sops-nix` | age-encrypted secrets on every host; `sops` and `age` in the dev shell |
 | `fsa` | mic processing on every host (package on nixos, darwin module on `sommei`) |
-| `hermes-agent` | hermes desktop on `games` |
 | `msga` | native slack client on `games` |
 | `ramiel` | ramiel discord theme for vesktop and equibop (`flake = false`) |
 
 inputs that ship a `nixpkgs` or `nix-darwin` input follow ours, so the lock
-keeps a single copy of each. sops-nix follows `nixpkgs`. `hermes-agent` is the
-exception: upstream only tests its package against its own `nixpkgs`.
+keeps a single copy of each. sops-nix follows `nixpkgs`.
 
 ## theming
 
