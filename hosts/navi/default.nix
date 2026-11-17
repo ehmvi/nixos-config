@@ -20,11 +20,7 @@
   fileSystems."/".options = [ "noatime" ];
 
   fyrr.wayle.configFile = ../../config/wayle/config-navi.toml;
-  # hyprlock : memes dispositions que kb_layout dans hyprland.lua, et la batterie
-  fyrr.hyprlock.layouts = [
-    "us"
-    "fr"
-  ];
+  # hyprlock : niveau de la batterie
   fyrr.hyprlock.battery = "BAT0";
 
   # terminus 16x32, la plus grande : la police par defaut est minuscule a cette densite

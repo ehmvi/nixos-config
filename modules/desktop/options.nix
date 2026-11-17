@@ -9,15 +9,6 @@
   };
 
   options.fyrr.hyprlock = {
-    layouts = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
-      default = [ ];
-      example = [
-        "us"
-        "fr"
-      ];
-      description = "noms courts des dispositions, dans l'ordre de kb_layout (hyprland.lua). vide = pas de label";
-    };
     battery = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;

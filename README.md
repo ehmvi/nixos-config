@@ -34,7 +34,7 @@ the two nixos hosts differ in a few places:
 | | navi | games |
 |---|---|---|
 | hyprland scale / mode | 1.8 / preferred | 1.0 / `2560x1440@360` |
-| keyboard | `us,fr` | `us` only |
+| keyboard | qwerty-fr (accents on AltGr), caps lock is super | qwerty-fr (accents on AltGr), caps lock is super |
 | `mainMod` | `SUPER`, also on caps lock (`caps:super`) | `SUPER` on caps lock (`caps:super`, 60% keyboard) |
 | wayle config | `config/wayle/config-navi.toml` | `config/wayle/config-games.toml` |
 | extras | power management, `powertop` | nvidia (open kernel module, stable branch), steam with proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot), sunshine |
