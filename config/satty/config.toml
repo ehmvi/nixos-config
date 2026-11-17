@@ -1,0 +1,12 @@
+# satty : annotation d'une capture (shift+print dans hyprland.lua)
+[general]
+# meme dossier et meme forme de nom que hyprshot (~/AAAA-MM-JJ-HHMMSS_hyprshot.png)
+output-filename = "~/%Y-%m-%d-%H%M%S_satty.png"
+# wl-copy garde l'image dans le presse-papiers apres la fermeture de satty
+copy-command = "wl-copy"
+# entree : enregistre puis copie. la copie ferme satty (early-exit), donc en dernier
+actions-on-enter = ["save-to-file", "save-to-clipboard"]
+early-exit = ["copy"]
+# fenetre flottante a la taille de l'image, pas tuilee par hyprland
+floating-hack = true
+resize = { mode = "smart" }

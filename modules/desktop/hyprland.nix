@@ -31,6 +31,7 @@
     brightnessctl
     wayle
     hyprshot
+    satty # annote une capture de hyprshot (shift+print)
     # claude code colle les images (ctrl+v) via wl-paste ou xclip.
     # hyprshot embarque wl-copy pour lui seul, pas dans le path.
     wl-clipboard
