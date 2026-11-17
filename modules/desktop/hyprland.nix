@@ -12,6 +12,9 @@
   # (requisite sur cette cible) echoue en "dependency failed"
   programs.hyprland.withUWSM = true;
   programs.hyprlock.enable = true;
+  # hyprlock active hypridle, dont le service a un path restreint (hyprland,
+  # hyprlock, procps, systemd). l'assombrissement de hypridle.conf appelle brightnessctl
+  systemd.user.services.hypridle.path = [ pkgs.brightnessctl ];
 
   # agent polkit (fenetre de mot de passe pour les actions privilegiees), absent par
   # defaut sous hyprland. on rend son unite systemd dispo, lancee depuis hyprland.lua
