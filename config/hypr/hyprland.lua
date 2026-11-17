@@ -503,3 +503,62 @@ hl.window_rule({
     match     = { class = "^(org.coolercontrol.CoolerControl)$" },
     workspace = "10 silent",
 })
+
+-- fenetres flottantes. ce bloc reste apres les regles de workspace :
+-- les effets statiques s'appliquent dans l'ordre d'enregistrement, la
+-- derniere regle qui pose un workspace l'emporte.
+
+-- selecteur de fichiers du portail gtk (le portail fixe son prgname a
+-- xdg-desktop-portal-gtk). hyprland le fait deja flotter quand il est
+-- rattache a la fenetre parente, la regle fixe la taille.
+hl.window_rule({
+    name   = "float-portal-file-chooser",
+    match  = { class = "^(xdg-desktop-portal-gtk)$" },
+    float  = true,
+    center = true,
+    size   = "monitor_w*0.5 monitor_h*0.6",
+})
+
+-- dialogues gtk ouverts dans le processus par electron et chromium, avec
+-- la classe de l'appli : on les reconnait au titre (chaines de brave en
+-- en-US, plus celles de gtk et firefox).
+hl.window_rule({
+    name   = "float-file-dialogs",
+    match  = { title = "^(Open File|Save File|Save As|Open Folder|Select Folder|Select a File|File Upload).*" },
+    float  = true,
+    center = true,
+})
+
+-- bitwarden : electron prend desktopName (bitwarden.desktop) comme
+-- app-id wayland et comme WM_CLASS, donc bitwarden.
+hl.window_rule({
+    name   = "float-bitwarden",
+    match  = { class = "^([Bb]itwarden)$" },
+    float  = true,
+    center = true,
+    size   = "monitor_w*0.45 monitor_h*0.6",
+})
+
+-- ente auth : appli flutter, g_set_prgname et l'application-id gtk
+-- valent io.ente.auth.
+hl.window_rule({
+    name   = "float-ente-auth",
+    match  = { class = "^(io\\.ente\\.auth)$" },
+    float  = true,
+    center = true,
+    size   = "monitor_w*0.35 monitor_h*0.6",
+})
+
+-- picture in picture de brave, en bas a droite et epingle. la regle
+-- assign-brave-workspace la vise aussi : workspace = "unset" annule son
+-- "4 silent", la fenetre s'ouvre sur le workspace courant.
+hl.window_rule({
+    name              = "brave-picture-in-picture",
+    match             = { class = "^(brave-browser)$", title = "^(Picture in picture)$" },
+    workspace         = "unset",
+    float             = true,
+    pin               = true,
+    keep_aspect_ratio = true,
+    size              = "monitor_w*0.25 monitor_h*0.25",
+    move              = "monitor_w-window_w-20 monitor_h-window_h-20",
+})
