@@ -8,6 +8,8 @@
 }:
 
 let
+  hostName = "sommei";
+
   zenProfilesIni = pkgs.writeText "zen-profiles.ini" ''
     [General]
     StartWithLastProfile=1
@@ -30,6 +32,14 @@ in
   # optimisation du store via launchd. le gc (dimanche 3h15) vient du module
   # partage ; ici seulement l optimise, defaut dimanche 4h15.
   nix.optimise.automatic = true;
+
+  # le justfile choisit la sortie du flake avec scutil --get LocalHostName :
+  # sans ce nom, just switch sur un mac neuf cherche une config qui n'existe pas
+  networking = {
+    inherit hostName;
+    computerName = hostName;
+    localHostName = hostName;
+  };
 
   system.primaryUser = username;
   system.stateVersion = 5;
