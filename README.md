@@ -83,7 +83,7 @@ nixos-config/
 ├── docs/                  # conventions, secrets (in french), gotchas, godot, resources
 ├── hosts/
 │   ├── navi/{default,hardware}.nix
-│   ├── games/{default,hardware}.nix
+│   ├── games/{default,hardware,rgb-off}.nix
 │   └── sommei/default.nix
 ├── modules/
 │   ├── shared/            # nix settings and the sops age key (nixos and darwin)
