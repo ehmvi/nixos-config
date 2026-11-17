@@ -242,11 +242,12 @@ hl.config({
 
 hl.config({
     input = {
-        -- qwerty-fr (modules/desktop/sddm.nix) : qwerty us + accents sur altgr (alt droit)
-        kb_layout = hostname == "games" and "us_qwerty-fr" or "us_qwerty-fr,fr", -- games : qwerty-fr seul. navi : qwerty-fr + azerty, alt+shift pour basculer
-        kb_variant = hostname == "games" and "qwerty-fr" or "qwerty-fr,",
+        -- qwerty-fr (modules/desktop/sddm.nix) : qwerty us + accents sur altgr (alt droit).
+        -- une seule disposition sur les deux hotes, donc aucune bascule
+        kb_layout = "us_qwerty-fr",
+        kb_variant = "qwerty-fr",
         kb_model   = "",
-        kb_options = hostname == "games" and "caps:super" or "caps:super,grp:alt_shift_toggle", -- caps lock devient super partout (clavier 60% sur games). navi : alt+shift bascule aussi la disposition
+        kb_options = "caps:super", -- caps lock devient super partout (clavier 60% sur games)
         kb_rules   = "",
         numlock_by_default = true, -- verr num actif au demarrage de la session
         follow_mouse = 1,

@@ -99,24 +99,10 @@ let
         halign = center
         valign = center
     }
-    ${hyprlockLayout}${hyprlockBattery}
+    ${hyprlockBattery}
   '';
 
-  # labels de hyprlock propres au host (options fyrr.hyprlock, poses par navi).
-  # la disposition active : $LAYOUT est interne, hyprlock le rafraichit a chaque bascule
-  hyprlockLayout = lib.optionalString (config.fyrr.hyprlock.layouts != [ ]) ''
-
-    label {
-        monitor =
-        text = $LAYOUT[${lib.concatStringsSep "," config.fyrr.hyprlock.layouts}]
-        color = rgb(${hex theme.palette.subtext0})
-        font_size = 12
-        font_family = JetBrainsMono Nerd Font
-        position = 0, -60
-        halign = center
-        valign = center
-    }
-  '';
+  # label de hyprlock propre au host (option fyrr.hyprlock, posee par navi).
   # batterie : lue dans sysfs par le shell lui-meme (read), sans autre binaire,
   # une fois par minute
   hyprlockBattery = lib.optionalString (config.fyrr.hyprlock.battery != null) ''

@@ -30,7 +30,7 @@ reflects where i was in the learning curve when i made it.
 | | navi | games |
 |---|---|---|
 | hyprland scale / mode | 1.8 / preferred | 1.0 / `2560x1440@360` |
-| keyboard | `us,fr` | `us` only |
+| keyboard | qwerty-fr (accents on AltGr), caps lock is super | qwerty-fr (accents on AltGr), caps lock is super |
 | `mainMod` | `SUPER`, also via caps lock (`caps:super`) | `SUPER` via caps lock (`caps:super`, 60% keyboard) |
 | wayle config | `config/wayle/config-navi.toml` | `config/wayle/config-games.toml` |
 | extras | power management, `powertop` | nvidia (open kernel module, stable branch), steam + proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot), sunshine (stream the desktop to moonlight on the mac) |
