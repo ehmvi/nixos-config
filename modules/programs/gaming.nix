@@ -9,8 +9,6 @@
   };
 
   environment.systemPackages = [
-    pkgs.archipelago
-    pkgs.poptracker # progression tracker for archipelago randomizers
     pkgs.lutris
   ];
 

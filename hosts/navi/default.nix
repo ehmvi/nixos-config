@@ -12,6 +12,7 @@
     ../../modules/programs/cli.nix
     ../../modules/programs/office.nix
     ../../modules/programs/apps.nix
+    ../../modules/programs/timon.nix
   ];
 
   networking.hostName = "navi";

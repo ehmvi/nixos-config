@@ -40,7 +40,19 @@
     })
     # mistral vibe : agent de code, fournit vibe et vibe-acp (que t3 code lance
     # via le registre acp). connexion par navigateur = forfait mistral, pas de cle api.
-    mistral-vibe
+    (callPackage ../../pkgs/mistral-vibe.nix { })
+    # vibe est une tui : ce lanceur l'ouvre dans wezterm, classe vibe, que
+    # hyprland envoie sur le workspace 1 (config/hypr/hyprland.lua).
+    # sans --always-new-process, wezterm reutilise son processus et ignore --class.
+    (makeDesktopItem {
+      name = "mistral-vibe";
+      desktopName = "Mistral Vibe";
+      comment = "Mistral coding agent";
+      exec = "wezterm start --always-new-process --class vibe -- vibe";
+      icon = "utilities-terminal";
+      startupWMClass = "vibe";
+      categories = [ "Development" ];
+    })
     kdePackages.kate
     kdePackages.qttools
     kdePackages.kdenlive

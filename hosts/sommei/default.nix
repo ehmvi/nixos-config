@@ -143,6 +143,10 @@ in
     wimlib
     just
     starship
+    # mistral vibe : agent de code (vibe, vibe-acp), comme sur navi et games
+    (callPackage ../../pkgs/mistral-vibe.nix { })
+    # timon : pas de cask, le .dmg officiel (lie dans /Applications/Nix Apps)
+    (callPackage ../../pkgs/timon-darwin.nix { })
   ];
 
   # hjem — declarative dotfiles

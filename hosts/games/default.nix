@@ -52,6 +52,7 @@ in
     ../../modules/programs/gaming.nix
     ../../modules/programs/office.nix
     ../../modules/programs/apps.nix
+    ../../modules/programs/timon.nix
     ../../modules/programs/spicetify.nix
     ../../modules/programs/sunshine.nix
     ../../modules/programs/ollama.nix
@@ -131,6 +132,9 @@ in
     inputs.msga.packages.${pkgs.stdenv.hostPlatform.system}.default
     # lanceur minecraft. le paquet embarque les jdk 8, 17, 21 et 25.
     pkgs.prismlauncher
+    # horizon : minecraft java 26.3 reecrit en rust, via son lanceur. il faut sa
+    # propre copie de minecraft, la 26.3 lancee une fois. voir le paquet.
+    (pkgs.callPackage ../../pkgs/horizon-launcher.nix { })
     # cles usb multiboot. ventoy en terminal, ventoy-web pour l'interface web
     # sur localhost. les deux demandent root. unfree et insecure, voir plus haut.
     pkgs.ventoy

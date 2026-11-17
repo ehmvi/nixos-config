@@ -58,10 +58,16 @@ update:
     nix flake update
     just bump-release pkgs/artcraft-launcher.nix
     just bump-release pkgs/t3code-nightly.nix
+    just bump-release pkgs/timon.nix
+    just bump-release pkgs/timon-darwin.nix
+    just bump-release pkgs/horizon-launcher.nix
 
 # passe un paquet de pkgs/ a la derniere release github : reecrit version et hash.
 # releases/latest ignore les pre-releases : un paquet en version -nightly. prend
-# la derniere nightly de la liste. rien n'est ecrit si le telechargement echoue.
+# la derniere nightly de la liste. un tag sans `v` (`launcher@0.2.69`) vient d'un
+# monorepo : releases/latest peut y etre un autre produit, donc on prend le
+# dernier tag a ce prefixe. seul le hash qui suit l'url github change. rien
+# n'est ecrit si le telechargement echoue.
 bump-release file:
     #!/usr/bin/env bash
     set -euo pipefail
@@ -73,15 +79,20 @@ bump-release file:
     fi
     repo=$(printf '%s\n' "$template" | cut -d/ -f4-5)
     current=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$file")
+    prefix=$(printf '%s\n' "$template" | sed -nE 's|.*/releases/download/(.*)\$\{finalAttrs\.version\}/.*|\1|p')
     if [[ "$current" == *-nightly.* ]]; then
         latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=30" | grep -oE '"tag_name": *"v[^"]*-nightly\.[^"]*"' | sed -n 1p | cut -d'"' -f4 || true)
         pattern='^[0-9]+(\.[0-9]+)+-nightly\.[0-9]+\.[0-9]+$'
+    elif [ "$prefix" != v ]; then
+        latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=100" | grep -oE "\"tag_name\": *\"$prefix[0-9][^\"]*\"" | sed -n 1p | cut -d'"' -f4 || true)
+        pattern='^[0-9]+(\.[0-9]+)+$'
     else
         latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
         pattern='^[0-9]+(\.[0-9]+)+$'
     fi
     version=${latest##*/v}
     version=${version#v}
+    version=${version#"$prefix"}
     if ! [[ "$version" =~ $pattern ]]; then
         echo "$repo : tag inattendu : $latest" >&2
         exit 1
@@ -92,6 +103,6 @@ bump-release file:
     fi
     url=${template//'${finalAttrs.version}'/$version}
     hash=$(nix hash convert --hash-algo sha256 --to sri "$(nix-prefetch-url --type sha256 "$url")")
-    sed -E -i.bak -e "s|^( *version = \").*(\";)$|\\1$version\\2|" -e "s|^( *hash = \").*(\";)$|\\1$hash\\2|" "$file"
+    sed -E -i.bak -e "s|^( *version = \").*(\";)$|\\1$version\\2|" -e "\\|^ *url = \"https://github\\.com/|,\\|^ *hash = |s|^( *hash = \").*(\";)$|\\1$hash\\2|" "$file"
     rm "$file.bak"
     echo "$file : $current -> $version"

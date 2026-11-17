@@ -75,6 +75,8 @@ hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Ice")
 -- le wrapper nixos donne cap_sys_nice a hyprland : la glibc passe en mode securise
 -- et retire TZDIR des variables. on le remet pour que les applis trouvent le fuseau.
 hl.env("TZDIR", "/etc/zoneinfo")
+-- dossier des captures de hyprshot (sinon ~). satty enregistre au meme endroit (satty/config.toml)
+hl.env("HYPRSHOT_DIR", os.getenv("HOME") .. "/Pictures/screenshots")
 
 
 -- this section controls which programs are allowed to perform sensitive operations like screen capture or plugin loading.
@@ -379,8 +381,8 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("hyprshot -m region"))
 -- home sans modificateur : meme capture de zone que print.
 -- sans non_consuming, hyprland garde la touche et les applis ne la voient pas.
 hl.bind("Home",                          hl.dsp.exec_cmd("hyprshot -m region"))
--- shift+print : capture de zone a annoter dans satty (reglages dans satty/config.toml)
-hl.bind("SHIFT + Print",                  hl.dsp.exec_cmd("hyprshot -m region --raw | satty --filename -"))
+-- super+home : capture de zone a annoter dans satty (reglages dans satty/config.toml)
+hl.bind(mainMod .. " + Home",             hl.dsp.exec_cmd("hyprshot -m region --raw | satty --filename -"))
 -- pipette : copie en hex la couleur cliquee
 hl.bind(mainMod .. " + SHIFT + X",       hl.dsp.exec_cmd("hyprpicker -a"))
 
@@ -475,7 +477,7 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:ter
 
 -- plan (games, et navi : ce fichier est partage). silent : la fenetre
 -- part sur le workspace sans y changer le focus.
--- 1 grok. 2 t3 code.
+-- 1 grok, timon et vibe. 2 t3 code.
 -- 3 rien. 4 brave. 5 social et fsa. 6 jeux. 7 lanceurs de jeux.
 -- 10 suivi.
 
@@ -483,6 +485,22 @@ hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:ter
 hl.window_rule({
     name      = "assign-grok-workspace",
     match     = { class = "^(grok-bot)$" },
+    workspace = "1 silent",
+})
+
+-- timon : electron nomme la classe d'apres le name du package.json
+-- (timon-desktop), le StartupWMClass du .desktop (pkgs/timon.nix).
+hl.window_rule({
+    name      = "assign-timon-workspace",
+    match     = { class = "^(timon-desktop)$" },
+    workspace = "1 silent",
+})
+
+-- vibe : tui lancee dans wezterm avec la classe vibe (lanceur dans
+-- modules/programs/apps.nix).
+hl.window_rule({
+    name      = "assign-vibe-workspace",
+    match     = { class = "^(vibe)$" },
     workspace = "1 silent",
 })
 
