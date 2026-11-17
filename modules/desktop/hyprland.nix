@@ -13,6 +13,13 @@
   programs.hyprland.withUWSM = true;
   programs.hyprlock.enable = true;
 
+  # uwsm (prepare-env.sh) exporte XDG_MENU_PREFIX=hyprland-, mais personne ne fournit
+  # hyprland-applications.menu : kservice ne construit alors aucun arbre d'applis et
+  # le menu "ouvrir avec" de dolphin reste vide. le nom du fichier suit la session,
+  # d'ou sa place ici plutot que dans apps.nix. menu minimal, sans plasma-workspace
+  environment.etc."xdg/menus/hyprland-applications.menu".source =
+    ../../config/xdg/hyprland-applications.menu;
+
   # agent polkit (fenetre de mot de passe pour les actions privilegiees), absent par
   # defaut sous hyprland. on rend son unite systemd dispo, lancee depuis hyprland.lua
   systemd.packages = [ pkgs.hyprpolkitagent ];
