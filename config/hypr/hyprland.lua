@@ -292,6 +292,10 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 
+-- garder l'ecran eveille : bascule l'inhibiteur de veille de wayle, sans
+-- duree (jusqu'au prochain appui). bloque assombrissement, verrou et veille.
+hl.bind(mainMod .. " + SHIFT + I", hl.dsp.exec_cmd("wayle idle toggle --indefinite"))
+
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
