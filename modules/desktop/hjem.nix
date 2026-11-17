@@ -244,6 +244,8 @@ in
 
       ".config/satty/config.toml".source = ../../config/satty/config.toml;
 
+      ".config/udiskie/config.yml".source = ../../config/udiskie/config.yml;
+
       # rofi : palette de theme.nix, puis celle du fond par-dessus si le variant est dynamique
       ".config/rofi/config.rasi".text =
         theme.render ../../config/rofi/config.rasi

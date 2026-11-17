@@ -54,6 +54,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("systemctl --user start hypridle")
     -- historique du presse-papiers : chaque copie part dans cliphist
     hl.exec_cmd("wl-paste --watch cliphist store")
+    -- montage auto des cles usb, icone seulement quand un support est la
+    hl.exec_cmd("udiskie --automount --notify --smart-tray")
     -- seulement la session : aucune appli ne part au login, pas meme un terminal.
 end)
 

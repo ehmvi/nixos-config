@@ -55,6 +55,9 @@
     hyprsunset # filtre de lumiere bleue, lance et tue par le module hyprsunset de wayle
     playerctl
     (callPackage ../../pkgs/power-menu.nix { }) # super+m
+    # monte les cles usb a l'insertion et le notifie (lance par hyprland.lua).
+    # regles de securite dans config/udiskie/config.yml
+    udiskie
     # hook matugen : meme hyprland que la session, pour que hyprctl corresponde
     (callPackage ../../pkgs/apply-hypr-colors.nix {
       hyprland = config.programs.hyprland.package;

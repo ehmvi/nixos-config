@@ -1,0 +1,13 @@
+# udiskie : montage auto des supports amovibles, lance par hyprland.lua.
+# les regles d'ici passent avant celles d'udiskie : la premiere qui matche gagne.
+device_config:
+  # disques internes (nvme, sata, partitions windows de games) : jamais touches.
+  # is_external = drapeau udisks HintSystem a faux. udiskie ignore deja un disque
+  # interne entier, cette regle le dit aussi pour chaque partition
+  - is_external: false
+    ignore: true
+  # cle ventoy : l'outil ventoy veut la cle demontee. ses deux partitions gardent
+  # leur label par defaut (Ventoy, VTOYEFI). pas d'automontage, mais elles restent
+  # dans l'icone pour un montage a la main (copier une iso)
+  - id_label: [Ventoy, VTOYEFI]
+    automount: false
