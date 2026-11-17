@@ -503,3 +503,14 @@ hl.window_rule({
     match     = { class = "^(org.coolercontrol.CoolerControl)$" },
     workspace = "10 silent",
 })
+
+-- jeux : ni verrou ni ecran eteint tant qu'un jeu est en plein ecran.
+-- les jeux sdl et steam inhibent deja via d-bus, pas tous les jeux proton.
+-- fullscreen et pas always : un jeu en fenetre laisse la veille faire.
+-- pas de regle generique sur le plein ecran : une video en pause
+-- bloquerait le verrou du portable.
+hl.window_rule({
+    name         = "games-idle-inhibit",
+    match        = { class = "^(steam_app_\\d+|gamescope)$" },
+    idle_inhibit = "fullscreen",
+})
