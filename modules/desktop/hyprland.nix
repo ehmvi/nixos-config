@@ -41,6 +41,13 @@
     # claude code colle les images (ctrl+v) via wl-paste ou xclip.
     # hyprshot embarque wl-copy pour lui seul, pas dans le path.
     wl-clipboard
+    # historique du presse-papiers, alimente par wl-paste --watch (hyprland.lua).
+    # le binaire seul : les scripts contrib tirent fuzzel, fzf, wofi, chafa et
+    # resvg (une cinquantaine de mo) pour des menus qu'on n'utilise pas
+    (cliphist.overrideAttrs {
+      postPatch = "";
+      postInstall = "";
+    })
     matugen # extrait une palette du fond d ecran (lance par wayle, theme-provider)
     awww # moteur de fond d ecran pilote par wayle (wayle lance awww-daemon lui-meme)
     hyprsunset # filtre de lumiere bleue, lance et tue par le module hyprsunset de wayle
