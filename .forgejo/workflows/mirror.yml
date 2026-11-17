@@ -1,0 +1,33 @@
+# ci : forgejo est le depot de reference, github n'est qu'un miroir.
+# chaque push reporte toutes les branches et tous les tags sur github.
+name: mirror
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: pi5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # MIRROR_GITHUB_KEY : cle de deploiement en ecriture sur ehmvi/nixos-config.
+      # MIRROR_GITHUB_HOST_KEY : variable du compte, partagee avec les autres miroirs.
+      - name: cle du miroir github
+        run: |
+          apt-get update -qq && apt-get install -y -qq openssh-client >/dev/null
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.MIRROR_GITHUB_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          printf '%s\n' "${{ vars.MIRROR_GITHUB_HOST_KEY }}" > ~/.ssh/known_hosts
+
+      # le checkout ne recupere que la branche poussee : on rapatrie le reste avant d'envoyer
+      - name: pousser les branches et les tags vers github
+        run: |
+          git fetch --quiet origin '+refs/heads/*:refs/remotes/origin/*' '+refs/tags/*:refs/tags/*'
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes"
+          git push --force git@github.com:ehmvi/nixos-config.git 'refs/remotes/origin/*:refs/heads/*'
+          git push --force --tags git@github.com:ehmvi/nixos-config.git
