@@ -242,6 +242,8 @@ in
 
       ".config/git/config".source = ../../config/git/config;
 
+      ".config/satty/config.toml".source = ../../config/satty/config.toml;
+
       # rofi : palette de theme.nix, puis celle du fond par-dessus si le variant est dynamique
       ".config/rofi/config.rasi".text =
         theme.render ../../config/rofi/config.rasi
