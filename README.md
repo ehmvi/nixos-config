@@ -41,7 +41,7 @@ the two nixos hosts differ in a few places:
 
 `hyprland.lua` reads `/etc/hostname` to pick the per-host values. the wayle
 file comes from a custom option, `fyrr.wayle.configFile`, declared in
-`modules/desktop/hjem.nix`.
+`modules/desktop/options.nix`.
 
 ### streaming from games to the mac
 

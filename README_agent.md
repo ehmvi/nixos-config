@@ -37,7 +37,7 @@ reflects where i was in the learning curve when i made it.
 
 per-host values in `hyprland.lua` are picked by reading `/etc/hostname`. the
 wayle file is selected through a custom option, `fyrr.wayle.configFile`,
-declared in `modules/desktop/hjem.nix`. on games, a moonlight stream
+declared in `modules/desktop/options.nix`. on games, a moonlight stream
 switches the panel to the resolution the client asks for (1920×1080 for
 the mac's external display), at its highest refresh rate and scale `1`,
 when the panel's edid has that mode. sunshine leaks vram on every moonlight
