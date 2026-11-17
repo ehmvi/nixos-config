@@ -52,6 +52,8 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("wayle panel start")
     hl.exec_cmd("systemctl --user start hyprpolkitagent")
     hl.exec_cmd("systemctl --user start hypridle")
+    -- historique du presse-papiers : chaque copie part dans cliphist
+    hl.exec_cmd("wl-paste --watch cliphist store")
     -- seulement la session : aucune appli ne part au login, pas meme un terminal.
 end)
 
@@ -291,6 +293,12 @@ hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
+-- historique du presse-papiers (super+v sert deja au flottant). il est stocke en
+-- clair dans ~/.cache/cliphist/db. cliphist ignore les copies marquees sensibles
+-- par l'appli source, mais bitwarden ne les marque pas : super+shift+suppr vide
+-- tout l'historique apres avoir copie un mot de passe.
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + DELETE", hl.dsp.exec_cmd("cliphist wipe"))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left",  hl.dsp.focus({ direction = "left" }))
