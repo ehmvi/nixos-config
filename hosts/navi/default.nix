@@ -34,6 +34,10 @@
 
   # upower : etat de la batterie pour les autres programmes (module battery de wayle)
   services.upower.enable = true;
+  # batterie critique : extinction propre, le travail non enregistre est perdu.
+  # le defaut HybridSleep suppose une hibernation, impossible ici (zram seul,
+  # pas de swap disque) : on ecrit l'action qui a vraiment lieu.
+  services.upower.criticalPowerAction = "PowerOff";
   # profils d energie (economie / equilibre / performance) : powerprofilesctl
   services.power-profiles-daemon.enable = true;
   # thermald : demon intel qui limite la chauffe du cpu avant le throttling brutal
