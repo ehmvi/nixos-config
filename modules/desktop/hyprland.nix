@@ -37,6 +37,7 @@
     matugen # extrait une palette du fond d ecran (lance par wayle, theme-provider)
     awww # moteur de fond d ecran pilote par wayle (wayle lance awww-daemon lui-meme)
     playerctl
+    (callPackage ../../pkgs/power-menu.nix { }) # super+m
     # hook matugen : meme hyprland que la session, pour que hyprctl corresponde
     (callPackage ../../pkgs/apply-hypr-colors.nix {
       hyprland = config.programs.hyprland.package;
