@@ -55,6 +55,16 @@
   chat grid is gone.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.
+- **log out with `uwsm stop`, never `loginctl terminate-session` or
+  `terminate-user`.** ending the logind session sends sigterm then sighup to
+  everything in it, `sddm-helper` included. sddm 0.21 reads a helper killed by
+  sighup as exit code 1, `HELPER_AUTH_ERROR`, and never restarts the greeter:
+  black screen until `sudo systemctl restart display-manager`
+  ([sddm#1908](https://github.com/sddm/sddm/issues/1908), fix pending in
+  [sddm#2103](https://github.com/sddm/sddm/pull/2103)). `uwsm stop` (super+m)
+  stops the compositor, `uwsm start` returns 0 and the greeter comes back.
+  wayle's power module logs out with `terminate-session`, so it stays off the
+  bar. the same `Process crashed` line at every shutdown is harmless.
 
 **darwin**
 
