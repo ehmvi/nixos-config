@@ -114,9 +114,14 @@ from the nixos hosts. only sommei imports `modules/programs/godot-android.nix`.
 | `spicetify-nix` | patched spotify on games |
 | `treefmt-nix` | formatter, and the format check in `nix flake check` |
 | `sops-nix` | age-encrypted secrets on every host, plus `sops` and `age` in the dev shell |
+| `fsa` | microphone processing on every host (a package on nixos, a module on sommei) |
+| `hermes-agent` | hermes desktop on games |
+| `msga` | native slack client on games |
+| `ramiel` | the ramiel discord theme for vesktop and equibop (not a flake) |
 
 when an input has its own `nixpkgs` or `nix-darwin` input, it follows ours, so
-the lock file keeps one copy of each.
+the lock file keeps one copy of each. the exception is `hermes-agent`, whose
+upstream only tests its package against its own `nixpkgs`.
 
 ## theming
 
