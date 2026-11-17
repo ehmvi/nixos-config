@@ -202,6 +202,25 @@ in
     orientation = "bottom";
     tilesize = 42;
     show-recents = false;
+    # cette liste remplace tout le dock a chaque switch : un ajout ou un
+    # deplacement a la souris est perdu au switch suivant, il faut le
+    # reporter ici.
+    # une app absente garde sa place avec une icone en point
+    # d'interrogation. sur un mac neuf les defaults passent avant homebrew,
+    # donc les casks ne s'affichent bien qu'apres un second switch.
+    persistent-apps = [
+      "/Applications/KeePassXC.app"
+      "/Applications/Ente Auth.app"
+      "/Applications/Bitwarden.app"
+      "/Applications/kitty.app"
+      "/Applications/Grok Bot.app"
+      "/Applications/T3 Code (Beta).app"
+      "/Applications/Zen.app"
+      "/Applications/Zed.app"
+      "/Applications/Moonlight.app"
+    ];
+    # partie droite du dock, vide aujourd'hui
+    persistent-others = [ ];
   };
 
   system.defaults.finder = {
