@@ -387,6 +387,42 @@ hl.window_rule({
     float = true,
 })
 
+-- scratchpad : un terminal deroulant (classe dropterm) sur le workspace
+-- special "term". rien ne part au login : le terminal est lance au
+-- premier super+s, puis reste vivant (shell et dossier gardes) et
+-- super+s ne fait que le montrer ou le cacher.
+hl.window_rule({
+    name      = "dropterm-scratchpad",
+    match     = { class = "^dropterm$" },
+    workspace = "special:term silent",
+    float     = true,
+    size      = "monitor_w*0.7 monitor_h*0.5",
+    move      = "monitor_w*0.15 50",
+})
+
+-- sans --always-new-process, wezterm reutilise son processus et ignore --class.
+local droptermCmd = "wezterm start --always-new-process --class dropterm"
+local droptermLaunchedAt = 0
+
+hl.bind(mainMod .. " + S", function()
+    -- get_windows ne voit que les fenetres mappees, classe exacte.
+    if #hl.get_windows({ class = "dropterm" }) > 0 then
+        hl.dispatch(hl.dsp.workspace.toggle_special("term"))
+    elseif os.time() - droptermLaunchedAt > 3 then
+        -- premier appui : pas de toggle. il partirait avant que la fenetre
+        -- existe, puis la regle silent la poserait sans focus. la regle
+        -- d'exec, lue apres les regles de fenetre, remplace le silent :
+        -- hyprland ouvre lui-meme special:term et donne le focus au terminal.
+        -- le delai de 3 s evite un second terminal si on rappuie pendant
+        -- le demarrage.
+        droptermLaunchedAt = os.time()
+        hl.exec_cmd(droptermCmd, { workspace = "special:term" })
+    end
+end)
+
+-- envoie la fenetre active dans le scratchpad, sans la suivre.
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:term", follow = false }))
+
 -- plan (games, et navi : ce fichier est partage). silent : la fenetre
 -- part sur le workspace sans y changer le focus.
 -- 1 grok. 2 t3 code.
