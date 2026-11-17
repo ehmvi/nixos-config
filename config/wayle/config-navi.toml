@@ -19,6 +19,7 @@ show = true
 left = [
     "dashboard",
     "hyprland-workspaces",
+    "keybind-mode",
 ]
 center = ["clock"]
 right = [
@@ -26,9 +27,13 @@ right = [
     "ram",
     "volume",
     "network",
+    "bluetooth",
     "battery",
+    "hyprsunset",
+    "idle-inhibit",
     "systray",
     "notifications",
+    "power",
 ]
 
 [modules.battery]
@@ -37,6 +42,14 @@ border-color = "accent"
 icon-bg-color = "accent"
 icon-color = "bg-base"
 label-color = "accent"
+button-bg-color = "bg-base"
+
+[modules.bluetooth]
+border-show = true
+border-color = "accent"
+icon-color = "bg-base"
+icon-bg-color = "accent"
+label-show = false
 button-bg-color = "bg-base"
 
 [modules.clock]
@@ -72,6 +85,33 @@ container-bg-color = "bg-base"
 border-show = true
 border-color = "fg-muted"
 
+[modules.hyprsunset]
+border-show = true
+border-color = "accent"
+icon-color = "bg-base"
+icon-bg-color = "accent"
+label-show = false
+button-bg-color = "bg-base"
+
+[modules.idle-inhibit]
+# minuterie du clic droit, pas un etat au demarrage : wayle demarre toujours inhibiteur coupe
+startup-duration = 60
+border-show = true
+border-color = "yellow"
+icon-color = "bg-base"
+icon-bg-color = "yellow"
+label-show = false
+button-bg-color = "bg-base"
+
+[modules.keybind-mode]
+auto-hide = true
+border-show = true
+border-color = "accent"
+icon-color = "bg-base"
+icon-bg-color = "accent"
+label-color = "accent"
+button-bg-color = "bg-base"
+
 [modules.network]
 border-show = true
 border-color = "accent"
@@ -86,6 +126,14 @@ icon-color = "bg-base"
 icon-bg-color = "status-info"
 label-color = "status-info"
 button-bg-color = "bg-base"
+
+[modules.power]
+# menu rofi avec confirmation (power-menu) : le module ne fait rien par defaut
+left-click = "power-menu"
+border-show = true
+border-color = "border-accent"
+icon-color = "accent"
+icon-bg-color = "bg-base"
 
 [modules.ram]
 border-show = true
