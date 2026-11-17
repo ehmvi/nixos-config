@@ -11,6 +11,10 @@
     kdePackages.kio # kio plumbing (required)
     kdePackages.kio-extras # extra protocols (sftp, etc.)
     kdePackages.kio-fuse # mount remote filesystems
+    # miniatures de dolphin : workers kio lances a la navigation, rien ne reste en memoire
+    kdePackages.ffmpegthumbs # videos
+    kdePackages.kdegraphics-thumbnailers # pdf, ps, raw
+    kdePackages.kimageformats # webp, avif, heif, jxl
     imv
     mpv
     obs-studio
