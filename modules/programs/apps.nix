@@ -1,6 +1,6 @@
 # module: programs/apps
 # general graphical apps (browser, file manager, media, terminals, editors, chat)
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -13,6 +13,7 @@
     kdePackages.kio-fuse # mount remote filesystems
     imv
     mpv
+    sioyek # lecteur pdf, pilote au clavier
     obs-studio
     ente-auth
     gajim
@@ -48,14 +49,51 @@
   systemd.user.units."app-bitwarden@autostart.service".enable = false;
 
   # file type (mime) → default application associations
-  xdg.mime.defaultApplications = {
-    "image/png" = "imv.desktop";
-    "image/jpeg" = "imv.desktop";
-    "image/gif" = "imv.desktop";
-    "image/webp" = "imv.desktop";
-    "image/bmp" = "imv.desktop";
-    "image/tiff" = "imv.desktop";
-    "image/svg+xml" = "imv.desktop";
-    "image/x-icon" = "imv.desktop";
-  };
+  # pas de joker dans mimeapps : chaque type est liste.
+  # ~/.config/mimeapps.list passe avant /etc/xdg/mimeapps.list
+  xdg.mime.defaultApplications =
+    # images : imv
+    {
+      "image/png" = "imv.desktop";
+      "image/jpeg" = "imv.desktop";
+      "image/gif" = "imv.desktop";
+      "image/webp" = "imv.desktop";
+      "image/bmp" = "imv.desktop";
+      "image/tiff" = "imv.desktop";
+      "image/svg+xml" = "imv.desktop";
+      "image/x-icon" = "imv.desktop";
+    }
+    # video et audio : mpv
+    // lib.genAttrs [
+      "video/mp4"
+      "video/x-matroska"
+      "video/webm"
+      "video/quicktime"
+      "video/x-msvideo"
+      "video/mpeg"
+      "video/ogg"
+      "video/x-flv"
+      "audio/mpeg"
+      "audio/flac"
+      "audio/ogg"
+      "audio/opus"
+      "audio/x-vorbis+ogg"
+      "audio/wav"
+      "audio/x-wav"
+      "audio/mp4"
+      "audio/aac"
+      "audio/webm"
+    ] (_: "mpv.desktop")
+    // {
+      # pdf : sioyek
+      "application/pdf" = "sioyek.desktop";
+      # texte brut : zed
+      "text/plain" = "dev.zed.Zed.desktop";
+      # dossiers : dolphin
+      "inode/directory" = "org.kde.dolphin.desktop";
+      # navigateur : brave
+      "x-scheme-handler/http" = "brave-browser.desktop";
+      "x-scheme-handler/https" = "brave-browser.desktop";
+      "text/html" = "brave-browser.desktop";
+    };
 }
