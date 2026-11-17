@@ -47,13 +47,14 @@
   `services.udev.extraRules` writes `99-local.rules`, too late, so the gaming
   rules ship as `70-gaming.rules` through `services.udev.packages`.
 - **workspaces are assigned in `hyprland.lua`**, the same file on navi
-  and games. no app starts with the session. 1 is grok bot. a terminal
-  stays on the current workspace. 2 is empty, for windows a demo opens from code. 3 is
-  brave. 4 is steam games (`steam_app_<id>`), gamescope, and the
-  steam and lutris windows. 5 is vesktop, equibop, signal and fsa. 6 is
-  bottom and nvtop, each launched with its own class, and coolercontrol.
-  gajim no longer has a reserved workspace. the old workspace 3
-  chat grid is gone.
+  and games. no app starts with the session. a terminal stays on the
+  current workspace. 1 is grok bot. 2 is t3 code (`com.t3tools.T3Code`,
+  or `t3code` from its `.desktop`). 3 has no rule. 4 is brave. 5 is
+  vesktop, equibop, signal and fsa. 6 is games: steam games
+  (`steam_app_<id>`) and gamescope. 7 is the launchers: steam, lutris and
+  battle.net. 10 is monitoring: bottom and nvtop, each launched with its
+  own class (`ws10-btm`, `ws10-nvtop`), and coolercontrol. gajim has no
+  workspace.
 - **`pkexec` is not setuid by default** on current nixos
   (`security.polkit.enablePkexecWrapper`). use `sudo`.
 - **`~/.config/mimeapps.list` wins over `/etc/xdg/mimeapps.list`.** apps
