@@ -311,6 +311,37 @@ hl.bind(mainMod .. " + right", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + up",    hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + down",  hl.dsp.focus({ direction = "down" }))
 
+-- gestion des fenetres.
+-- f : vrai plein ecran. shift + f : maximise, la barre et les marges restent.
+-- la regle suppress-maximize-events ne bloque que les demandes des applis,
+-- pas ce dispatcher.
+hl.bind(mainMod .. " + F",         hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }))
+
+-- shift + fleches : deplace la fenetre active dans cette direction.
+for _, dir in ipairs({ "left", "right", "up", "down" }) do
+    hl.bind(mainMod .. " + SHIFT + " .. dir, hl.dsp.window.move({ direction = dir }))
+end
+
+-- r : sous-map de redimensionnement. les fleches changent la taille par
+-- pas de 40 px (20 px reste minuscule a l'echelle 1.8 de navi), echap ou
+-- entree en sortent. tant qu'on y est, tous les autres binds sont inactifs.
+hl.define_submap("resize", function()
+    hl.bind("right", hl.dsp.window.resize({ x = 40,  y = 0,   relative = true }), { repeating = true })
+    hl.bind("left",  hl.dsp.window.resize({ x = -40, y = 0,   relative = true }), { repeating = true })
+    hl.bind("up",    hl.dsp.window.resize({ x = 0,   y = -40, relative = true }), { repeating = true })
+    hl.bind("down",  hl.dsp.window.resize({ x = 0,   y = 40,  relative = true }), { repeating = true })
+    hl.bind("Escape", hl.dsp.submap("reset"))
+    hl.bind("Return", hl.dsp.submap("reset"))
+end)
+hl.bind(mainMod .. " + R", hl.dsp.submap("resize"))
+
+-- tab : retour au workspace precedent, sans activer workspace_back_and_forth.
+hl.bind(mainMod .. " + TAB", hl.dsp.focus({ workspace = "previous" }))
+
+-- w : liste des fenetres ouvertes dans rofi.
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("rofi -show window"))
+
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
