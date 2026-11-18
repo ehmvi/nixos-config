@@ -30,7 +30,6 @@ right = [
     "hyprsunset",
     "systray",
     "notifications",
-    "power",
 ]
 
 [modules.bluetooth]
@@ -96,14 +95,6 @@ icon-color = "bg-base"
 icon-bg-color = "status-info"
 label-color = "status-info"
 button-bg-color = "bg-base"
-
-[modules.power]
-# menu rofi avec confirmation (power-menu) : le module ne fait rien par defaut
-left-click = "power-menu"
-border-show = true
-border-color = "border-accent"
-icon-color = "accent"
-icon-bg-color = "bg-base"
 
 [modules.ram]
 border-show = true
