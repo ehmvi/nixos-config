@@ -1,0 +1,86 @@
+{
+  "anicraft": {
+    "repo": "storytold/anicraft",
+    "version": "0.2.1",
+    "linux": "sha256-o6h5W9aupLS8XKDybCJqByMw04/pP07fVSY2Dr9xVv0=",
+    "darwin": "sha256-5CyGSvtwTR4wIJL5qQOTXC7a2hFhszYyglXeZTQFshU="
+  },
+  "craft-anything": {
+    "repo": "storytold/craft-anything",
+    "version": "0.6.1",
+    "linux": "sha256-g+wHMMkRfzmRIrMVxj7Uw6jTGsVb3ddMuLM80vdu9wQ=",
+    "darwin": "sha256-u7d30iGk/+aTMjwbbmJfAucb+gTXTTKl1QxFQmVe1mQ="
+  },
+  "deckcraft": {
+    "repo": "storytold/deckcraft",
+    "version": "0.18.1",
+    "linux": "sha256-W659VWZjhiRBHvlo8lMqszWNwoCIQURYPkl8VjHbiiY=",
+    "darwin": "sha256-MyHRH2NTs/+d4yjyFAfXUn8fkCnIPatOOrc09RbToFU="
+  },
+  "designcraft": {
+    "repo": "storytold/designcraft",
+    "version": "0.20.1",
+    "linux": "sha256-6RYw1M31eMyx4vOfiOJOhSDxSC1RrkcUZX7kceIjf0Q=",
+    "darwin": "sha256-9Fsr9VQ8HYw30JqXHplCDW7z2XtuvjPjGzbSo8OesMI="
+  },
+  "effectcraft": {
+    "repo": "storytold/effectcraft",
+    "version": "0.24.1",
+    "linux": "sha256-XOA5NpAUQif6kYboIwitY4pu9tn5dsmW5tA7W1G2Wns=",
+    "darwin": "sha256-ItARHR2qpxQu5iZqK4F00vTTdcTBLg38QKBNs9+zWFE="
+  },
+  "figcraft": {
+    "repo": "storytold/figcraft",
+    "version": "0.18.1",
+    "linux": "sha256-gnbSrFXG939686QRqbAEFdP+sLWWB6VFIzETQOZT/Bk=",
+    "darwin": "sha256-3nvCL7NjxXo1CSf1ygCb1ESxmZO96yhjtWTpnz+64jA="
+  },
+  "filmcraft": {
+    "repo": "storytold/filmcraft",
+    "version": "0.20.1",
+    "linux": "sha256-Pk/qPLjUc+aPGJoKh5K6RhYPq1B62rOriSAHP9QfJPo=",
+    "darwin": "sha256-VyLw8hypZYPuJ9/Yi64j4KSmq4eGKmwACCyIxcdZ514="
+  },
+  "lightcraft": {
+    "repo": "storytold/lightcraft",
+    "version": "0.21.1",
+    "linux": "sha256-sSPeFpFYCaeeZLpO467p4c3tbvI7c3wG+Bzcfi8obWI=",
+    "darwin": "sha256-tw9GysATkBVMmt+gaCLmaRuV/CcMUHsO0iCgDcWIux4="
+  },
+  "materialcraft": {
+    "repo": "storytold/materialcraft",
+    "version": "0.4.1",
+    "linux": "sha256-QxFfjT4v7o+fKbwHsDyYTC6PbQTg4ZWUOdc+xc32gw4=",
+    "darwin": "sha256-Ts4Zd6wh8DSxCsPnUclzSb8rhehDJGTXcUouC9A1Q+w="
+  },
+  "photocraft": {
+    "repo": "storytold/photocraft",
+    "version": "0.23.1",
+    "linux": "sha256-Q4Ou9noHzDcK0lCm7WABUgXT5sRj+vP/Sw9nuBeMz8g=",
+    "darwin": "sha256-YGpSkXGIxl3HFwl4EYCg4yRODzt/QLL1uAFw6HNkQg0="
+  },
+  "solidcraft": {
+    "repo": "tangency-labs/solidcraft",
+    "version": "0.44.1",
+    "linux": "sha256-FkCXdD9v8Rwe65CkMTlkcolV4pdokFIFPk5djSCmQik=",
+    "darwin": "sha256-6JFvxAE1o4tLfBW79GmOKwHC8RQC6dvDLoQCHO5ADUM="
+  },
+  "soundcraft": {
+    "repo": "storytold/soundcraft",
+    "version": "0.20.1",
+    "linux": "sha256-yu/PhcTxE4cX1ZLTHOW+B/L8phbsNtY/rGdgze++KKk=",
+    "darwin": "sha256-6x3TktfDhntWmqngjAFkJwloAAFv8z+PTgGS5D2ebAs="
+  },
+  "texturecraft": {
+    "repo": "storytold/texturecraft",
+    "version": "0.6.1",
+    "linux": "sha256-4X0Uoeu59hHaRhcIwpiIdQ+YL91/DNEeFpDsSoQGhgA=",
+    "darwin": "sha256-WBtRlkuBK1F/gvrcGHbL+irrmjmRNzZvp0Abkr1r3S0="
+  },
+  "vectorcraft": {
+    "repo": "storytold/vectorcraft",
+    "version": "0.24.1",
+    "linux": "sha256-oJBRQlL94UVJWsb8Zdb/ExHWmJmOV7pDTV0IlsPR+/o=",
+    "darwin": "sha256-je5ZlrDZX8CovIudlcrCSDSmI8sIA2oM6ou2wOl0yq0="
+  }
+}

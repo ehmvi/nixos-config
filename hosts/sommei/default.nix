@@ -24,6 +24,7 @@ in
   imports = [
     ../../modules/shared/nix.nix
     ../../modules/programs/godot-android.nix
+    ../../modules/programs/craft.nix
   ];
 
   nixpkgs.hostPlatform = "aarch64-darwin";

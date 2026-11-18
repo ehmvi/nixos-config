@@ -61,6 +61,46 @@ update:
     just bump-release pkgs/timon.nix
     just bump-release pkgs/timon-darwin.nix
     just bump-release pkgs/horizon-launcher.nix
+    just bump-craft
+
+# passe les apps craft de pkgs/craft-apps.json a leur derniere release github.
+# les hashes du tarball linux et du dmg mac viennent du SHA256SUMS.txt de la
+# release : rien a telecharger. releases/latest ignore les pre-releases. le
+# fichier n'est reecrit qu'a la fin : une app en echec n'ecrit rien.
+bump-craft:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    file="{{flake}}/pkgs/craft-apps.json"
+    jq="$(nix build --no-link --print-out-paths --inputs-from {{flake}} nixpkgs#jq.bin)/bin/jq"
+    json=$(cat "$file")
+    for id in $("$jq" -r 'keys[]' <<<"$json"); do
+        repo=$("$jq" -r --arg id "$id" '.[$id].repo' <<<"$json")
+        current=$("$jq" -r --arg id "$id" '.[$id].version' <<<"$json")
+        latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
+        version=${latest##*/v}
+        if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+            echo "$repo : tag inattendu : $latest" >&2
+            exit 1
+        fi
+        if [ "$version" = "$current" ]; then
+            echo "$id : deja en $version"
+            continue
+        fi
+        sums=$(curl -sSfL "https://github.com/$repo/releases/download/v$version/SHA256SUMS.txt")
+        sum() { awk -v f="$1" '$2 == f || $2 == "*" f { print $1 }' <<<"$sums"; }
+        linux=$(sum "$id-$version-linux-x86_64.tar.gz")
+        darwin=$(sum "$id-$version-macos-universal.dmg")
+        if [ -z "$linux" ] || [ -z "$darwin" ]; then
+            echo "$repo $version : tarball linux ou dmg absent de SHA256SUMS.txt" >&2
+            exit 1
+        fi
+        json=$("$jq" --arg id "$id" --arg v "$version" \
+            --arg l "$(nix hash convert --hash-algo sha256 --to sri "$linux")" \
+            --arg d "$(nix hash convert --hash-algo sha256 --to sri "$darwin")" \
+            '.[$id] += { version: $v, linux: $l, darwin: $d }' <<<"$json")
+        echo "$id : $current -> $version"
+    done
+    printf '%s\n' "$json" > "$file"
 
 # passe un paquet de pkgs/ a la derniere release github : reecrit version et hash.
 # releases/latest ignore les pre-releases : un paquet en version -nightly. prend

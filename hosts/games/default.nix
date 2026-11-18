@@ -52,6 +52,7 @@ in
     ../../modules/programs/gaming.nix
     ../../modules/programs/office.nix
     ../../modules/programs/apps.nix
+    ../../modules/programs/craft.nix
     ../../modules/programs/timon.nix
     ../../modules/programs/spicetify.nix
     ../../modules/programs/sunshine.nix
