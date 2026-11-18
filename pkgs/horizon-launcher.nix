@@ -108,6 +108,17 @@ buildFHSEnv {
 
   runScript = "${unwrapped}/bin/horizon-launcher";
 
+  # le lanceur ouvre la socket de controle du jeu sous XDG_RUNTIME_DIR (repli
+  # /tmp) et refuse tout dossier parent qui n'est ni a root ni a l'utilisateur.
+  # dans le namespace de bwrap, root n'est pas mappe : /run, /run/user et /tmp
+  # y appartiennent a nobody (65534), et le lancement echoue sur
+  # « bind holder control socket: permission denied ». on remonte le runtime
+  # dir sous la racine tmpfs de bwrap, qui appartient a l'utilisateur.
+  extraBwrapArgs = [
+    ''--bind "''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}" /xdg-runtime''
+    "--setenv XDG_RUNTIME_DIR /xdg-runtime"
+  ];
+
   profile = ''
     export HORIZON_LAUNCHER_NO_SELF_UPDATE=1
     export HORIZON_LAUNCHER_DESKTOP_EXEC="''${HORIZON_LAUNCHER_DESKTOP_EXEC:-${pname}}"
