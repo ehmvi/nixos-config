@@ -57,6 +57,7 @@ in
     ../../modules/programs/spicetify.nix
     ../../modules/programs/sunshine.nix
     ../../modules/programs/ollama.nix
+    ../../modules/programs/remotion.nix
     ./rgb-off.nix
   ];
 
