@@ -105,6 +105,7 @@ in
       # msga : client slack natif (c++), pas electron. non notarise : au premier
       # lancement, reglages > confidentialite et securite > "ouvrir quand meme".
       "punarinta/msga/msga"
+      "super-productivity"
       "utm"
       "xquartz"
       "hopper-disassembler"

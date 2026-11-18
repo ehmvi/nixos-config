@@ -18,6 +18,7 @@
     imv
     mpv
     sioyek # lecteur pdf, pilote au clavier
+    super-productivity # taches et suivi du temps. sommei prend le cask
     obs-studio
     ente-auth
     gajim
