@@ -96,6 +96,8 @@ in
       "font-jetbrains-mono-nerd-font"
       "gstreamer-runtime"
       "grok-bot"
+      # terminal principal (kitty.conf gere par hjem plus bas)
+      "kitty"
       "knockknock"
       "marta"
       "monal"
