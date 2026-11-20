@@ -25,6 +25,12 @@
       url = "github:punarinta/make-slack-great-again";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # ardia : navigateur chromium (barre laterale facon arc). binaire amont
+    # x86_64-linux seulement : navi et games. mise a jour : nix flake update ardia.
+    ardia = {
+      url = "github:Atlas-BES/ardia-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";

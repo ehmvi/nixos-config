@@ -1,8 +1,17 @@
 # module: programs/apps
 # general graphical apps (browser, file manager, media, terminals, editors, chat)
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
+  # ardia : navigateur chromium, paquet et action polkit fournis par le flake amont
+  imports = [ inputs.ardia.nixosModules.default ];
+  programs.ardia.enable = true;
+
   environment.systemPackages = with pkgs; [
     bitwarden-desktop
     brave
