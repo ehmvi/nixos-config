@@ -87,6 +87,8 @@ in
     casks = [
       # limite la charge batterie (80 %) quand le mac reste branche
       "aldente"
+      # ardia : navigateur chromium (sidebar facon arc), cask officiel, se met a jour seul
+      "ardia"
       "brave-browser"
       "bitwarden"
       "ente-auth"
