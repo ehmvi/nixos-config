@@ -21,11 +21,11 @@ let
 
   unwrapped = stdenvNoCC.mkDerivation (finalAttrs: {
     pname = "${pname}-unwrapped";
-    version = "0.2.78";
+    version = "0.2.96";
 
     src = fetchurl {
       url = "https://github.com/horizon-rust/horizon/releases/download/launcher@${finalAttrs.version}/horizon-launcher-linux-x86_64.tar.gz";
-      hash = "sha256-jCFVTG5sSNF/XDiU7Y7m+O8NXSmxgXcGki6cgmZ9yn4=";
+      hash = "sha256-GvmL2y/E8l2DpvwYl/z4Yw9LLxj8WeNwEEcPzf5IXLg=";
     };
 
     # l'archive ne contient que le binaire, sans dossier

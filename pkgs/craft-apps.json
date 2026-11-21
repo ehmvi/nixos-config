@@ -61,9 +61,9 @@
   },
   "solidcraft": {
     "repo": "tangency-labs/solidcraft",
-    "version": "0.44.1",
-    "linux": "sha256-FkCXdD9v8Rwe65CkMTlkcolV4pdokFIFPk5djSCmQik=",
-    "darwin": "sha256-6JFvxAE1o4tLfBW79GmOKwHC8RQC6dvDLoQCHO5ADUM="
+    "version": "0.45.0",
+    "linux": "sha256-eBcPVG4UQtudFGN6S4qOazm1QwCdPT2FfL1l8Jr6N/g=",
+    "darwin": "sha256-WcJSnU069+Q342ggdNOyTWySXW2FtXtg2S1SyU1nxDg="
   },
   "soundcraft": {
     "repo": "storytold/soundcraft",

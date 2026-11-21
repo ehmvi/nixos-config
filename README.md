@@ -1,5 +1,10 @@
 # nixos-config
 
+> [!NOTE]
+> this github repo is only a mirror. the real repo lives on my private,
+> self-hosted [forgejo](https://forgejo.org) instance, so this mirror can
+> sometimes lag behind and not be up to date.
+
 > [!WARNING]
 > this is my **personal** nix configuration, built from scratch as a learning
 > project. it fits my own machines and habits, so most of it will not work out
@@ -13,13 +18,6 @@ into place.
 commit and pull request rules are in [docs/conventions.md](docs/conventions.md).
 a longer, denser version of this file for coding agents is in
 [README_agent.md](README_agent.md).
-
-## foreword
-
-i'm learning linux and nix in the open, and this repo is where i practice. i
-want to understand each piece, not assemble the flashiest setup, so i keep
-things small and explicit. if a choice looks naive, it's probably where i was
-in the learning curve when i made it.
 
 ## hosts
 
