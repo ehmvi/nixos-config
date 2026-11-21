@@ -15,10 +15,6 @@ nix-darwin. [hjem](https://github.com/feel-co/hjem) manages the dotfiles in
 symlink-only mode. the real config files live in `config/`, and hjem links them
 into place.
 
-commit and pull request rules are in [docs/conventions.md](docs/conventions.md).
-a longer, denser version of this file for coding agents is in
-[README_agent.md](README_agent.md).
-
 ## hosts
 
 | name | machine | platform | gpu | role |
