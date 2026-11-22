@@ -45,9 +45,12 @@
     persistent = true;
   };
 
-  # auto-optimise-store est volontairement nixos-only : sur darwin l option
-  # peut corrompre le store, sommei utilise nix.optimise.automatic a la place.
-  nix.settings.auto-optimise-store = true;
+  # dedoublonnage du store en tache de fond (idle par defaut) plutot qu'a
+  # chaque ecriture : rebuilds et nix develop plus rapides, meme gain disque.
+  nix.optimise = {
+    automatic = true;
+    dates = [ "weekly" ];
+  };
 
   # builds et gc passent apres le reste : une mise a jour ne fait pas saccader
   # un jeu ou un stream. ils gardent tout le cpu quand rien d'autre ne tourne.
@@ -55,8 +58,18 @@
   nix.daemonCPUSchedPolicy = "idle";
   systemd.services.nix-gc.serviceConfig.CPUSchedulingPolicy = "idle";
 
+  # /tmp en ram : moins d'ecritures ssd et pas de menage disque au boot.
+  # mkDefault pour laisser un hote ajuster ou couper selon sa ram.
+  boot.tmp.useTmpfs = lib.mkDefault true;
+
   # swap compressé en ram (zram) : filet de sécurité quand la ram est pleine, zéro écriture disque
   zramSwap.enable = true;
+
+  # oomd surveille la pression memoire des sessions utilisateur : evite de
+  # figer le bureau si un processus (llm, navigateur, build) sature la ram.
+  systemd.oomd.enableUserSlices = true;
+
+  boot.kernelModules = [ "tcp_bbr" ];
 
   boot.kernel.sysctl = {
     # zram relit une page en ram, bien plus vite qu'un fichier sur ssd : le noyau
@@ -66,6 +79,15 @@
     "vm.page-cluster" = 0;
     "vm.watermark_boost_factor" = 0;
     "vm.watermark_scale_factor" = 125;
+    # seuils fixes au lieu des ratios (10/20 % = plusieurs go sur 64 go) :
+    # evite les rafales d'ecritures sur le ssd et les saccades d'e/s.
+    "vm.dirty_background_bytes" = 64 * 1024 * 1024;
+    "vm.dirty_bytes" = 256 * 1024 * 1024;
+    # garde plus longtemps en ram le cache d'inodes/dentries (nix store, btrfs, git)
+    "vm.vfs_cache_pressure" = 50;
+    # bbr + fq : latence reseau plus stable sous charge (telechargements, stream tailscale)
+    "net.core.default_qdisc" = "fq";
+    "net.ipv4.tcp_congestion_control" = "bbr";
     # le watchdog nmi reveille chaque coeur et occupe un compteur de perf, pour du debug noyau
     "kernel.nmi_watchdog" = 0;
   };
