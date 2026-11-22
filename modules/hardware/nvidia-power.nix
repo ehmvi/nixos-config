@@ -7,11 +7,24 @@
   # garde le pilote chargé en permanence, sinon la limite peut être perdue
   hardware.nvidia.nvidiaPersistenced = true;
 
-  # applique la limite à chaque démarrage
+  # applique la limite au demarrage et apres chaque sortie de veille :
+  # le pilote remet la limite par defaut (200 w) au reveil.
   systemd.services.nvidia-power-limit = {
     description = "limite de puissance gpu (170 w)";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "nvidia-persistenced.service" ];
+    wantedBy = [
+      "multi-user.target"
+      "suspend.target"
+      "hibernate.target"
+      "hybrid-sleep.target"
+      "suspend-then-hibernate.target"
+    ];
+    after = [
+      "nvidia-persistenced.service"
+      "systemd-suspend.service"
+      "systemd-hibernate.service"
+      "systemd-hybrid-sleep.service"
+      "systemd-suspend-then-hibernate.service"
+    ];
     serviceConfig = {
       Type = "oneshot";
       ExecStart = "${config.hardware.nvidia.package.bin}/bin/nvidia-smi -pl 170";
