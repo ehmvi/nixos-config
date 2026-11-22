@@ -1,6 +1,11 @@
 # module: programs/gaming
 # steam + proton-ge + nintendo controller support
-{ pkgs, username, ... }:
+{
+  lib,
+  pkgs,
+  username,
+  ...
+}:
 
 {
   programs.steam = {
@@ -19,6 +24,14 @@
     enable = true;
     package = pkgs.ananicy-cpp;
     rulesProvider = pkgs.ananicy-rules-cachyos;
+    # aucune regle cachyos n'utilise de cgroup : les couper evite 27 erreurs
+    # cgroupv2 au boot et la creation de /sys/fs/cgroup/cpu{80,85,90}.
+    # mkForce sur le workaround : nixpkgs l'a pose sans mkOptionDefault.
+    settings = {
+      cgroup_load = false;
+      apply_cgroup = false;
+      cgroup_realtime_workaround = lib.mkForce false;
+    };
   };
 
   environment.systemPackages = [
