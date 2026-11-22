@@ -1,7 +1,7 @@
 configuration {
     modi: "drun,window,run";
     terminal: "wezterm";
-    drun-display-format: "{icon} {name}";
+    drun-display-format: "{name}";
     display-drun: "";
     display-window: "";
     display-run: "";
