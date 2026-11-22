@@ -13,9 +13,11 @@
     # required for wayland (hyprland)
     modesetting.enable = true;
 
-    # enable : sauvegarde la vram pendant la veille (NVreg_PreserveVideoMemoryAllocations).
-    # pas reserve aux portables : a passer a true si fenetres noires ou corrompues au reveil.
-    powerManagement.enable = false;
+    # sauvegarde la vram pendant la veille (NVreg_PreserveVideoMemoryAllocations) :
+    # evite les fenetres noires ou corrompues au reveil. cible /tmp (tmpfs) : rapide,
+    # sans ecriture ssd.
+    powerManagement.enable = true;
+    moduleParams.nvidia.NVreg_TemporaryFilePath = "/tmp";
     # finegrained : eteint le gpu au repos (prime offload), portables hybrides uniquement
     powerManagement.finegrained = false;
 
