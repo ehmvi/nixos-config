@@ -227,9 +227,9 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
-        -- vrr toujours actif sur games (evite le modeset / ecran noir de vrr=2 au plein ecran
-        -- sur 1440p@360 dsc tout en gardant g-sync en jeu), coupe sur navi.
-        vrr                     = hostname == "games" and 1 or 0,
+        -- vrr coupe : vrr=2 force un modeset sur 1440p@360 dsc (ecran noir au changement de
+        -- workspace depuis un plein ecran) et vrr=1 cause du flicker oled sur les themes sombres.
+        vrr                     = 0,
     },
 })
 
