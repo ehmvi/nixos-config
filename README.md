@@ -192,7 +192,7 @@ ignores the matugen files, even old ones left on disk.
 | wayle bar | `[styling]` generated in `hjem.nix`, then matugen at runtime. square buttons and popovers |
 | rofi | `config/rofi/config.rasi` (rendered), then `matugen-colors.rasi` |
 | wezterm, hyprlock | generated in `hjem.nix` |
-| starship, fastfetch | `config/starship/starship.toml`, `config/fastfetch/config.jsonc` (rendered, starship on sommei too) |
+| starship, fastfetch | `config/starship/starship.toml`, `config/fastfetch/config.jsonc` (rendered, on sommei too) |
 | btm (games) | `[styles]` in `config/bottom/bottom.toml` (rendered) |
 | zed | `config/zed/theme.json`, installed as `~/.config/zed/themes/theme-nix.json` with the theme name `theme.nix` |
 | gtk 3 and 4 | `adw-gtk3-dark` and libadwaita, recoloured by `config/gtk/gtk.css` and `gtk4.css`. dconf sets `prefer-dark`, the theme, icons, cursor and fonts (`modules/desktop/theming.nix`) |
