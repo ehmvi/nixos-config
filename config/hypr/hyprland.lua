@@ -312,7 +312,7 @@ hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("hyprlock"))
 -- clair dans ~/.cache/cliphist/db. cliphist ignore les copies marquees sensibles
 -- par l'appli source, mais bitwarden ne les marque pas : super+shift+suppr vide
 -- tout l'historique apres avoir copie un mot de passe.
-hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("cliphist list | rofi -dmenu -display-columns 2 | cliphist decode | wl-copy"))
+hl.bind(mainMod .. " + SHIFT + V", hl.dsp.exec_cmd("sel=$(cliphist list | rofi -dmenu -display-columns 2) && [ -n \"$sel\" ] && printf '%s\\n' \"$sel\" | cliphist decode | wl-copy"))
 hl.bind(mainMod .. " + SHIFT + DELETE", hl.dsp.exec_cmd("cliphist wipe"))
 
 -- Move focus with mainMod + arrow keys
