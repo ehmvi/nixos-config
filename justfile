@@ -26,11 +26,15 @@ build:
 fmt:
     nix fmt
 
-# statix + deadnix, épinglés au nixpkgs du lock (--inputs-from garantit que
-# local et CI lancent la même version des linters)
+# statix + deadnix + shellcheck de l'activation darwin (nix-darwin echoue sur
+# un avertissement shellcheck). --inputs-from epingle local et CI au meme lock.
 lint:
+    #!/usr/bin/env bash
+    set -euo pipefail
     nix run --inputs-from {{flake}} nixpkgs#statix -- check .
     nix run --inputs-from {{flake}} nixpkgs#deadnix -- --fail .
+    nix eval --raw {{flake}}#darwinConfigurations.sommei.config.system.activationScripts.postActivation.text \
+        | nix run --inputs-from {{flake}} nixpkgs#shellcheck -- --shell=bash -
 
 # gate local : format + lint. miroir exact de ce que fait la CI.
 check:
