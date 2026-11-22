@@ -10,6 +10,8 @@
   fetchurl,
   unzip,
   autoPatchelfHook,
+  copyDesktopItems,
+  makeDesktopItem,
   makeWrapper,
   SDL2,
   libGL,
@@ -29,6 +31,7 @@ stdenv.mkDerivation (finalAttrs: {
   nativeBuildInputs = [
     unzip
     autoPatchelfHook
+    copyDesktopItems
     makeWrapper
   ];
 
@@ -59,6 +62,16 @@ stdenv.mkDerivation (finalAttrs: {
 
     runHook postInstall
   '';
+
+  desktopItems = [
+    (makeDesktopItem {
+      name = "sm64coopdx";
+      desktopName = "sm64coopdx";
+      comment = "Super Mario 64 coop deluxe";
+      exec = "sm64coopdx";
+      categories = [ "Game" ];
+    })
+  ];
 
   meta = {
     description = "Super Mario 64 coop deluxe";
