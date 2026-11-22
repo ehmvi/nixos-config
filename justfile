@@ -124,7 +124,7 @@ bump-release file:
         latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=30" | grep -oE '"tag_name": *"v[^"]*-nightly\.[^"]*"' | sed -n 1p | cut -d'"' -f4 || true)
         pattern='^[0-9]+(\.[0-9]+)+-nightly\.[0-9]+\.[0-9]+$'
     elif [ "$prefix" != v ]; then
-        latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=100" | grep -oE "\"tag_name\": *\"$prefix[0-9][^\"]*\"" | sed -n 1p | cut -d'"' -f4 || true)
+        latest=$(curl -sSfL "https://api.github.com/repos/$repo/releases?per_page=100" | grep -oE "\"tag_name\": *\"${prefix}[0-9][^\"]*\"" | sed -n 1p | cut -d'"' -f4 || true)
         pattern='^[0-9]+(\.[0-9]+)+$'
     else
         latest=$(curl -sSfL -o /dev/null -w '%{url_effective}' "https://github.com/$repo/releases/latest")
