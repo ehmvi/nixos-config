@@ -154,11 +154,9 @@ let
     config.hide_tab_bar_if_only_one_tab = true
     config.use_fancy_tab_bar = false
     config.tab_bar_at_bottom = true
-    config.default_cursor_style = 'BlinkingBar'
-    config.cursor_blink_rate = 500
-    -- clignotement sans fondu : wezterm ne redessine plus chaque image du fondu
-    config.cursor_blink_ease_in = 'Constant'
-    config.cursor_blink_ease_out = 'Constant'
+    -- curseur fixe : evite deux reveils gpu/compositeur par seconde au repos
+    config.default_cursor_style = 'SteadyBar'
+    config.cursor_blink_rate = 0
     config.max_fps = 120
     config.scrollback_lines = 10000
     config.audible_bell = 'Disabled'
