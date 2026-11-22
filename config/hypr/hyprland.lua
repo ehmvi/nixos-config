@@ -227,8 +227,9 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
-        -- plein ecran seulement : evite le scintillement vrr sur le bureau oled
-        vrr                     = 2,
+        -- pas de bascule vrr au plein ecran : elle force un modeset sur 1440p@360 dsc
+        -- (ecran noir a chaque changement de workspace depuis un plein ecran).
+        vrr                     = 0,
     },
 })
 
