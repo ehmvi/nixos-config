@@ -48,6 +48,111 @@ eval:
     nix eval {{flake}}#nixosConfigurations.games.config.system.build.toplevel.drvPath
     nix eval {{flake}}#darwinConfigurations.sommei.config.system.build.toplevel.drvPath
 
+# controle rapide (lecture seule, sans build) de l'etat reel de cet hote :
+# unites en echec, liens nix casses, mimeapps obsoletes, garde-fous materiels.
+doctor:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    issues=0
+    ok()   { printf 'ok    %s\n' "$1"; }
+    warn() { printf 'warn  %s\n' "$1"; issues=$((issues + 1)); }
+
+    if [ "$(uname)" = "Darwin" ]; then
+        host=$(scutil --get LocalHostName 2>/dev/null || hostname -s)
+        if [ "$host" = "sommei" ]; then
+            ok "LocalHostName = sommei"
+        else
+            warn "LocalHostName = $host (attendu : sommei)"
+        fi
+        if [ -d /Library/Audio/Plug-Ins/HAL/BlackHole2ch.driver ]; then
+            ok "BlackHole2ch.driver present"
+        else
+            warn "BlackHole2ch.driver absent de /Library/Audio/Plug-Ins/HAL"
+        fi
+        if [ -f "$HOME/Library/Application Support/zen/profiles.ini" ]; then
+            ok "zen profiles.ini present"
+        else
+            warn "zen profiles.ini absent"
+        fi
+    else
+        host=$(hostname)
+        sys_failed=$(systemctl --failed --no-legend --plain | awk '{print $1}')
+        if [ -z "$sys_failed" ]; then
+            ok "systemd systeme : 0 unite en echec"
+        else
+            warn "systemd systeme en echec : $(printf '%s' "$sys_failed" | tr '\n' ' ')"
+        fi
+        usr_failed=$(systemctl --user --failed --no-legend --plain 2>/dev/null | awk '{print $1}' || true)
+        if [ -z "$usr_failed" ]; then
+            ok "systemd utilisateur : 0 unite en echec"
+        else
+            warn "systemd utilisateur en echec : $(printf '%s' "$usr_failed" | tr '\n' ' ')"
+        fi
+
+        # seuls les liens casses vers /nix/store comptent (chrome/electron utilisent des liens Singleton* casses)
+        broken=()
+        while IFS= read -r -d '' link; do
+            case "$(readlink "$link" 2>/dev/null || true)" in
+                /nix/store/*) broken+=("$link") ;;
+            esac
+        done < <(find "$HOME/.config" -maxdepth 4 -xtype l -print0 2>/dev/null || true)
+        if [ "${#broken[@]}" -eq 0 ]; then
+            ok "liens hjem/nix dans ~/.config : tous valides"
+        else
+            warn "liens /nix/store casses : ${broken[*]}"
+        fi
+
+        # verifie que chaque .desktop de ~/.config/mimeapps.list existe encore
+        if [ -f "$HOME/.config/mimeapps.list" ]; then
+            dead=()
+            while IFS= read -r desktop; do
+                found=0
+                IFS=: read -ra dirs <<< "${XDG_DATA_DIRS:-/usr/share}:/run/current-system/sw/share:${XDG_DATA_HOME:-$HOME/.local/share}"
+                for dir in "${dirs[@]}"; do
+                    if [ -f "$dir/applications/$desktop" ]; then found=1; break; fi
+                done
+                [ "$found" -eq 0 ] && dead+=("$desktop")
+            done < <(awk -F= '/^[^[#]/ && NF>=2 { n=split($2,a,";"); for(i=1;i<=n;i++) if(a[i] ~ /\.desktop$/) print a[i] }' "$HOME/.config/mimeapps.list" | sort -u)
+            if [ "${#dead[@]}" -eq 0 ]; then
+                ok "mimeapps.list : toutes les cibles .desktop existent"
+            else
+                warn "mimeapps.list pointe vers des .desktop absents : ${dead[*]}"
+            fi
+        fi
+
+        if [ "$host" = "games" ]; then
+            if command -v nvidia-smi >/dev/null 2>&1; then
+                pl=$(nvidia-smi --query-gpu=power.limit --format=csv,noheader,nounits 2>/dev/null | head -n1 | tr -d ' ')
+                case "$pl" in
+                    170|170.0|170.00) ok "gpu power limit = ${pl} W" ;;
+                    *) warn "gpu power limit = ${pl:-inconnu} W (attendu : 170 W)" ;;
+                esac
+            fi
+        elif [ "$host" = "navi" ]; then
+            for bat in /sys/class/power_supply/BAT*; do
+                [ -r "$bat/charge_control_end_threshold" ] || continue
+                start=$(cat "$bat/charge_control_start_threshold" 2>/dev/null || echo "?")
+                end=$(cat "$bat/charge_control_end_threshold" 2>/dev/null || echo "?")
+                if [ "$start" = "75" ] && [ "$end" = "80" ]; then
+                    ok "batterie $(basename "$bat") : seuils ${start}/${end} %"
+                else
+                    warn "batterie $(basename "$bat") : seuils ${start}/${end} % (attendu : 75/80 %)"
+                fi
+            done
+        fi
+
+        wayle_log=$(find "$HOME/.local/state/wayle" -maxdepth 1 -name 'wayle-shell.*.log' 2>/dev/null | sort | tail -n1 || true)
+        if [ -n "$wayle_log" ]; then
+            if grep -qE 'Read-only file system|deprecated config key' "$wayle_log"; then
+                warn "wayle : avertissements config/schema dans $(basename "$wayle_log")"
+            else
+                ok "wayle : aucun avertissement config/schema dans $(basename "$wayle_log")"
+            fi
+        fi
+    fi
+
+    [ "$issues" -eq 0 ]
+
 # cherche des secrets (cles, tokens, mots de passe) dans tout l historique git.
 # repo public : un secret commite reste lisible dans l historique meme apres suppression.
 scan:
