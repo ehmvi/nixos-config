@@ -135,8 +135,9 @@ hl.config({
 
         blur = {
             enabled   = true,
-            size      = 3,
-            passes    = 4,
+            -- 2 passes (rayon 5) au lieu de 4 : rendu proche pour moitie moins de charge gpu
+            size      = 5,
+            passes    = 2,
             vibrancy  = 0.1696,
         },
     },
@@ -226,6 +227,8 @@ hl.config({
     misc = {
         force_default_wallpaper = 0,    -- Set to 0 or 1 to disable the anime mascot wallpapers
         disable_hyprland_logo   = true, -- If true disables the random hyprland logo / anime girl background. :(
+        -- plein ecran seulement : evite le scintillement vrr sur le bureau oled
+        vrr                     = 2,
     },
 })
 
@@ -233,7 +236,9 @@ hl.config({
     render = {
         -- pas de bascule hdr auto au plein ecran : elle force un modeset,
         -- donc environ 1s d'ecran noir en plein ecran sur youtube.
-        cm_auto_hdr = 0,
+        cm_auto_hdr    = 0,
+        -- jeux plein ecran seulement : contourne le compositeur (latence et charge gpu moindres)
+        direct_scanout = 2,
     },
 })
 
