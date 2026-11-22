@@ -68,7 +68,8 @@ element {
     border-radius: 0px;
 }
 
-element normal.normal {
+element normal.normal,
+element alternate.normal {
     background-color: transparent;
     text-color:       @fg;
 }
@@ -78,9 +79,26 @@ element selected.normal {
     text-color:       @accent;
 }
 
-element alternate.normal {
+element normal.active,
+element alternate.active {
     background-color: transparent;
-    text-color:       @fg;
+    text-color:       @accent-alt;
+}
+
+element selected.active {
+    background-color: @bg-alt;
+    text-color:       @accent-alt;
+}
+
+element normal.urgent,
+element alternate.urgent {
+    background-color: transparent;
+    text-color:       @urgent;
+}
+
+element selected.urgent {
+    background-color: @bg-alt;
+    text-color:       @urgent;
 }
 
 element-text {
