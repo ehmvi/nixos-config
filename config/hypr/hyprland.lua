@@ -336,6 +336,24 @@ end
 -- r : sous-map de redimensionnement. les fleches changent la taille par
 -- pas de 40 px (20 px reste minuscule a l'echelle 1.8 de navi), echap ou
 -- entree en sortent. tant qu'on y est, tous les autres binds sont inactifs.
+-- wayle n'affiche plus le mode de raccourcis : le compositeur signale la
+-- sous-map active tant qu'on n'en est pas sorti.
+local submapNotif = nil
+hl.on("keybinds.submap", function(name)
+    if submapNotif then
+        pcall(function() submapNotif:dismiss() end)
+        submapNotif = nil
+    end
+    if name ~= "" then
+        submapNotif = hl.notification.create({
+            text    = name .. " (echap / entree pour sortir)",
+            timeout = 60000,
+            color   = theme.active_border,
+            icon    = "info",
+        })
+    end
+end)
+
 hl.define_submap("resize", function()
     hl.bind("right", hl.dsp.window.resize({ x = 40,  y = 0,   relative = true }), { repeating = true })
     hl.bind("left",  hl.dsp.window.resize({ x = -40, y = 0,   relative = true }), { repeating = true })
