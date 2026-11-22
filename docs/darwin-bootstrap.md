@@ -155,7 +155,7 @@ carry these over by hand, from the old mac or a backup:
 | cmux | `~/.config/cmux` | `cmux.json`, `settings.json` |
 | raycast | `~/.config/raycast`, `~/Library/Application Support/com.raycast.macos` | raycast's own settings export is the clean way _(unverified)_ |
 | cli tools | `~/.local/bin`, `~/.npm-global/bin` | claude, uv/uvx, codex and a few more, installed imperatively. `nodejs_22` comes from nix, the global npm prefix doesn't |
-| hand-installed apps | `/Applications` | adobe creative cloud, ableton live, davinci resolve, cinema 4d, raycast, karabiner, tailscale, signal, obs, zed, kitty, ... with their licences |
+| hand-installed apps | `/Applications` | adobe creative cloud, ableton live, davinci resolve, cinema 4d, raycast, karabiner, tailscale, signal, obs, zed, ... with their licences |
 | app sign-ins | per app | bitwarden, brave, obsidian vault, discord clients, t3 code (`~/.t3/userdata`), mullvad, tailscale |
 | backups | none | restic is installed, but no `services.restic.backups` job exists. copy data off the old mac before wiping it |
 
