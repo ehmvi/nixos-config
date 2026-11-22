@@ -14,7 +14,12 @@
     package = pkgs.ollama-vulkan;
     host = "127.0.0.1";
     openFirewall = false;
-    # le modele quitte la vram 2 min apres sa derniere reponse (defaut 5 min), pour les jeux
-    environmentVariables.OLLAMA_KEEP_ALIVE = "2m";
+    # le modele quitte la vram 2 min apres sa derniere reponse (defaut 5 min), pour les jeux.
+    # flash attention + cache kv q8_0 : divise presque par deux la vram du contexte sur les 12 go.
+    environmentVariables = {
+      OLLAMA_KEEP_ALIVE = "2m";
+      OLLAMA_FLASH_ATTENTION = "1";
+      OLLAMA_KV_CACHE_TYPE = "q8_0";
+    };
   };
 }
