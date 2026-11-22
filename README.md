@@ -348,8 +348,8 @@ pitfalls i hit with nix, hjem, the desktop and darwin are in
 - console: the initrd loads the terminus font (`ter-v32n` on navi, `ter-v24n`
   on games), and the tty colours come from `theme.ansi16`.
 - printing: cups.
-- nix: garbage collection every week for anything older than 7 days, store
-  auto-optimisation, and builds and gc at idle cpu priority.
+- nix: garbage collection every week for anything older than 7 days, weekly
+  store optimisation, and builds and gc at idle cpu priority.
 - locale: `en_US.UTF-8` with french regional settings, timezone `Europe/Paris`.
 - sommei: touch id for sudo, and declarative settings for the dock, finder,
   trackpad, key repeat and screenshots.
