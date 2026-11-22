@@ -47,9 +47,10 @@
 
   # dedoublonnage du store en tache de fond (idle par defaut) plutot qu'a
   # chaque ecriture : rebuilds et nix develop plus rapides, meme gain disque.
+  # decale apres nix-gc (lundi 00h) pour ne pas dedoublonner des chemins en cours de suppression.
   nix.optimise = {
     automatic = true;
-    dates = [ "weekly" ];
+    dates = [ "Mon *-*-* 03:00:00" ];
   };
 
   # builds et gc passent apres le reste : une mise a jour ne fait pas saccader
