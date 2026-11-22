@@ -50,8 +50,8 @@
   and games. no app starts with the session. a terminal stays on the
   current workspace. 1 is grok bot. 2 is t3 code (`com.t3tools.T3Code`,
   or `t3code` from its `.desktop`). 3 has no rule. 4 is brave. 5 is
-  vesktop, equibop, signal and fsa. 6 is games: steam games
-  (`steam_app_<id>`) and gamescope. 7 is the launchers: steam, lutris and
+  vesktop, equibop, signal and fsa. 6 is games: steam or umu-proton games
+  (`steam_app_<id>`, `steam_app_default`) and gamescope. 7 is the launchers: steam, lutris and
   battle.net. 10 is monitoring: bottom and nvtop, each launched with its
   own class (`ws10-btm`, `ws10-nvtop`), and coolercontrol. gajim has no
   workspace.

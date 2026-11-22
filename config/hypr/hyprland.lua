@@ -554,13 +554,13 @@ hl.window_rule({
 })
 
 -- workspace 6 : les jeux, reconnus a la classe, pas au titre.
--- steam_app_<id> : fenetre d'un jeu steam. gamescope : un jeu lance
--- dessous (le paquet n'est pas installe, la classe suffit). un jeu
--- lutris ou battle.net (wine, classe <jeu>.exe) n'a aucune de ces
--- classes et reste sur le workspace courant.
+-- steam_app_<id> : fenetre d'un jeu steam. steam_app_default : jeu lance
+-- hors steam via umu-proton / lutris. gamescope : un jeu lance dessous
+-- (le paquet n'est pas installe, la classe suffit). un jeu wine classique
+-- (classe <jeu>.exe) n'a aucune de ces classes et reste sur le workspace courant.
 hl.window_rule({
     name      = "assign-steam-game-workspace",
-    match     = { class = "^steam_app_\\d+$" },
+    match     = { class = "^steam_app_(\\d+|default)$" },
     workspace = "6 silent",
 })
 
