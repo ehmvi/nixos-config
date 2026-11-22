@@ -85,6 +85,8 @@ in
       "anomalyco/tap/opencode-v2"
     ];
     casks = [
+      # limite la charge batterie (80 %) quand le mac reste branche
+      "aldente"
       "brave-browser"
       "bitwarden"
       "ente-auth"
@@ -204,6 +206,7 @@ in
     orientation = "bottom";
     tilesize = 42;
     show-recents = false;
+    expose-animation-duration = 0.1;
   };
 
   system.defaults.finder = {
@@ -221,6 +224,7 @@ in
   system.defaults.NSGlobalDomain = {
     KeyRepeat = 3;
     InitialKeyRepeat = 15;
+    NSAutomaticWindowAnimationsEnabled = false;
   };
 
   system.defaults.screencapture = {
