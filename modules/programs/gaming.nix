@@ -34,6 +34,10 @@
     };
   };
 
+  # l'unite amont pose MemoryHigh=16M, trop bas pour les ~110 000 lignes de
+  # regles cachyos (pic > 16 mo, 4 mo en zram). 32 mo laisse le demon en ram.
+  systemd.services.ananicy-cpp.serviceConfig.MemoryHigh = "32M";
+
   environment.systemPackages = [
     pkgs.lutris
   ];
