@@ -234,9 +234,8 @@ in
       # se choisit une fois dans zed (theme selector: toggle)
       ".config/zed/themes/theme-nix.json".text = theme.render ../../config/zed/theme.json;
 
-      ".config/wayle/tombi.toml".source = ../../config/wayle/tombi.toml;
+      # seul config.toml est declare : wayle regenere runtime.toml, schema.json et tombi.toml
       ".config/wayle/config.toml".source = wayleConfig;
-      ".config/wayle/schema.json".source = ../../config/wayle/schema.json;
 
       ".config/git/config".source = ../../config/git/config;
 
