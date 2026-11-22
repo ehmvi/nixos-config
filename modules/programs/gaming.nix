@@ -1,11 +1,24 @@
 # module: programs/gaming
 # steam + proton-ge + nintendo controller support
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
   programs.steam = {
     enable = true;
     extraCompatPackages = [ pkgs.proton-ge-bin ];
+  };
+
+  # gamemode : pousse le gouverneur et la priorite seulement pendant un jeu,
+  # puis revient aux reglages calmes a la fermeture.
+  programs.gamemode.enable = true;
+  users.users.${username}.extraGroups = [ "gamemode" ];
+
+  # ananicy-cpp : ajuste automatiquement les priorites (jeux, pipewire, compositeur
+  # devant les taches de fond) sans toucher aux tensions ni aux limites thermiques.
+  services.ananicy = {
+    enable = true;
+    package = pkgs.ananicy-cpp;
+    rulesProvider = pkgs.ananicy-rules-cachyos;
   };
 
   environment.systemPackages = [
