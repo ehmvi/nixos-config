@@ -42,15 +42,12 @@
     pkgs.lutris
   ];
 
-  # regles udev : manettes nintendo, souris endgame gear et xbab, clavier melgeek
+  # regles udev : manettes nintendo, souris xbab, clavier melgeek
   # uaccess = acces pour la session active seulement. fichier 70-* car uaccess doit
   # etre pose avant 73-seat-late.rules (extraRules finit en 99-local.rules : trop tard)
   services.udev.packages = [
     (pkgs.writeTextDir "lib/udev/rules.d/70-gaming.rules" ''
       SUBSYSTEM=="usb", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="0337", TAG+="uaccess"
-      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1978", TAG+="uaccess"
-      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1976", TAG+="uaccess"
-      SUBSYSTEM=="hidraw", ATTRS{idVendor}=="3367", ATTRS{idProduct}=="1966", TAG+="uaccess"
       # made68 air (0416:0114). l'interface 00 porte les frappes, la 01 est
       # le canal de config que hive ouvre. uaccess sur 00 laisserait un
       # programme de la session lire les frappes. on ne l'ouvre que sur 01.
