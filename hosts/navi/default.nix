@@ -65,6 +65,8 @@
     powertop
     # messagerie simplex, navi seulement. l'appimage est dans le cache ; le wrapper fhs s'assemble en local
     simplex-chat-desktop
+    # figma n'a pas de client linux officiel : figma-linux est l'enveloppe electron non officielle
+    figma-linux
   ];
 
   system.stateVersion = "25.11";
