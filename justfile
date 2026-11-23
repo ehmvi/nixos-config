@@ -171,6 +171,50 @@ update:
     just bump-release pkgs/timon-darwin.nix
     just bump-release pkgs/horizon-launcher.nix
     just bump-craft
+    just bump-ladybird
+
+# passe pkgs/ladybird.nix et pkgs/ladybird-darwin.nix a la derniere release.
+# version et sha256 mac viennent de download.ladybird.org/releases.json, le
+# sha256 du .deb 24.04 de l'index apt : rien a telecharger.
+bump-ladybird:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    linux_file="{{flake}}/pkgs/ladybird.nix"
+    darwin_file="{{flake}}/pkgs/ladybird-darwin.nix"
+    jq="$(nix build --no-link --print-out-paths --inputs-from {{flake}} nixpkgs#jq.bin)/bin/jq"
+    rel=$(curl -sSfL "https://download.ladybird.org/releases.json")
+    version=$("$jq" -r '.releases[0].version // empty' <<<"$rel")
+    if ! [[ "$version" =~ ^[0-9]+(\.[0-9]+)+$ ]]; then
+        echo "ladybird : version inattendue : $version" >&2
+        exit 1
+    fi
+    current_linux=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$linux_file")
+    current_darwin=$(sed -nE 's|^ *version = "(.*)";$|\1|p' "$darwin_file")
+    if [ "$version" = "$current_linux" ] && [ "$version" = "$current_darwin" ]; then
+        echo "ladybird : deja en $version"
+        exit 0
+    fi
+    darwin_hex=$("$jq" -r '.releases[0].downloads[] | select(.platform == "macOS" and .architecture == "arm64") | .sha256' <<<"$rel" | head -n1)
+    linux_hex=$(curl -sSfL "https://apt.ladybird.org/dists/noble/main/binary-amd64/Packages" \
+        | awk -v f="pool/main/l/ladybird/ladybird_${version}-1~ubuntu24.04_amd64.deb" '
+            /^Filename: / { match_pkg = ($2 == f) }
+            match_pkg && /^SHA256: / { print $2; exit }
+        ')
+    if [ -z "$linux_hex" ] || [ -z "$darwin_hex" ]; then
+        echo "ladybird $version : sha256 linux ou darwin absent" >&2
+        exit 1
+    fi
+    linux_hash=$(nix hash convert --hash-algo sha256 --to sri "$linux_hex")
+    darwin_hash=$(nix hash convert --hash-algo sha256 --to sri "$darwin_hex")
+    sed -E -i.bak \
+        -e "s|^( *version = \").*(\";)$|\\1$version\\2|" \
+        -e "s|^( *hash = \").*(\";)$|\\1$linux_hash\\2|" "$linux_file"
+    rm "$linux_file.bak"
+    sed -E -i.bak \
+        -e "s|^( *version = \").*(\";)$|\\1$version\\2|" \
+        -e "s|^( *hash = \").*(\";)$|\\1$darwin_hash\\2|" "$darwin_file"
+    rm "$darwin_file.bak"
+    echo "ladybird : $current_linux -> $version"
 
 # passe les apps craft de pkgs/craft-apps.json a leur derniere release github.
 # les hashes du tarball linux et du dmg mac viennent du SHA256SUMS.txt de la
