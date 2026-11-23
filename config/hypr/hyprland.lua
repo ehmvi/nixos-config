@@ -296,12 +296,25 @@ if hostname == "games" then
         },
     })
 else
-    -- acceleration facon macos : lente et precise au ralenti, forte quand le doigt va vite.
-    -- "custom <pas> <points>" : vitesse de sortie a 0, 1, 2... unites/ms en entree
-    -- (gain v * (0.2 + 1.9 v² / (v² + 64))). libinput ignore alors sensitivity
+    -- acceleration facon macos : precise au ralenti, de plus en plus rapide avec la
+    -- vitesse du doigt, sans le palier plat du profil adaptive de libinput.
+    -- le profil custom lit les unites brutes du capteur (pas des mm) : il faut donc la
+    -- resolution du touchpad, la derniere valeur de "0: [...]" sous absinfo dans
+    -- `sudo libinput record`. libinput ignore alors sensitivity
+    local touchpadUnitsPerMm = 12
+    -- pixels par mm de doigt selon la vitesse s (mm/s) : 7 au ralenti, ~20 a 100 mm/s,
+    -- ~40 sur un geste vif (le defaut libinput reste a ~10 jusqu'a 130 mm/s)
+    local function pxPerMm(s) return 7 + 36 * s * s / (s * s + 130 * 130) end
+    local stepMmPerS = 15
+    local points = {}
+    for i = 0, 40 do
+        local s = i * stepMmPerS
+        points[#points + 1] = string.format("%.4f", s * pxPerMm(s) / 1000)
+    end
     hl.config({
         input = {
-            accel_profile = "custom 1 0 0.23 0.62 1.3 2.32 3.67 5.3 7.17 9.2 11.35 13.59 15.87 18.18 20.52 22.85 25.19 27.52 29.84 32.16 34.46 36.76 39.04 41.32 43.58 45.84",
+            accel_profile = string.format("custom %.4f %s",
+                touchpadUnitsPerMm * stepMmPerS / 1000, table.concat(points, " ")),
         },
     })
 end
@@ -462,6 +475,14 @@ hl.window_rule({
     },
 
     no_focus = true,
+})
+
+hl.window_rule({
+    -- electron (figma-linux) defile bien plus vite que le reste au touchpad
+    name  = "figma-slow-scroll",
+    match = { class = "(?i).*figma.*" },
+
+    scroll_touchpad = 0.15,
 })
 
 -- Layer rules also return a handle.
