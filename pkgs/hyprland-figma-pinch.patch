@@ -1,0 +1,34 @@
+--- a/src/managers/input/InputManager.cpp
++++ b/src/managers/input/InputManager.cpp
+@@ -6,6 +6,8 @@
+ #include <hyprutils/math/Vector2D.hpp>
+ #include <ranges>
+ #include <algorithm>
++#include <cctype>
++#include <cmath>
+ #include "../../config/ConfigValue.hpp"
+ #include "../../config/shared/actions/ConfigActions.hpp"
+ #include "../../config/ConfigManager.hpp"
+@@ -2364,7 +2366,21 @@
+ 
+     g_pTrackpadGestures->gestureUpdate(e);
+ 
+-    PROTO::pointerGestures->pinchUpdate(e.timeMs, e.delta, e.scale, e.rotation);
++    // nixos-config : figma-linux (electron) zoome trop lentement au pincement.
++    // scale est cumule depuis le debut du geste : scale^2 double l'amplitude du zoom
++    double scale = e.scale;
++    if (g_pSeatManager->m_state.pointerFocus) {
++        const auto PWINDOW =
++            Desktop::viewState()->query().type(Desktop::View::VIEW_TYPE_WINDOW).surface(g_pSeatManager->m_state.pointerFocus.lock()).runWindow();
++        if (PWINDOW) {
++            std::string appID = PWINDOW->metadata().appID();
++            std::ranges::transform(appID, appID.begin(), [](unsigned char c) { return std::tolower(c); });
++            if (appID.contains("figma"))
++                scale = std::pow(scale, 2.0);
++        }
++    }
++
++    PROTO::pointerGestures->pinchUpdate(e.timeMs, e.delta, scale, e.rotation);
+ }
+ 
+ void CInputManager::onPinchEnd(IPointer::SPinchEndEvent e) {

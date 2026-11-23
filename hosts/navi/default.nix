@@ -58,6 +58,12 @@
   # (mesure en 1440p h264) pour 0,4 coeur gagne.
   hjem.users.${username}.files.".config/mpv/mpv.conf".source = ../../config/mpv/mpv.conf;
 
+  # pincer pour zoomer dans figma-linux est trop lent : le patch amplifie le pincement
+  # pour les fenetres figma seulement. hyprland se compile alors sur navi (pas de cache)
+  programs.hyprland.package = pkgs.hyprland.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ../../pkgs/hyprland-figma-pinch.patch ];
+  });
+
   # fwupd : mises a jour firmware (bios, thunderbolt, ssd) via lvfs, ou lenovo publie
   services.fwupd.enable = true;
 
@@ -67,6 +73,8 @@
     simplex-chat-desktop
     # figma n'a pas de client linux officiel : figma-linux est l'enveloppe electron non officielle
     figma-linux
+    # prise de notes. unfree, autorise globalement (modules/shared/nix.nix).
+    obsidian
   ];
 
   system.stateVersion = "25.11";
