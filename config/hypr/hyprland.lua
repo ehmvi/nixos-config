@@ -245,7 +245,7 @@ hl.config({
 
 
 -- this section configures keyboard layout, mouse sensitivity, and touchpad behavior.
--- the gesture entry below sets up a 3-finger swipe to switch workspaces.
+-- the gesture entry below sets up a 4-finger swipe to switch workspaces.
 ---------------
 ---- INPUT ----
 ---------------
@@ -267,14 +267,23 @@ hl.config({
 
         sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
+        -- touchpad reglé comme le trackpad du mac (sommei)
         touchpad = {
             natural_scroll = true,
+            -- clic a deux doigts = clic droit, n'importe ou sur le pave. sinon libinput
+            -- reserve un coin en bas a droite au clic droit (pas comme sur mac)
+            clickfinger_behavior = true,
+            -- glisser a trois doigts, comme TrackpadThreeFingerDrag sur sommei
+            drag_3fg = 1,
+            -- defaut 1.0 : trop rapide. ajuster sur navi
+            scroll_factor = 0.5,
         },
     },
 })
 
+-- quatre doigts : trois doigts servent au glisser (drag_3fg), comme sur mac
 hl.gesture({
-    fingers = 3,
+    fingers = 4,
     direction = "horizontal",
     action = "workspace"
 })
@@ -284,6 +293,15 @@ if hostname == "games" then
     hl.config({
         input = {
             accel_profile = "flat",
+        },
+    })
+else
+    -- acceleration facon macos : lente et precise au ralenti, forte quand le doigt va vite.
+    -- "custom <pas> <points>" : vitesse de sortie a 0, 1, 2... unites/ms en entree
+    -- (gain v * (0.2 + 1.9 v² / (v² + 64))). libinput ignore alors sensitivity
+    hl.config({
+        input = {
+            accel_profile = "custom 1 0 0.23 0.62 1.3 2.32 3.67 5.3 7.17 9.2 11.35 13.59 15.87 18.18 20.52 22.85 25.19 27.52 29.84 32.16 34.46 36.76 39.04 41.32 43.58 45.84",
         },
     })
 end
