@@ -27,10 +27,9 @@
   ];
 
   fyrr.wayle.configFile = ../../config/wayle/config-navi.toml;
-  # fonds propres a navi (bureau + hyprlock/sddm) : remplacer par les fichiers
-  # locaux ou des fetchurl des que les images orange sont pretes
+  # fonds propres a navi (bureau + hyprlock/sddm)
   # fyrr.wallpapers.desktop = ./wallpaper.png;
-  # fyrr.wallpapers.lock = ./lockscreen.png;
+  fyrr.wallpapers.lock = ./lockscreen.png;
   # hyprlock : niveau de la batterie
   fyrr.hyprlock.battery = "BAT0";
 
