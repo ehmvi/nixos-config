@@ -14,8 +14,9 @@ let
   # "#rrggbb" -> "rrggbb"
   hex = c: builtins.substring 1 6 c;
 
-  # fonds partages avec sddm.nix, epingles dans wallpapers.nix
-  inherit (import ./wallpapers.nix { inherit (pkgs) fetchurl; }) lockWallpaper desktopWallpaper;
+  # fonds partages avec sddm.nix (options fyrr.wallpapers, defauts dans wallpapers.nix)
+  lockWallpaper = config.fyrr.wallpapers.lock;
+  desktopWallpaper = config.fyrr.wallpapers.desktop;
 
   # wayle ne relance matugen que si le chemin du fond change, pas son contenu.
   # on lui donne donc le chemin du store : nouveau fond = nouveau chemin = nouvelles couleurs,
@@ -47,6 +48,8 @@ let
 
   # themes discord : depot ehmvi/ramiel (entree flake), un fichier par variante
   ramielThemes = builtins.mapAttrs pkgs.writeText (import "${inputs.ramiel}/themes.nix");
+  vesktopTheme =
+    if theme.variant == "ramiel-orange" then "ramiel-orange.theme.css" else "ramiel.theme.css";
 
   # hyprlock.conf généré depuis theme.nix — plus de couleurs en dur
   hyprlockConf = pkgs.writeText "hyprlock.conf" ''
@@ -210,8 +213,14 @@ in
       ".config/matugen/templates/vesktop-colors.css".source =
         "${inputs.ramiel}/matugen/ramiel-colors.css";
 
-      # theme vesktop. ramiel-colors.theme.css reste hors de hjem : matugen le reecrit
-      ".config/vesktop/themes/ramiel.theme.css".source = ramielThemes."ramiel.theme.css";
+      # theme vesktop : ramiel + matugen sur games (ramiel-colors.theme.css reste hors de hjem),
+      # ramiel-orange fige sur navi
+      ".config/vesktop/themes/${vesktopTheme}" = {
+        source = ramielThemes.${vesktopTheme};
+      }
+      // lib.optionalAttrs (theme.variant == "ramiel-orange") {
+        clobber = true;
+      };
 
       # theme equibop : ramiel en orange fige pour distinguer les deux clients
       # (pas de matugen ici, voulu). clobber : remplace une copie posee a la main
@@ -251,6 +260,13 @@ in
           /* couleurs du fond d ecran (generees par matugen), par-dessus celles de theme.nix */
           @import "~/.config/rofi/matugen-colors.rasi"
         '';
+    }
+    // lib.optionalAttrs (theme.variant == "ramiel-orange") {
+      # theme t3 code : rend ramiel (orange) disponible dans reglages > apparence
+      ".t3/userdata/themes/ramiel-orange.json" = {
+        source = "${inputs.ramiel}/t3code/ramiel-orange.json";
+        clobber = true;
+      };
     };
   };
 }

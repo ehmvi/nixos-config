@@ -18,7 +18,7 @@ A single Nix flake managing two NixOS machines and one macOS (`nix-darwin`) mach
 ```
 .
 ├── flake.nix         # Flake inputs, dev shell, and host definitions
-├── theme.nix         # Single-source color palettes (ramiel, blood, copland)
+├── theme.nix         # Single-source color palettes (ramiel, ramiel-orange, blood, copland)
 ├── justfile          # Build, switch, lint, health check, and update tasks
 ├── hosts/            # Per-machine entry points (navi, games, sommei)
 ├── modules/
@@ -36,7 +36,7 @@ A single Nix flake managing two NixOS machines and one macOS (`nix-darwin`) mach
 
 - **Opt-in modules** — Each host imports only what it needs. Shared modules set defaults with `lib.mkDefault` so hosts override cleanly without `lib.mkForce`.
 - **Symlink-only dotfiles** — `hjem` links plain config files from `config/` directly into place instead of wrapping them in Home Manager modules.
-- **Unified theming** — `theme.nix` defines the active palette (`ramiel` by default) and renders templated dotfiles at build time. On NixOS, `matugen` handles dynamic wallpaper colors at runtime for Hyprland, Rofi, Wayle, and Vesktop.
+- **Unified theming** — `theme.nix` defines per-host palettes (`ramiel` on `games`/`sommei`, `ramiel-orange` on `navi`) and renders templated dotfiles at build time. When a variant is dynamic (`ramiel`), `matugen` handles runtime wallpaper colors for Hyprland, Rofi, Wayle, and Vesktop.
 
 ## Stack
 

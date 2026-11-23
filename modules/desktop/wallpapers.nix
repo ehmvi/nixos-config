@@ -1,6 +1,6 @@
-# fonds evangelion (github.com/Aleph1-9012/Evangelion), epingles sur un commit precis.
+# fonds evangelion par defaut (github.com/Aleph1-9012/Evangelion), epingles sur un commit precis.
 # nix ne telecharge que ces 2 images, et verifie leur contenu grace au hash.
-# pas un module : hjem.nix et sddm.nix l'importent avec fetchurl
+# pas un module : options.nix l'importe pour les valeurs par defaut de fyrr.wallpapers
 { fetchurl }:
 
 {

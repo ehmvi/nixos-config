@@ -1,9 +1,10 @@
 # theme.nix : colonne vertébrale colorimétrique, sélection par variant.
 #
 # `variant` est le SEUL knob qui retourne toute la machine :
-#   "ramiel"  -> vert-noir + sarcelle, la palette du fond ramiel (defaut)
-#   "blood"   -> near-black + plum-rose sourd
-#   "copland" -> ambre chaud, tube CRT copland-os (serial experiments lain)
+#   "ramiel"        -> vert-noir + sarcelle, la palette du fond ramiel (defaut)
+#   "ramiel-orange" -> brun-noir + orange doux, palette fixe de ehmvi/ramiel (navi)
+#   "blood"         -> near-black + plum-rose sourd
+#   "copland"       -> ambre chaud, tube CRT copland-os (serial experiments lain)
 #
 # `mauve` est le SLOT accent — or en copland, plum-rose en blood — pas une couleur fixe.
 # les palettes partagent les mêmes 26 clés sémantiques (convention catppuccin) par contrat,
@@ -17,10 +18,11 @@
 #     justement la sortie de matugen sur le fond epingle, les deux couches donnent donc
 #     les memes couleurs tant que le fond ne change pas.
 #
-# importé une fois dans flake.nix et threadé partout comme specialArg `theme`.
+# appele par host dans flake.nix et threade partout comme specialArg `theme`.
+{
+  variant ? "ramiel", # "ramiel" | "ramiel-orange" | "blood" | "copland"
+}:
 let
-  variant = "ramiel"; # "ramiel" | "blood" | "copland"
-
   # variants qui suivent le fond d ecran a l'execution (matugen). les autres restent
   # figes : wayle garde sa palette statique, hyprland et rofi ignorent les fichiers matugen.
   dynamic = variant == "ramiel";
@@ -59,6 +61,39 @@ let
       base = "#0e1513"; # surface, fond
       mantle = "#090f0e"; # surface_container_lowest
       crust = "#050908";
+    };
+
+    # ramiel-orange : palette de ehmvi/ramiel (palettes/orange.css), soit la sortie de
+    # matugen (schema sombre, tonal-spot, graine #f08c28) plus deux couleurs hors matugen.
+    # fige (dynamic = false) : les surfaces brun-noir et l'accent orange restent stables.
+    # red = cramoisi (le rouge-orange de ramiel se perdrait dans l'orange), yellow = ambre.
+    ramiel-orange = {
+      rosewater = "#ffdcc2"; # secondary fixe, pale
+      flamingo = "#ffdad6"; # on_error_container
+      pink = "#f16c7d"; # core eclairci
+      mauve = "#ffb77c"; # ACCENT : primary, orange doux
+      red = "#ec3b52"; # core cramoisi : rare, erreurs / danger uniquement
+      maroon = "#ffb4ab"; # error matugen, rouge doux
+      peach = "#e37f66"; # core et ambre a parts egales
+      yellow = "#d9c27a"; # ambre, avertissements / idle
+      green = "#ffb77c"; # primary : meme role que ramiel, succes = accent
+      teal = "#ffdcc2"; # primary fixe (on_primary_container)
+      sky = "#e1e7b1"; # tertiary fixe
+      sapphire = "#959a72"; # tertiary assombri
+      blue = "#c4cb96"; # tertiary, structure / dossiers / liens externes
+      lavender = "#e3c0a6"; # secondary
+      text = "#efe0d6"; # on_surface, texte vif (survol, titres)
+      subtext1 = "#d6c3b6"; # on_surface_variant, texte courant
+      subtext0 = "#9e8e82"; # outline, icones et texte sourd
+      overlay2 = "#87786d";
+      overlay1 = "#706257"; # commentaires, heures (text-5 de vesktop)
+      overlay0 = "#51443b"; # outline_variant, bordure de panneau actif
+      surface2 = "#3c332c"; # surface_container_highest
+      surface1 = "#312822"; # surface_container_high, selection
+      surface0 = "#261e18"; # surface_container, bordure au repos
+      base = "#19120c"; # surface, fond
+      mantle = "#140d08"; # surface_container_lowest
+      crust = "#0c0805";
     };
 
     # copland amber : le tube tachibana labs / copland os. ambre chaud sur noir chaud,
@@ -149,6 +184,26 @@ let
       "#cde8e0"
       "#b5e6ea"
       "#dee4e0"
+    ];
+    # ramiel-orange : meme correspondance de slots que ramiel, sur la palette orange.
+    # cyan = melange primary / tertiary, magenta = secondary, rouge = core cramoisi.
+    ramiel-orange = [
+      "#312822"
+      "#ec3b52"
+      "#ffb77c"
+      "#d9c27a"
+      "#c4cb96"
+      "#e3c0a6"
+      "#e2c189"
+      "#d6c3b6"
+      "#706257"
+      "#f16c7d"
+      "#ffdcc2"
+      "#e0cd92"
+      "#e1e7b1"
+      "#ffdcc2"
+      "#f0e2ba"
+      "#efe0d6"
     ];
     copland = [
       "#28200f"

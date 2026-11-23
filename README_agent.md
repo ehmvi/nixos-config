@@ -40,12 +40,15 @@ the two nixos hosts differ in a few places:
 | keyboard | qwerty-fr (accents on AltGr), caps lock is super | qwerty-fr (accents on AltGr), caps lock is super |
 | `mainMod` | `SUPER`, also via caps lock (`caps:super`) | `SUPER` via caps lock (`caps:super`, 60% keyboard) |
 | wayle config | `config/wayle/config-navi.toml` | `config/wayle/config-games.toml` |
+| theme variant | `ramiel-orange` (fixed) | `ramiel` (dynamic via matugen) |
 | extras | power management (`upower`, `power-profiles-daemon`, `thermald`, 75–80% battery charge thresholds), `powertop`, intel VA-API/QSV (`intel-media-driver`, `vpl-gpu-rt`) + `mpv` hwdec, `ext4` (`noatime,commit=60`) | nvidia (open kernel module, stable branch, 170 W power limit reapplied after suspend), steam + proton-ge, coolercontrol (`nct6775`), spicetify, openrgb (leds off at boot), sunshine, ollama, remotion, `btrfs` (`compress=zstd:1,noatime` + monthly scrub), Wake-on-LAN |
 
 per-host values in `hyprland.lua` are picked by reading `/etc/hostname`. the
 wayle file is selected through a custom option, `fyrr.wayle.configFile`,
 declared in `modules/desktop/options.nix` (alongside `fyrr.hyprlock.battery`
-for showing the laptop battery level on the lock screen).
+for showing the laptop battery level on the lock screen and
+`fyrr.wallpapers.{desktop,lock}` for per-host desktop and lockscreen/sddm
+wallpapers).
 
 ### streaming from games to the mac
 
@@ -144,15 +147,19 @@ disturb. amber (`#d9c27a`) marks warnings and idle states.
 
 ### palette: `theme.nix`
 
-`theme.nix` sits at the repo root and holds three palettes: `ramiel` (default),
-`blood` and `copland` (a serial experiments lain reference). a single `variant`
-string picks one.
+`theme.nix` sits at the repo root and holds four palettes: `ramiel` (default,
+used on `games` and `sommei`), `ramiel-orange` (used on `navi`, derived from
+`ehmvi/ramiel` `palettes/orange.css` / matugen seed `#f08c28`), `blood` and
+`copland` (a serial experiments lain reference). `flake.nix` calls `theme.nix`
+per host through `mkHost`'s `themeVariant` argument.
 
 every palette exposes the same 26 semantic keys (catppuccin convention) plus
 the 16 ansi colours, so any consumer that interpolates `theme.palette.<key>`
 rethemes automatically. `ramiel` is matugen's output on the pinned
 `Ramiel-wall.png` (dark scheme, tonal-spot), plus the core red-orange and amber
-accents. here is how the matugen roles map to the palette keys:
+accents. `ramiel-orange` uses the same role mapping on matugen's `#f08c28`
+tonal-spot output, with a crimson core (`#ec3b52`) so errors stay distinct from
+the orange accent. here is how the matugen roles map to the palette keys:
 
 | palette key | matugen role |
 |---|---|
@@ -165,11 +172,11 @@ accents. here is how the matugen roles map to the palette keys:
 | `blue` | tertiary |
 | `lavender` | secondary |
 | `maroon` | error |
-| `red` | the core red-orange (not from matugen) |
+| `red` | the core accent (not from matugen) |
 | `yellow` | amber (not from matugen) |
 
-`flake.nix` imports the file once and passes it to every host as `theme`
-through `specialArgs`. there are two ways to consume it:
+`flake.nix` instantiates `theme.nix` per host and passes it as `theme` through
+`specialArgs`. there are two ways to consume it:
 
 1. **inline nix**: `wezterm.lua`, `hyprlock.conf`, `hypr-theme.lua` (border
    fallback) and the wayle `[styling]` section are written in
@@ -193,14 +200,15 @@ matugen only runs when the variant is dynamic (`theme.dynamic`, true for
 `ramiel`). wayle then uses `theme-provider = "matugen"`, `hyprland.lua` prefers
 `matugen-colors.lua` and rofi imports `matugen-colors.rasi`. since `ramiel` is
 matugen's own output for the pinned wallpaper, both layers agree; they only
-diverge if the wallpaper changes. with `blood` or `copland`, wayle keeps its
-static palette and the matugen files, even stale ones, are ignored.
+diverge if the wallpaper changes. with `ramiel-orange`, `blood` or `copland`,
+wayle keeps its static palette and the matugen files, even stale ones, are
+ignored.
 
 | app | where its colours come from |
 |---|---|
-| hyprland borders | matugen (`matugen-colors.lua`), falling back to `hypr-theme.lua` |
-| wayle bar | `[styling]` generated in `hjem.nix`, then matugen at runtime. square buttons and popovers |
-| rofi | `config/rofi/config.rasi` (rendered), then `matugen-colors.rasi` |
+| hyprland borders | matugen (`matugen-colors.lua`) when dynamic, otherwise `hypr-theme.lua` |
+| wayle bar | `[styling]` generated in `hjem.nix`, then matugen at runtime if dynamic. square buttons and popovers |
+| rofi | `config/rofi/config.rasi` (rendered), plus `matugen-colors.rasi` if dynamic |
 | wezterm, hyprlock | generated in `hjem.nix` |
 | starship, fastfetch | `config/starship/starship.toml`, `config/fastfetch/config.jsonc` (rendered, on `sommei` too) |
 | btm (`games`) | `[styles]` in `config/bottom/bottom.toml` (rendered) |
@@ -209,7 +217,9 @@ static palette and the matugen files, even stale ones, are ignored.
 | electron, brave, libadwaita dark mode | `color-scheme = prefer-dark` through `xdg-desktop-portal-gtk` |
 | qt / kde (dolphin, kate, ark, kdenlive…) | `qt.platformTheme = "kde"` with the breeze style; colours, fonts, icons and terminal come from `config/kde/kdeglobals`, installed as `/etc/xdg/kdeglobals` |
 | spotify (`games`) | `config/spicetify/ramiel/user.css` (structure only) + `customColorScheme` from `theme.nix` |
-| vesktop | `ramiel.theme.css` + matugen's `ramiel-colors.theme.css` |
+| vesktop | `ramiel.theme.css` + matugen's `ramiel-colors.theme.css` on `games`; fixed `ramiel-orange.theme.css` on `navi` |
+| equibop | fixed `ramiel-orange.theme.css` |
+| t3 code (`navi`) | `ramiel-orange.json` linked from `inputs.ramiel` into `~/.t3/userdata/themes/` |
 | obsidian | its own ramiel theme in the vault, outside this repo |
 
 `kdeglobals` goes in `/etc/xdg` and gtk settings in the system dconf database

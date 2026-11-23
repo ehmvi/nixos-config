@@ -63,7 +63,7 @@
       ...
     }:
     let
-      theme = import ./theme.nix;
+      mkTheme = import ./theme.nix;
       forAllSystems = nixpkgs.lib.genAttrs [
         "x86_64-linux"
         "aarch64-darwin"
@@ -79,8 +79,12 @@
           builder,
           modules,
           username, # compte principal du host, passe aux modules via specialArgs
+          themeVariant ? "ramiel",
           darwin ? false,
         }:
+        let
+          theme = mkTheme { variant = themeVariant; };
+        in
         builder {
           specialArgs = {
             inherit inputs theme username;
@@ -124,6 +128,7 @@
         navi = mkHost {
           builder = nixpkgs.lib.nixosSystem;
           username = "paul";
+          themeVariant = "ramiel-orange";
           modules = [ ./hosts/navi/default.nix ];
         };
         games = mkHost {

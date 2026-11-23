@@ -1,11 +1,16 @@
 # module: desktop/sddm
 # sddm en wayland (session hyprland via uwsm) + xserver pour le clavier et nvidia
-{ pkgs, theme, ... }:
+{
+  config,
+  pkgs,
+  theme,
+  ...
+}:
 
 let
-  # meme fond que hyprlock (ayanami) : les deux ecrans de mot de passe se ressemblent,
-  # le bureau garde ramiel
-  inherit (import ./wallpapers.nix { inherit (pkgs) fetchurl; }) lockWallpaper;
+  # meme fond que hyprlock (option fyrr.wallpapers.lock, ayanami par defaut) :
+  # les deux ecrans de mot de passe se ressemblent, le bureau a son propre fond
+  lockWallpaper = config.fyrr.wallpapers.lock;
 
   # where-is-my-sddm-theme : un seul champ de mot de passe, qt6, et pour toute
   # dependance qt5compat + qtsvg. sddm-astronaut tire qtmultimedia et
