@@ -92,6 +92,7 @@
           modules = [
             (if darwin then sops-nix.darwinModules.sops else sops-nix.nixosModules.sops)
             ./modules/shared/sops.nix
+            ./modules/shared/t3code.nix
             (if darwin then hjem.darwinModules.default else hjem.nixosModules.default)
           ]
           ++ modules;
