@@ -8,6 +8,8 @@ let
     T3CODE_TELEMETRY_ENABLED = "false";
     T3CODE_OTEL_SDK_DISABLED = "true";
   };
+  # passerelle d'ingestion fermee : bloquee dans /etc/hosts, en plus des variables.
+  ingest = "ingest.t3.codes";
 in
 {
   # optionalAttrs, pas mkIf : meme raison que shared/sops.
@@ -21,6 +23,26 @@ in
     (lib.optionalAttrs (!(options.environment ? sessionVariables)) {
       environment.variables = vars;
       launchd.user.envVariables = vars;
+    })
+    # nixos : networking.hosts ecrit /etc/hosts.
+    (lib.optionalAttrs (options.networking ? hosts) {
+      networking.hosts = {
+        "127.0.0.1" = [ ingest ];
+        "::1" = [ ingest ];
+      };
+    })
+    # darwin : pas d'option hosts, /etc/hosts est un vrai fichier. on ajoute
+    # les lignes une seule fois (reperees par le commentaire), puis on vide
+    # le cache dns. mkAfter : s'ajoute au postActivation de sommei.
+    (lib.optionalAttrs (!(options.networking ? hosts)) {
+      system.activationScripts.postActivation.text = lib.mkAfter ''
+        if ! grep -qF '# t3code-telemetry' /etc/hosts; then
+          echo "blocking ${ingest} in /etc/hosts..." >&2
+          printf '127.0.0.1 ${ingest} # t3code-telemetry\n::1 ${ingest} # t3code-telemetry\n' >> /etc/hosts
+          dscacheutil -flushcache || true
+          killall -HUP mDNSResponder 2>/dev/null || true
+        fi
+      '';
     })
   ];
 }

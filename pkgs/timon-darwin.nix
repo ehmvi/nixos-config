@@ -16,11 +16,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "timon";
-  version = "0.1.9";
+  version = "0.1.11";
 
   src = fetchurl {
     url = "https://github.com/ai-timon/timon/releases/download/v${finalAttrs.version}/Timon-${finalAttrs.version}-arm64.dmg";
-    hash = "sha256-m3BSpwd+nZaBDckvI0ZgS7BAeM8oVhYje+mTEAL6J50=";
+    hash = "sha256-SYGd1X05w8IMGGXc/NdJEybll1o25zwmS7OHPAhxjXU=";
   };
 
   nativeBuildInputs = [ _7zz ];

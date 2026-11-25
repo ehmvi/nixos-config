@@ -56,11 +56,11 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "timon";
-  version = "0.1.9";
+  version = "0.1.11";
 
   src = fetchurl {
     url = "https://github.com/ai-timon/timon/releases/download/v${finalAttrs.version}/timon-desktop_${finalAttrs.version}_amd64.deb";
-    hash = "sha256-75M311xU5mhrb3Fpn8vIGJe9hl5TZL2Ss/l2LwY3onQ=";
+    hash = "sha256-3Hh9DJo59+E2hP/K5oznG0KGb+AdC0+daZigb6VVqpM=";
   };
 
   nativeBuildInputs = [
