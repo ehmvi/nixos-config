@@ -36,4 +36,10 @@ sketchybar --add item volume right \
   --set volume script="$PLUGIN_DIR/volume.sh" \
   --subscribe volume volume_change
 
+# tray : les icones de la barre de menus des apps (aldente, mullvad...), voir tray.sh
+sketchybar --add item tray right \
+  --set tray drawing=off updates=on update_freq=10 \
+    script="TRAY_COLOR=0xff@accent.hex@ $PLUGIN_DIR/tray.sh" \
+  --subscribe tray system_woke
+
 sketchybar --update
