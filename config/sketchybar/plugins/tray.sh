@@ -35,12 +35,14 @@ done <<LIST
 $current
 LIST
 
-# nouvelles icones
+# nouvelles icones : marges negatives pour rogner le vide que macos met autour de
+# chaque icone, et teinte unie (TRAY_COLOR, l accent du theme passe par sketchybarrc)
 while IFS= read -r item; do
   [ -z "$item" ] && continue
   printf '%s\n' "$current" | grep -Fxq -- "$item" && continue
   sketchybar --add alias "$item" right \
-    --set "$item" padding_left=0 padding_right=0 alias.update_freq=2 \
+    --set "$item" padding_left=-5 padding_right=-5 alias.update_freq=2 \
+      alias.color="${TRAY_COLOR:-0xffffffff}" \
       click_script="$dir/tray_click.sh"
   changed=1
 done <<LIST
