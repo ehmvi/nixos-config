@@ -61,6 +61,17 @@ in
     );
   };
 
+  # skhd : raccourcis clavier globaux. cmd+w quitte l app au premier plan (cmd+q) au lieu
+  # de fermer la fenetre, comme fermer une fenetre sur navi et games. du coup cmd+w ne
+  # ferme plus d onglet nulle part. agent launchd utilisateur ; il faut lui donner la
+  # permission « accessibilite » (le binaire du store, glisse dans la liste).
+  services.skhd = {
+    enable = true;
+    skhdConfig = ''
+      cmd - w : ${pkgs.skhd}/bin/skhd -k "cmd - q"
+    '';
+  };
+
   # fish shell
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish ];
