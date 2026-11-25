@@ -56,8 +56,6 @@ in
   # le rc est rendu avec theme.nix, les plugins sont lus depuis le store.
   services.sketchybar = {
     enable = true;
-    # jq : tray.sh lit les reponses json de sketchybar --query
-    extraPackages = [ pkgs.jq ];
     config = builtins.replaceStrings [ "@plugins@" ] [ "${../../config/sketchybar/plugins}" ] (
       theme.render ../../config/sketchybar/sketchybarrc
     );
