@@ -162,16 +162,18 @@ scan:
 bump input:
     nix flake update {{input}}
 
+# le `-` devant chaque bump laisse continuer si un depot amont tombe (404,
+# release cassee) : l erreur s affiche, le paquet garde sa version.
 # met a jour tous les inputs et les paquets suivis sur les releases github
 update:
     nix flake update
-    just bump-release pkgs/artcraft-launcher.nix
-    just bump-release pkgs/t3code-nightly.nix
-    just bump-release pkgs/timon.nix
-    just bump-release pkgs/timon-darwin.nix
-    just bump-release pkgs/horizon-launcher.nix
-    just bump-craft
-    just bump-ladybird
+    -just bump-release pkgs/artcraft-launcher.nix
+    -just bump-release pkgs/t3code-nightly.nix
+    -just bump-release pkgs/timon.nix
+    -just bump-release pkgs/timon-darwin.nix
+    -just bump-release pkgs/horizon-launcher.nix
+    -just bump-craft
+    -just bump-ladybird
 
 # passe pkgs/ladybird.nix et pkgs/ladybird-darwin.nix a la derniere release.
 # version et sha256 mac viennent de download.ladybird.org/releases.json, le

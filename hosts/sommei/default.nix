@@ -51,6 +51,16 @@ in
   # le module copie le driver dans /Library/Audio/Plug-Ins/HAL a l activation
   programs.fsa.enable = true;
 
+  # sketchybar : barre du haut a la place de la barre de menus macos (masquee plus bas,
+  # elle reapparait en survolant le haut de l ecran). agent launchd utilisateur ;
+  # le rc est rendu avec theme.nix, les plugins sont lus depuis le store.
+  services.sketchybar = {
+    enable = true;
+    config = builtins.replaceStrings [ "@plugins@" ] [ "${../../config/sketchybar/plugins}" ] (
+      theme.render ../../config/sketchybar/sketchybarrc
+    );
+  };
+
   # fish shell
   programs.fish.enable = true;
   environment.shells = [ pkgs.fish ];
@@ -112,7 +122,6 @@ in
       # lancement, reglages > confidentialite et securite > "ouvrir quand meme".
       "punarinta/msga/msga"
       "super-productivity"
-      "utm"
       "xquartz"
       "hopper-disassembler"
       "handbrake-app"
@@ -232,6 +241,8 @@ in
     KeyRepeat = 3;
     InitialKeyRepeat = 15;
     NSAutomaticWindowAnimationsEnabled = false;
+    # la barre de menus se cache : sketchybar prend sa place
+    _HIHideMenuBar = true;
   };
 
   system.defaults.screencapture = {

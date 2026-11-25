@@ -1,0 +1,39 @@
+#!/bin/sh
+# sketchybar : barre du haut de sommei, couleurs de theme.nix (0xAARRGGBB).
+# PLUGIN_DIR est rempli par nix (hosts/sommei/default.nix) : les scripts vivent dans le store.
+PLUGIN_DIR="@plugins@"
+
+sketchybar --bar position=top height=32 blur_radius=20 \
+  color=0xe6@base.hex@ border_color=0xff@surface0.hex@ border_width=1 \
+  padding_left=10 padding_right=10
+
+sketchybar --default \
+  icon.font="JetBrainsMono Nerd Font:Bold:15.0" \
+  label.font="JetBrainsMono Nerd Font:Regular:13.0" \
+  icon.color=0xff@accent.hex@ label.color=0xff@subtext1.hex@ \
+  padding_left=6 padding_right=6 \
+  icon.padding_left=4 icon.padding_right=4 \
+  label.padding_left=4 label.padding_right=4
+
+# gauche : logo puis l app au premier plan
+sketchybar --add item apple left \
+  --set apple icon=󰀵 label.drawing=off click_script="open -a 'System Settings'"
+
+sketchybar --add item front_app left \
+  --set front_app icon.drawing=off label.color=0xff@text.hex@ \
+    script="$PLUGIN_DIR/front_app.sh" \
+  --subscribe front_app front_app_switched
+
+# droite (de droite a gauche) : heure, batterie, volume
+sketchybar --add item clock right \
+  --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add item battery right \
+  --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery system_woke power_source_change
+
+sketchybar --add item volume right \
+  --set volume script="$PLUGIN_DIR/volume.sh" \
+  --subscribe volume volume_change
+
+sketchybar --update

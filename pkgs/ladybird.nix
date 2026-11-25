@@ -41,12 +41,12 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "ladybird";
-  version = "2026.47.7";
+  version = "2026.47.8";
 
   src = fetchurl {
     name = "ladybird-${finalAttrs.version}-amd64.deb";
     url = "https://apt.ladybird.org/pool/main/l/ladybird/ladybird_${finalAttrs.version}-1~ubuntu24.04_amd64.deb";
-    hash = "sha256-Z+M/CiNLZyc0uJZep91cY8jwthYxO5HUNSLFOtaGsdQ=";
+    hash = "sha256-9FvU+CL0Xr8cqKjARNQqnamfqA+rqwm4Rd9z6o0dZyY=";
   };
 
   nativeBuildInputs = [
