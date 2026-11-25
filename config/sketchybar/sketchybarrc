@@ -1,41 +1,115 @@
 #!/bin/sh
-# sketchybar : barre du haut de sommei, couleurs de theme.nix (0xAARRGGBB).
+# sketchybar : barre du haut de sommei, alignee sur wayle (config/wayle/config-navi.toml)
+# et rendue avec les couleurs de theme.nix (0xAARRGGBB).
 # PLUGIN_DIR est rempli par nix (hosts/sommei/default.nix) : les scripts vivent dans le store.
 PLUGIN_DIR="@plugins@"
 
-sketchybar --bar position=top height=32 blur_radius=20 \
-  color=0xe6@base.hex@ border_color=0xff@surface0.hex@ border_width=1 \
-  padding_left=10 padding_right=10
+sketchybar --add event yabai_windows
+sketchybar --add event skhd_mode
 
+# 14 pouces m1 pro : hauteur 36 et notch_width 200 pour epouser l'encoche sans
+# gaspiller d'espace vertical ; yabai reserve la meme hauteur via external_bar.
+sketchybar --bar position=top height=36 notch_width=200 topmost=off \
+  blur_radius=20 color=0xf2@base.hex@ \
+  border_color=0xff@overlay0.hex@ border_width=2 \
+  padding_left=8 padding_right=8
+
+# style wayle : boites carrees encadrees en accent, pastille d'icone inversee
 sketchybar --default \
-  icon.font="JetBrainsMono Nerd Font:Bold:15.0" \
-  label.font="JetBrainsMono Nerd Font:Regular:13.0" \
-  icon.color=0xff@accent.hex@ label.color=0xff@subtext1.hex@ \
-  padding_left=6 padding_right=6 \
-  icon.padding_left=4 icon.padding_right=4 \
-  label.padding_left=4 label.padding_right=4
+  icon.font="JetBrainsMono Nerd Font:Bold:14.0" \
+  label.font="JetBrainsMono Nerd Font:Medium:12.0" \
+  icon.color=0xff@base.hex@ \
+  icon.background.drawing=on \
+  icon.background.color=0xff@accent.hex@ \
+  icon.background.height=24 \
+  icon.background.corner_radius=0 \
+  icon.padding_left=6 icon.padding_right=6 \
+  label.color=0xff@accent.hex@ \
+  label.padding_left=6 label.padding_right=6 \
+  background.drawing=on \
+  background.color=0xff@base.hex@ \
+  background.border_color=0xff@accent.hex@ \
+  background.border_width=2 \
+  background.height=24 \
+  background.corner_radius=0 \
+  padding_left=3 padding_right=3
 
-# gauche : logo puis l app au premier plan
+# gauche : logo, espaces yabai 1..10 (min 3 visibles), puis indicateur de mode skhd
 sketchybar --add item apple left \
-  --set apple icon=󰀵 label.drawing=off click_script="open -a 'System Settings'"
+  --set apple icon=󰀵 icon.color=0xff@accent.hex@ icon.background.drawing=off \
+    label.drawing=off padding_right=6 click_script="open -a 'System Settings'"
 
-sketchybar --add item front_app left \
-  --set front_app icon.drawing=off label.color=0xff@text.hex@ \
-    script="$PLUGIN_DIR/front_app.sh" \
-  --subscribe front_app front_app_switched
+i=1
+while [ "$i" -le 10 ]; do
+  sketchybar --add item "space.$i" left \
+    --set "space.$i" \
+      icon="$i" \
+      icon.color=0xff@overlay1.hex@ \
+      icon.background.drawing=off \
+      icon.padding_left=7 icon.padding_right=7 \
+      label.drawing=off \
+      background.drawing=off \
+      padding_left=0 padding_right=0 \
+      click_script="yabai -m space --focus $i"
+  i=$((i + 1))
+done
 
-# droite (de droite a gauche) : heure (clic = calendrier), batterie (clic = reglages
-# batterie), volume (clic = muet, molette = +/-)
+sketchybar --set space.1 \
+  script="BAR_ACCENT=0xff@accent.hex@ BAR_BASE=0xff@base.hex@ BAR_TEXT=0xff@text.hex@ BAR_DIM=0xff@overlay1.hex@ $PLUGIN_DIR/workspaces.sh" \
+  --subscribe space.1 space_change space_windows_change yabai_windows
+
+sketchybar --add bracket workspaces '/space\..*/' \
+  --set workspaces \
+    background.drawing=on \
+    background.color=0xff@base.hex@ \
+    background.border_color=0xff@subtext0.hex@ \
+    background.border_width=2 \
+    background.height=24 \
+    background.corner_radius=0
+
+sketchybar --add item mode left \
+  --set mode drawing=off icon=󰩨 label="" \
+    icon.background.color=0xff@yellow.hex@ \
+    label.color=0xff@yellow.hex@ \
+    background.border_color=0xff@yellow.hex@ \
+    padding_left=6 \
+    script="$PLUGIN_DIR/mode.sh" \
+  --subscribe mode skhd_mode
+
+# droite (de droite a gauche) : heure tout a droite, batterie, bluetooth, wifi,
+# volume (en jaune comme wayle), ram, cpu
 sketchybar --add item clock right \
-  --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="open -a Calendar"
+  --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" \
+    click_script="open -a Calendar"
 
 sketchybar --add item battery right \
   --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
     click_script="open x-apple.systempreferences:com.apple.Battery-Settings.extension" \
   --subscribe battery system_woke power_source_change
 
+sketchybar --add item bluetooth right \
+  --set bluetooth update_freq=30 label.drawing=off script="$PLUGIN_DIR/bluetooth.sh" \
+    click_script="open x-apple.systempreferences:com.apple.BluetoothSettings"
+
+sketchybar --add item network right \
+  --set network update_freq=15 script="$PLUGIN_DIR/network.sh" \
+    click_script="open x-apple.systempreferences:com.apple.wifi-settings-extension" \
+  --subscribe network wifi_change
+
 sketchybar --add item volume right \
-  --set volume script="$PLUGIN_DIR/volume.sh" \
+  --set volume \
+    icon.background.color=0xff@yellow.hex@ \
+    label.color=0xff@yellow.hex@ \
+    background.border_color=0xff@yellow.hex@ \
+    script="$PLUGIN_DIR/volume.sh" \
   --subscribe volume volume_change mouse.clicked mouse.scrolled
+
+sketchybar --add item ram right \
+  --set ram update_freq=5 script="$PLUGIN_DIR/ram.sh" \
+    click_script="open -a 'Activity Monitor'"
+
+sketchybar --add item cpu right \
+  --set cpu update_freq=5 script="$PLUGIN_DIR/cpu.sh" \
+    click_script="open -a 'Activity Monitor'"
 
 sketchybar --update

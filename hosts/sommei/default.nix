@@ -52,13 +52,58 @@ in
   programs.fsa.enable = true;
 
   # sketchybar : barre du haut a la place de la barre de menus macos (masquee plus bas,
-  # elle reapparait en survolant le haut de l ecran). agent launchd utilisateur ;
+  # elle reapparait en survolant le haut de l'ecran). agent launchd utilisateur ;
   # le rc est rendu avec theme.nix, les plugins sont lus depuis le store.
   services.sketchybar = {
     enable = true;
+    extraPackages = [ pkgs.jq ];
     config = builtins.replaceStrings [ "@plugins@" ] [ "${../../config/sketchybar/plugins}" ] (
       theme.render ../../config/sketchybar/sketchybarrc
     );
+  };
+
+  # yabai : gestionnaire de fenetres bsp facon hyprland. la scripting addition
+  # (sip partiellement desactive, voir docs/darwin-bootstrap.md) donne la bascule
+  # instantanee entre espaces, le deplacement de fenetres et les regles silencieuses.
+  services.yabai = {
+    enable = true;
+    enableScriptingAddition = true;
+    config = {
+      layout = "bsp";
+      auto_balance = "off";
+      split_ratio = 0.5;
+      window_placement = "second_child";
+      window_gap = 6;
+      top_padding = 10;
+      bottom_padding = 10;
+      left_padding = 10;
+      right_padding = 10;
+      external_bar = "all:36:0";
+      mouse_follows_focus = "off";
+      focus_follows_mouse = "off";
+      mouse_modifier = "alt";
+      mouse_action1 = "move";
+      mouse_action2 = "resize";
+      mouse_drop_action = "swap";
+      window_shadow = "float";
+    };
+    extraConfig = builtins.readFile ../../config/yabai/extra.sh;
+  };
+
+  # skhd : raccourcis clavier alignes sur config/hypr/hyprland.lua (mainMod = lalt)
+  services.skhd = {
+    enable = true;
+    skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
+  };
+
+  # jankyborders : bordures carrees de 2 px sur les fenetres, couleurs de theme.nix
+  services.jankyborders = {
+    enable = true;
+    style = "square";
+    width = 2.0;
+    hidpi = true;
+    active_color = "0xff${builtins.substring 1 6 theme.accentHex}";
+    inactive_color = "0xff${builtins.substring 1 6 theme.palette.surface0}";
   };
 
   # fish shell
@@ -135,6 +180,7 @@ in
   environment.systemPackages = with pkgs; [
     git
     curl
+    jq
     htop
     tmux
     cmux
@@ -195,31 +241,36 @@ in
     fi
   '';
 
-  # caps lock ne verrouille plus les majuscules. il devient commande
-  # gauche, partout, comme super sur games (kb_options caps:super dans
-  # config/hypr/hyprland.lua, pour tous les claviers).
-  # 0x700000039 caps lock, 0x7000000e3 left gui (commande / super).
+  # caps lock ne verrouille plus les majuscules. il devient option gauche
+  # (lalt), le mainMod de config/skhd/skhdrc, comme super sur navi et games
+  # (kb_options caps:super dans config/hypr/hyprland.lua). commande reste
+  # intacte pour les raccourcis macos, et option droite (ralt) reste libre
+  # pour les accents de qwerty-fr.
+  # 0x700000039 caps lock, 0x7000000e2 left option (lalt).
   # hidutil tourne a chaque just switch, et encore au boot
-  # (activate-system). pas besoin de se deconnecter pour l'installer.
-  # la table n'est pas un reglage macos durable : une deconnexion peut
-  # la perdre jusqu'au prochain switch ou reboot.
-  # cmd+tab et cmd+espace partent aussi de caps lock.
+  # (activate-system). une deconnexion peut la perdre jusqu'au prochain
+  # switch ou reboot.
   system.keyboard.enableKeyMapping = true;
   system.keyboard.userKeyMapping = [
     {
       HIDKeyboardModifierMappingSrc = 30064771129;
-      HIDKeyboardModifierMappingDst = 30064771299;
+      HIDKeyboardModifierMappingDst = 30064771298;
     }
   ];
 
   # réglages macos déclaratifs
   system.defaults.dock = {
-    autohide = false;
+    autohide = true;
+    # garde l'ordre fixe des espaces 1..10 pour yabai
+    mru-spaces = false;
     orientation = "bottom";
     tilesize = 42;
     show-recents = false;
     expose-animation-duration = 0.1;
   };
+
+  # requis par yabai : chaque ecran a ses propres espaces
+  system.defaults.spaces.spans-displays = false;
 
   system.defaults.finder = {
     AppleShowAllExtensions = true;
