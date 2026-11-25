@@ -24,16 +24,18 @@ sketchybar --add item front_app left \
     script="$PLUGIN_DIR/front_app.sh" \
   --subscribe front_app front_app_switched
 
-# droite (de droite a gauche) : heure, batterie, volume
+# droite (de droite a gauche) : heure (clic = calendrier), batterie (clic = reglages
+# batterie), volume (clic = muet, molette = +/-)
 sketchybar --add item clock right \
-  --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh"
+  --set clock update_freq=10 script="$PLUGIN_DIR/clock.sh" click_script="open -a Calendar"
 
 sketchybar --add item battery right \
   --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+    click_script="open x-apple.systempreferences:com.apple.Battery-Settings.extension" \
   --subscribe battery system_woke power_source_change
 
 sketchybar --add item volume right \
   --set volume script="$PLUGIN_DIR/volume.sh" \
-  --subscribe volume volume_change
+  --subscribe volume volume_change mouse.clicked mouse.scrolled
 
 sketchybar --update
