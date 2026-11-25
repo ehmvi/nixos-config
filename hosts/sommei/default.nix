@@ -110,7 +110,6 @@ in
       "grok-bot"
       # terminal principal (kitty.conf gere par hjem plus bas)
       "kitty"
-      "knockknock"
       "marta"
       "monal"
       # client pour regarder le bureau de games via tailscale
