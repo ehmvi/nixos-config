@@ -1,21 +1,22 @@
 #!/bin/sh
 # espaces yabai 1..10 : affiche 1..3 en permanence et 4..10 si actif ou occupe
 # (comme min-workspace-count = 3 dans config/wayle/config-navi.toml).
-# les couleurs passent en variables d'environnement depuis sketchybarrc.
+# style planche : l'espace actif recoit une petite plaque surface1 cerclee d'un
+# filet accent (preparee dans sketchybarrc), les occupes sont a l'encre, les
+# vides en gris sourd. les couleurs passent en variables d'environnement.
 
-ACCENT="${BAR_ACCENT:-0xff85d6c1}"
-BASE="${BAR_BASE:-0xff0e1513}"
-TEXT="${BAR_TEXT:-0xffdee4e0}"
-DIM="${BAR_DIM:-0xff5d6763}"
+ACTIVE="${BAR_ACTIVE:-0xff7a5b2e}"
+TEXT="${BAR_TEXT:-0xff1e1a14}"
+DIM="${BAR_DIM:-0xff8a7f68}"
 
 spaces_json="$(yabai -m query --spaces 2>/dev/null)"
 
 # si yabai ne repond pas encore (avant la sa ou au demarrage), garde 1..3 visibles
 if [ -z "$spaces_json" ]; then
   sketchybar \
-    --set space.1 drawing=on icon.color="$BASE" icon.background.drawing=on icon.background.color="$ACCENT" \
-    --set space.2 drawing=on icon.color="$DIM" icon.background.drawing=off \
-    --set space.3 drawing=on icon.color="$DIM" icon.background.drawing=off \
+    --set space.1 drawing=on icon.color="$ACTIVE" background.drawing=on \
+    --set space.2 drawing=on icon.color="$DIM" background.drawing=off \
+    --set space.3 drawing=on icon.color="$DIM" background.drawing=off \
     --set space.4 drawing=off --set space.5 drawing=off --set space.6 drawing=off \
     --set space.7 drawing=off --set space.8 drawing=off --set space.9 drawing=off \
     --set space.10 drawing=off
@@ -37,13 +38,13 @@ while [ "$i" -le 10 ]; do
   fi
 
   if [ "$focused" -eq 1 ]; then
-    set -- "$@" --set "space.$i" drawing=on icon.color="$BASE" icon.background.drawing=on icon.background.color="$ACCENT"
+    set -- "$@" --set "space.$i" drawing=on icon.color="$ACTIVE" background.drawing=on
   elif [ "$wins" -gt 0 ]; then
-    set -- "$@" --set "space.$i" drawing=on icon.color="$TEXT" icon.background.drawing=off
+    set -- "$@" --set "space.$i" drawing=on icon.color="$TEXT" background.drawing=off
   elif [ "$i" -le 3 ]; then
-    set -- "$@" --set "space.$i" drawing=on icon.color="$DIM" icon.background.drawing=off
+    set -- "$@" --set "space.$i" drawing=on icon.color="$DIM" background.drawing=off
   else
-    set -- "$@" --set "space.$i" drawing=off icon.background.drawing=off
+    set -- "$@" --set "space.$i" drawing=off background.drawing=off
   fi
   i=$((i + 1))
 done

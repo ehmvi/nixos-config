@@ -113,15 +113,17 @@ in
   };
   launchd.user.agents.skhd.serviceConfig.EnvironmentVariables.SHELL = "/bin/sh";
 
-  # jankyborders : bordures de 2 px sur les fenetres, couleurs de theme.nix.
+  # jankyborders : filet fin de 1.5 px sur les fenetres, accorde a la barre gravee.
   # round epouse les coins arrondis imposes par macos (square laisse des triangles).
+  # inactif en overlay0 : un trait discret reste visible sur un fond clair, la ou
+  # surface0 se fondrait dans le vellum.
   services.jankyborders = {
     enable = true;
     style = "round";
-    width = 2.0;
+    width = 1.5;
     hidpi = true;
     active_color = "0xff${builtins.substring 1 6 theme.accentHex}";
-    inactive_color = "0xff${builtins.substring 1 6 theme.palette.surface0}";
+    inactive_color = "0xff${builtins.substring 1 6 theme.palette.overlay0}";
   };
 
   # fish shell
