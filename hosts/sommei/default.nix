@@ -257,6 +257,30 @@ in
       chmod u+w "$zenDir/profiles.ini"
       chown -R ${username}:staff "$zenDir"
     fi
+
+    # fond d'ecran herbanium : copie a un chemin stable (recopie seulement s'il change),
+    # puis mode clair et fond sur tous les bureaux via system events. sans session
+    # graphique, ou sans l'autorisation d'automatisation, on avertit sans echouer.
+    wallpaper="/Users/${username}/Pictures/wallpaper.png"
+    if ! cmp -s ${./wallpaper.png} "$wallpaper"; then
+      mkdir -p "/Users/${username}/Pictures"
+      cp ${./wallpaper.png} "$wallpaper"
+      chmod 644 "$wallpaper"
+      chown ${username}:staff "$wallpaper"
+    fi
+    # AppleInterfaceStyle = null n'efface pas une ancienne valeur Dark : on la retire ici
+    if sudo --user=${username} -- defaults read -g AppleInterfaceStyle >/dev/null 2>&1; then
+      sudo --user=${username} -- defaults delete -g AppleInterfaceStyle || true
+    fi
+    userUid=$(id -u ${username})
+    if launchctl print "gui/$userUid" >/dev/null 2>&1; then
+      launchctl asuser "$userUid" sudo --user=${username} -- /usr/bin/osascript \
+        -e 'tell application "System Events"' \
+        -e 'set dark mode of appearance preferences to false' \
+        -e "tell every desktop to set picture to \"$wallpaper\"" \
+        -e 'end tell' >/dev/null 2>&1 \
+        || echo "herbanium : fond ou mode clair non applique (system events indisponible)" >&2
+    fi
   '';
 
   # caps lock ne verrouille plus les majuscules. il devient option gauche
@@ -308,11 +332,21 @@ in
     NSAutomaticWindowAnimationsEnabled = false;
     # la barre de menus se cache : sketchybar prend sa place
     _HIHideMenuBar = true;
+    # theme herbanium (velin clair) : mode clair fixe, pas de bascule auto le soir
+    AppleInterfaceStyle = null;
+    AppleInterfaceStyleSwitchesAutomatically = false;
   };
 
   # empeche la touche fn/globe et caps lock de basculer la disposition clavier
   system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
-  system.defaults.CustomUserPreferences.NSGlobalDomain.TISRomanSwitchState = 0;
+  # accent graphite (-1) : neutre, ne tire pas sur le bronze du theme comme le ferait
+  # l'orange. la surbrillance du texte prend surface1 de herbanium (velin, "Other").
+  # pas d'option nix-darwin pour ces deux cles, d'ou CustomUserPreferences.
+  system.defaults.CustomUserPreferences.NSGlobalDomain = {
+    TISRomanSwitchState = 0;
+    AppleAccentColor = -1;
+    AppleHighlightColor = "0.827451 0.792157 0.701961 Other";
+  };
 
   system.defaults.screencapture = {
     location = "~/Pictures/screenshots";

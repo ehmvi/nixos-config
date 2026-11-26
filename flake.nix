@@ -143,6 +143,7 @@
         builder = nix-darwin.lib.darwinSystem;
         darwin = true;
         username = "user";
+        themeVariant = "herbanium";
         modules = [
           ./hosts/sommei/default.nix
           nix-homebrew.darwinModules.nix-homebrew
