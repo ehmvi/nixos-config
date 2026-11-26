@@ -391,8 +391,8 @@ what keeps each host light, and why: [docs/resources.md](docs/resources.md).
   workflow: `docs/secrets.md`.
 - **`just check` evaluates the hosts but does not build them**: a wrong option
   or a typo fails, a package that fails to compile still passes.
-- **a few theme pieces stay outside `theme.nix`.** kitty (`sommei` only) keeps
-  its own `eva24` file. the obsidian ramiel theme lives in the vault. vesktop's
+- **a few theme pieces stay outside `theme.nix`.** the obsidian ramiel theme
+  lives in the vault. vesktop's
   fallback colours are hand-written, though matugen overrides them anyway.
   breeze (qt) keeps its small rounded corners.
 - **git history carries several author names.** the current identity is

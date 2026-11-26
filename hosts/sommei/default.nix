@@ -236,7 +236,7 @@ in
     directory = "/Users/${username}";
     files = {
       ".config/kitty/kitty.conf".source = ../../config/kitty/kitty.conf;
-      ".config/kitty/themes/eva24.conf".source = ../../config/kitty/themes/eva24.conf;
+      ".config/kitty/theme.conf".text = theme.render ../../config/kitty/theme.conf;
       # meme prompt et fastfetch que navi et games, couleurs de theme.nix
       ".config/fastfetch/config.jsonc".text = theme.render ../../config/fastfetch/config.jsonc;
       ".config/starship.toml".text = theme.render ../../config/starship/starship.toml;
