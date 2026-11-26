@@ -285,6 +285,9 @@ in
         -e 'end tell' >/dev/null 2>&1 \
         || echo "herbanium : fond ou mode clair non applique (system events indisponible)" >&2
     fi
+
+    # recharge les fenetres kitty deja ouvertes apres mise a jour de theme.conf
+    pkill -USR1 -u ${username} -x kitty >/dev/null 2>&1 || true
   '';
 
   # caps lock ne verrouille plus les majuscules. il devient option gauche
