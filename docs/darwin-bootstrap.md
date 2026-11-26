@@ -117,16 +117,6 @@ works, as long as `scutil --get LocalHostName` says `sommei`.
 - **mullvad vpn** asks to add a vpn configuration on first connect
   _(unverified)_.
 - **full disk access** for the terminal only if `darwin-rebuild` asks for it.
-- **yabai scripting addition (once per mac):** boot into Recovery Mode (hold
-  power button on Apple Silicon), open Terminal and run
-  `csrutil enable --without fs --without debug --without nvram`. reboot into
-  macOS, run `sudo nvram boot-args=-arm64e_preview_abi`, and reboot again.
-  `services.yabai.enableScriptingAddition = true` handles the `yabai-sa`
-  daemon and `/etc/sudoers.d/yabai` automatically afterwards.
-- **accessibility permissions:** grant Accessibility to `yabai` and `skhd`
-  (System Settings > Privacy & Security > Accessibility). if a `yabai` or
-  `skhd` nixpkgs bump changes the store path, re-enable it there and restart
-  the agent (`launchctl kickstart -k gui/$(id -u)/org.nixos.yabai`).
 - **touch id for sudo** needs the finger enrolled in step 1.
   `reattach` makes it work inside tmux and cmux.
 - the per-app theme settings in the readme ("settings to set once in each

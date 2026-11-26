@@ -17,6 +17,8 @@
     brave
     # ladybird : .deb officiel ubuntu 24.04 (alpha), hors nixpkgs. sommei prend ladybird-darwin.nix
     (callPackage ../../pkgs/ladybird.nix { })
+    # see : lecteur de code natif, tarball officiel hors nixpkgs. sommei prend see-darwin.nix
+    (callPackage ../../pkgs/see.nix { })
     kdePackages.ark
     kdePackages.dolphin # file manager
     kdePackages.kio # kio plumbing (required)

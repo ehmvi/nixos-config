@@ -101,7 +101,7 @@ nixos-config/
 │   ├── desktop/           # hyprland, sddm, audio, fonts, theming (gtk, qt, cursor), printing, wallpapers, options, hjem
 │   ├── hardware/          # intel, nvidia, nvidia-power, bluetooth, health, coolercontrol
 │   └── programs/          # cli, apps, office, craft, timon, gaming, spicetify, sunshine, ollama, remotion, godot-android (sommei)
-├── pkgs/                  # packages and scripts outside nixpkgs (sunshine-monitor, craft-app*, ladybird*, timon*, t3code-nightly, horizon-launcher, artcraft-launcher, mistral-vibe, sm64coopdx, grok-bot, power-menu, apply-hypr-colors)
+├── pkgs/                  # packages and scripts outside nixpkgs (sunshine-monitor, craft-app*, ladybird*, timon*, see*, t3code-nightly, horizon-launcher, artcraft-launcher, mistral-vibe, sm64coopdx, grok-bot, power-menu, apply-hypr-colors)
 └── config/                # native dotfiles (hyprland.lua, wayle, gtk, kde, rofi, starship, fastfetch, bottom, zed, zen, kitty, fish, nushell, git, mpv, ...)
 ```
 

@@ -172,6 +172,8 @@ update:
     -just bump-release pkgs/timon.nix
     -just bump-release pkgs/timon-darwin.nix
     -just bump-release pkgs/horizon-launcher.nix
+    -just bump-release pkgs/see.nix
+    -just bump-release pkgs/see-darwin.nix
     -just bump-craft
     -just bump-ladybird
 

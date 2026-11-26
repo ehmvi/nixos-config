@@ -19,17 +19,6 @@ let
     Path=Profiles/default
     Default=1
   '';
-
-  # yabai master (dd84572) : inclut le correctif #2799 du motif add_space pour
-  # macos 26.6+ sur apple silicon (la release 7.1.25 de nixpkgs ne l'a pas encore).
-  yabaiPkg = pkgs.yabai.overrideAttrs {
-    src = pkgs.fetchFromGitHub {
-      owner = "asmvik";
-      repo = "yabai";
-      rev = "dd845723416f5fe92af49fad5ebab00369e07edd";
-      hash = "sha256-RPiGAuJS+tGsexekIzwgKYf/v+kA3lVn0+qMVIMC2Vk=";
-    };
-  };
 in
 {
   imports = [
@@ -61,70 +50,6 @@ in
   # fsa : traitement du micro en temps reel, sortie vers le micro virtuel blackhole 2ch.
   # le module copie le driver dans /Library/Audio/Plug-Ins/HAL a l activation
   programs.fsa.enable = true;
-
-  # sketchybar : barre du haut a la place de la barre de menus macos (masquee plus bas,
-  # elle reapparait en survolant le haut de l'ecran). agent launchd utilisateur ;
-  # le rc est rendu avec theme.nix, les plugins sont lus depuis le store.
-  services.sketchybar = {
-    enable = true;
-    extraPackages = [ pkgs.jq ];
-    config = builtins.replaceStrings [ "@plugins@" ] [ "${../../config/sketchybar/plugins}" ] (
-      theme.render ../../config/sketchybar/sketchybarrc
-    );
-  };
-
-  # yabai : gestionnaire de fenetres bsp facon hyprland. la scripting addition
-  # (sip partiellement desactive, voir docs/darwin-bootstrap.md) donne la bascule
-  # instantanee entre espaces, le deplacement de fenetres et les regles silencieuses.
-  services.yabai = {
-    enable = true;
-    package = yabaiPkg;
-    enableScriptingAddition = true;
-    config = {
-      layout = "bsp";
-      auto_balance = "off";
-      split_ratio = 0.5;
-      window_placement = "second_child";
-      window_gap = 6;
-      top_padding = 10;
-      bottom_padding = 10;
-      left_padding = 10;
-      right_padding = 10;
-      external_bar = "all:36:0";
-      mouse_follows_focus = "off";
-      focus_follows_mouse = "off";
-      mouse_modifier = "alt";
-      mouse_action1 = "move";
-      mouse_action2 = "resize";
-      mouse_drop_action = "swap";
-      window_shadow = "float";
-    };
-    extraConfig = builtins.replaceStrings [ "@yabai@" ] [ "${yabaiPkg}/bin/yabai" ] (
-      builtins.readFile ../../config/yabai/extra.sh
-    );
-  };
-  launchd.user.agents.yabai.serviceConfig.EnvironmentVariables.SHELL = "/bin/sh";
-
-  # skhd : raccourcis clavier alignes sur config/hypr/hyprland.lua (mainMod = lalt).
-  # SHELL=/bin/sh evite de lancer fish a chaque raccourci.
-  services.skhd = {
-    enable = true;
-    skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
-  };
-  launchd.user.agents.skhd.serviceConfig.EnvironmentVariables.SHELL = "/bin/sh";
-
-  # jankyborders : filet fin de 1.5 px sur les fenetres, accorde a la barre gravee.
-  # round epouse les coins arrondis imposes par macos (square laisse des triangles).
-  # inactif en overlay0 : un trait discret reste visible sur un fond clair, la ou
-  # surface0 se fondrait dans le vellum.
-  services.jankyborders = {
-    enable = true;
-    style = "round";
-    width = 1.5;
-    hidpi = true;
-    active_color = "0xff${builtins.substring 1 6 theme.accentHex}";
-    inactive_color = "0xff${builtins.substring 1 6 theme.palette.overlay0}";
-  };
 
   # fish shell
   programs.fish.enable = true;
@@ -228,6 +153,8 @@ in
     (callPackage ../../pkgs/ladybird-darwin.nix { })
     # timon : pas de cask, le .dmg officiel (lie dans /Applications/Nix Apps)
     (callPackage ../../pkgs/timon-darwin.nix { })
+    # see : pas de cask, le .app officiel (lie dans /Applications/Nix Apps)
+    (callPackage ../../pkgs/see-darwin.nix { })
   ];
 
   # hjem — declarative dotfiles
@@ -290,36 +217,29 @@ in
     pkill -USR1 -u ${username} -x kitty >/dev/null 2>&1 || true
   '';
 
-  # caps lock ne verrouille plus les majuscules. il devient option gauche
-  # (lalt), le mainMod de config/skhd/skhdrc, comme super sur navi et games
-  # (kb_options caps:super dans config/hypr/hyprland.lua). commande reste
-  # intacte pour les raccourcis macos, et option droite (ralt) reste libre
-  # pour les accents de qwerty-fr.
-  # 0x700000039 caps lock, 0x7000000e2 left option (lalt).
+  # caps lock ne verrouille plus les majuscules. il devient commande
+  # gauche, partout, comme super sur navi et games (kb_options caps:super
+  # dans config/hypr/hyprland.lua, pour tous les claviers).
+  # 0x700000039 caps lock, 0x7000000e3 left gui (commande / super).
   # hidutil tourne a chaque just switch, et encore au boot
   # (activate-system). une deconnexion peut la perdre jusqu'au prochain
-  # switch ou reboot.
+  # switch ou reboot. cmd+tab et cmd+espace partent aussi de caps lock.
   system.keyboard.enableKeyMapping = true;
   system.keyboard.userKeyMapping = [
     {
       HIDKeyboardModifierMappingSrc = 30064771129;
-      HIDKeyboardModifierMappingDst = 30064771298;
+      HIDKeyboardModifierMappingDst = 30064771299;
     }
   ];
 
   # réglages macos déclaratifs
   system.defaults.dock = {
-    autohide = true;
-    # garde l'ordre fixe des espaces 1..10 pour yabai
-    mru-spaces = false;
+    autohide = false;
     orientation = "bottom";
     tilesize = 42;
     show-recents = false;
     expose-animation-duration = 0.1;
   };
-
-  # requis par yabai : chaque ecran a ses propres espaces
-  system.defaults.spaces.spans-displays = false;
 
   system.defaults.finder = {
     AppleShowAllExtensions = true;
@@ -337,8 +257,7 @@ in
     KeyRepeat = 3;
     InitialKeyRepeat = 15;
     NSAutomaticWindowAnimationsEnabled = false;
-    # la barre de menus se cache : sketchybar prend sa place
-    _HIHideMenuBar = true;
+    _HIHideMenuBar = false;
     # theme herbanium (velin clair) : mode clair fixe, pas de bascule auto le soir
     AppleInterfaceStyle = null;
     AppleInterfaceStyleSwitchesAutomatically = false;
