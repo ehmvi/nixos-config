@@ -5,7 +5,7 @@
   "themes": [
     {
       "name": "theme.nix",
-      "appearance": "dark",
+      "appearance": "@appearance@",
       "style": {
         "background": "@base@",
         "background.appearance": "opaque",

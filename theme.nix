@@ -5,6 +5,7 @@
 #   "ramiel-orange" -> brun-noir + orange doux, palette fixe de ehmvi/ramiel (navi)
 #   "blood"         -> near-black + plum-rose sourd
 #   "copland"       -> ambre chaud, tube CRT copland-os (serial experiments lain)
+#   "herbanium"     -> clair : velin vieilli + encre sepia de gravure (planches botaniques)
 #
 # `mauve` est le SLOT accent — or en copland, plum-rose en blood — pas une couleur fixe.
 # les palettes partagent les mêmes 26 clés sémantiques (convention catppuccin) par contrat,
@@ -20,12 +21,15 @@
 #
 # appele par host dans flake.nix et threade partout comme specialArg `theme`.
 {
-  variant ? "ramiel", # "ramiel" | "ramiel-orange" | "blood" | "copland"
+  variant ? "ramiel", # "ramiel" | "ramiel-orange" | "blood" | "copland" | "herbanium"
 }:
 let
   # variants qui suivent le fond d ecran a l'execution (matugen). les autres restent
   # figes : wayle garde sa palette statique, hyprland et rofi ignorent les fichiers matugen.
   dynamic = variant == "ramiel";
+
+  # seul herbanium est clair : zed et macos suivent cette valeur.
+  appearance = if variant == "herbanium" then "light" else "dark";
 
   palettes = {
     # ramiel : la palette des themes ramiel (vesktop, obsidian), soit la sortie de
@@ -160,6 +164,40 @@ let
       mantle = "#0a070b";
       crust = "#060406";
     };
+
+    # herbanium : planches gravees du 18e siecle (botanique, astronomie). velin vieilli
+    # en fond, encre de taille-douce sepia-charbon pour le texte, ocre et vert sauge
+    # pour les accents. seul variant clair : les surfaces montent vers le papier,
+    # le texte descend vers l'encre. accents assombris pour rester lisibles sur le velin.
+    # red = cire a cacheter, erreurs uniquement.
+    herbanium = {
+      rosewater = "#524638";
+      flamingo = "#96584b";
+      pink = "#8f4d4a";
+      mauve = "#7a5b2e"; # ACCENT : sepia-bronze, terre d'ombre
+      red = "#9b3b2c"; # cramoisi cire a cacheter, erreurs uniquement
+      maroon = "#8a4236";
+      peach = "#9e5e32"; # terre de sienne brulee
+      yellow = "#8f6a20"; # ocre ancien, avertissements
+      green = "#4a6144"; # vert olive-sauge des planches, succes
+      teal = "#3f6359"; # encre vert-de-gris
+      sky = "#4a6875";
+      sapphire = "#486070";
+      blue = "#455d6b"; # ardoise bleu de prusse du graveur, structure / dossiers
+      lavender = "#6b5d54"; # taupe chaud, secondaire
+      text = "#1e1a14"; # encre profonde
+      subtext1 = "#383126"; # encre courante
+      subtext0 = "#5e5443"; # encre sourde, libelles
+      overlay2 = "#706652";
+      overlay1 = "#8a7f68"; # commentaires, heures
+      overlay0 = "#a89d84"; # filets, traits de gravure
+      surface2 = "#c5ba9f"; # separateur marque
+      surface1 = "#d3cab3"; # selection / survol
+      surface0 = "#dfd7c3"; # panneau, bordure au repos
+      base = "#ebe4d3"; # velin vieilli, fond
+      mantle = "#e2dac6"; # velin un peu plus sombre
+      crust = "#d6ccb4"; # bord du papier
+    };
   };
 
   # les 16 couleurs ANSI par variant (index 0..15 : black, red, green, yellow, blue,
@@ -241,6 +279,28 @@ let
       "#8ab4b0"
       "#e0d6dc"
     ];
+    # herbanium : encre sombre sur velin clair, comme latte. black = encre courante,
+    # white = surface2 (presque invisible en texte, d'usage pour les fonds). magenta =
+    # prune d'encre, car mauve (bronze) se confondrait avec le jaune ocre. les bright
+    # restent assez sombres pour etre lisibles sur le fond.
+    herbanium = [
+      "#383126"
+      "#9b3b2c"
+      "#4a6144"
+      "#7f5e1c"
+      "#455d6b"
+      "#7d4c62"
+      "#3f6359"
+      "#c5ba9f"
+      "#5e5443"
+      "#a5483a"
+      "#566f4f"
+      "#8f6a20"
+      "#4a6875"
+      "#8f5a6e"
+      "#466e63"
+      "#d3cab3"
+    ];
   };
 
   accent = "mauve"; # le SLOT accent (or en copland, plum-rose en blood)
@@ -288,6 +348,7 @@ in
   inherit
     variant
     dynamic
+    appearance
     accent
     palette
     ansi16
@@ -300,6 +361,7 @@ in
   #   @cle.hex@ -> "rrggbb"    (sans diese, ex. hyprland ou spicetify)
   #   @cle.rgb@ -> "r,g,b"     (kde)
   #   @variant@ -> nom du variant
+  #   @appearance@ -> "light" ou "dark"
   # le fichier reste lisible tel quel dans config/, nix ne fait que remplir les trous.
   render =
     path:
@@ -308,13 +370,19 @@ in
         map (n: "@${n}@") names
         ++ map (n: "@${n}.hex@") names
         ++ map (n: "@${n}.rgb@") names
-        ++ [ "@variant@" ]
+        ++ [
+          "@variant@"
+          "@appearance@"
+        ]
       )
       (
         map (n: named.${n}) names
         ++ map (n: builtins.substring 1 6 named.${n}) names
         ++ map (n: rgb named.${n}) names
-        ++ [ variant ]
+        ++ [
+          variant
+          appearance
+        ]
       )
       (builtins.readFile path);
 }
