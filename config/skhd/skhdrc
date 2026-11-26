@@ -6,8 +6,8 @@
 :: default : sketchybar --trigger skhd_mode MODE=default
 :: resize @ : sketchybar --trigger skhd_mode MODE=resize
 
-# applications
-lalt - q : open -na kitty
+# applications (on remet SHELL=fish : skhd tourne avec SHELL=/bin/sh)
+lalt - q : env SHELL=/run/current-system/sw/bin/fish open -na kitty
 lalt - c : yabai -m window --close
 lalt - e : open ~
 lalt - space : open -a Raycast
@@ -67,7 +67,7 @@ lalt + shift - 0x19 : yabai -m window --space 9
 lalt + shift - 0x1D : yabai -m window --space 10
 
 # scratchpad : lance kitty dropterm au premier appui, puis le montre ou le cache
-lalt - s : yabai -m window --toggle term || open -na kitty --args --title dropterm
+lalt - s : yabai -m window --toggle term || env SHELL=/run/current-system/sw/bin/fish open -na kitty --args --title dropterm
 lalt + shift - s : yabai -m window --scratchpad term
 
 # verrouillage et capture de zone
