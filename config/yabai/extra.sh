@@ -1,7 +1,8 @@
 # chargement de la scripting addition au demarrage et si le dock redemarre.
 # chemin complet du store requis par /etc/sudoers.d/yabai et secure_path.
-yabai -m signal --add event=dock_did_restart action="sudo @yabai@ --load-sa"
-sudo @yabai@ --load-sa
+yabai -m signal --add event=dock_did_restart action="sudo -n @yabai@ --load-sa"
+sudo -n @yabai@ --load-sa
+sleep 0.5
 
 # garantit 10 espaces sur l'ecran principal pour que mod+1..0 et les regles
 # d'applis aient toujours une cible. s'arrete proprement si la sa n'est pas chargee.
@@ -12,6 +13,7 @@ if [ "$space_count" -gt 0 ]; then
     space_count=$((space_count + 1))
   done
 fi
+sketchybar --trigger yabai_windows >/dev/null 2>&1 || true
 
 # synchro immediate de la barre des espaces dans sketchybar
 yabai -m signal --add event=space_changed action="sketchybar --trigger space_change"
