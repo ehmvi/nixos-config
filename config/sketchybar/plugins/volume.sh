@@ -16,7 +16,7 @@ esac
 # « 42 false » ; volume « missing value » sur certaines sorties (hdmi...)
 # le decoupage en mots est voulu : il separe volume et etat muet
 # shellcheck disable=SC2046
-set --$(osascript -e 'set s to get volume settings' \
+set -- $(osascript -e 'set s to get volume settings' \
   -e 'return (output volume of s as text) & " " & (output muted of s as text)')
 vol="$1"
 muted="$2"

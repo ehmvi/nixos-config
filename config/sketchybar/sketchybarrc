@@ -5,9 +5,11 @@
 # PLUGIN_DIR est rempli par nix (hosts/sommei/default.nix) : les scripts vivent dans le store.
 PLUGIN_DIR="@plugins@"
 
-# typographie : chiffres et texte en serif de macos (iowan old style, fournie
-# avec le systeme), icones en nerd font.
+# typographie : texte et chiffres romains en iowan old style, pourcentages en
+# times new roman (son "%" n'a pas la boucle qui colle au chiffre precedent),
+# icones en nerd font.
 SERIF="Iowan Old Style"
+NUMFONT="Times New Roman"
 GLYPH="JetBrainsMono Nerd Font"
 
 sketchybar --add event yabai_windows
@@ -35,12 +37,16 @@ sketchybar --default \
   background.corner_radius=0 \
   padding_left=1 padding_right=1
 
-# filet vertical de 1 px entre deux groupes, comme les colonnes d'une legende
+# filet vertical de 1 px entre deux groupes, comme les colonnes d'une legende.
+# largeur dynamique (icon.width=1, pas width=1) : sinon sketchybar ignore
+# padding_left/padding_right dans le calcul de largeur et colle le filet a gauche.
 divider() {
   sketchybar --add item "$1" "$2" \
-    --set "$1" width=1 icon.drawing=off label.drawing=off \
+    --set "$1" \
+      icon=" " icon.width=1 icon.padding_left=0 icon.padding_right=0 \
+      label.drawing=off \
       background.drawing=on background.color=0xff@overlay0.hex@ \
-      background.height=12 padding_left=5 padding_right=5
+      background.height=12 padding_left=4 padding_right=4
 }
 
 # gauche : embleme, planches 1..10 (min 3 visibles), puis indicateur de mode skhd
@@ -111,6 +117,7 @@ sketchybar --add item clock right \
 
 sketchybar --add item battery right \
   --set battery update_freq=120 script="$PLUGIN_DIR/battery.sh" \
+    label.font="$NUMFONT:Regular:13.0" \
     click_script="open x-apple.systempreferences:com.apple.Battery-Settings.extension" \
   --subscribe battery system_woke power_source_change
 
@@ -132,6 +139,7 @@ divider sep.net right
 sketchybar --add item volume right \
   --set volume \
     icon.color=0xff@yellow.hex@ \
+    label.font="$NUMFONT:Regular:13.0" \
     script="$PLUGIN_DIR/volume.sh" \
   --subscribe volume volume_change mouse.clicked mouse.scrolled
 
@@ -139,11 +147,13 @@ divider sep.sound right
 
 sketchybar --add item ram right \
   --set ram update_freq=5 script="$PLUGIN_DIR/ram.sh" \
+    label.font="$NUMFONT:Regular:13.0" \
     label.color=0xff@subtext1.hex@ \
     click_script="open -a 'Activity Monitor'"
 
 sketchybar --add item cpu right \
   --set cpu update_freq=5 script="$PLUGIN_DIR/cpu.sh" \
+    label.font="$NUMFONT:Regular:13.0" \
     label.color=0xff@subtext1.hex@ \
     click_script="open -a 'Activity Monitor'"
 
