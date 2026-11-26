@@ -87,19 +87,24 @@ in
       mouse_drop_action = "swap";
       window_shadow = "float";
     };
-    extraConfig = builtins.readFile ../../config/yabai/extra.sh;
+    extraConfig = builtins.replaceStrings [ "@yabai@" ] [ "${pkgs.yabai}/bin/yabai" ] (
+      builtins.readFile ../../config/yabai/extra.sh
+    );
   };
 
-  # skhd : raccourcis clavier alignes sur config/hypr/hyprland.lua (mainMod = lalt)
+  # skhd : raccourcis clavier alignes sur config/hypr/hyprland.lua (mainMod = lalt).
+  # SHELL=/bin/sh evite de lancer fish a chaque raccourci.
   services.skhd = {
     enable = true;
     skhdConfig = builtins.readFile ../../config/skhd/skhdrc;
   };
+  launchd.user.agents.skhd.serviceConfig.EnvironmentVariables.SHELL = "/bin/sh";
 
-  # jankyborders : bordures carrees de 2 px sur les fenetres, couleurs de theme.nix
+  # jankyborders : bordures de 2 px sur les fenetres, couleurs de theme.nix.
+  # round epouse les coins arrondis imposes par macos (square laisse des triangles).
   services.jankyborders = {
     enable = true;
-    style = "square";
+    style = "round";
     width = 2.0;
     hidpi = true;
     active_color = "0xff${builtins.substring 1 6 theme.accentHex}";
@@ -291,6 +296,10 @@ in
     # la barre de menus se cache : sketchybar prend sa place
     _HIHideMenuBar = true;
   };
+
+  # empeche la touche fn/globe et caps lock de basculer la disposition clavier
+  system.defaults.hitoolbox.AppleFnUsageType = "Do Nothing";
+  system.defaults.CustomUserPreferences.NSGlobalDomain.TISRomanSwitchState = 0;
 
   system.defaults.screencapture = {
     location = "~/Pictures/screenshots";

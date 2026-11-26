@@ -1,6 +1,7 @@
-# chargement de la scripting addition au demarrage et si le dock redemarre
-yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-sudo yabai --load-sa
+# chargement de la scripting addition au demarrage et si le dock redemarre.
+# chemin complet du store requis par /etc/sudoers.d/yabai et secure_path.
+yabai -m signal --add event=dock_did_restart action="sudo @yabai@ --load-sa"
+sudo @yabai@ --load-sa
 
 # garantit 10 espaces sur l'ecran principal pour que mod+1..0 et les regles
 # d'applis aient toujours une cible. s'arrete proprement si la sa n'est pas chargee.
