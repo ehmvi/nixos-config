@@ -1,5 +1,6 @@
 # starship : les @cle@ sont remplaces par la palette de theme.nix (theme.render).
 # le rouge ne sert qu'aux erreurs, le reste reste dans l accent et ses voisins.
+# le jaune passe en gras : sur un fond clair il frole 3:1, le gras le garde lisible.
 add_newline = true
 
 format = """[](@surface0@)$os$username[](bg:@blue@ fg:@surface0@)$directory[](fg:@blue@ bg:@surface1@)$git_branch$git_status[](fg:@surface1@ bg:@surface0@)$nodejs$python$rust$golang$nix_shell[](fg:@surface0@)$fill$cmd_duration$status$jobs$time$line_break$character"""
@@ -35,7 +36,7 @@ style = "bg:@surface1@ fg:@accent@"
 format = "[ $symbol $branch ]($style)"
 
 [git_status]
-style = "bg:@surface1@ fg:@yellow@"
+style = "bold bg:@surface1@ fg:@yellow@"
 format = "[$all_status$ahead_behind ]($style)"
 
 [nodejs]
@@ -45,7 +46,7 @@ format = "[ $symbol ($version) ]($style)"
 
 [python]
 symbol = ""
-style = "bg:@surface0@ fg:@yellow@"
+style = "bold bg:@surface0@ fg:@yellow@"
 format = "[ $symbol ($version) ]($style)"
 
 [rust]
@@ -68,7 +69,7 @@ symbol = " "
 
 [cmd_duration]
 min_time = 500
-style = "fg:@yellow@"
+style = "bold fg:@yellow@"
 format = "[  $duration ]($style)"
 
 [status]
