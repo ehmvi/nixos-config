@@ -240,6 +240,8 @@ in
       # meme prompt et fastfetch que navi et games, couleurs de theme.nix
       ".config/fastfetch/config.jsonc".text = theme.render ../../config/fastfetch/config.jsonc;
       ".config/starship.toml".text = theme.render ../../config/starship/starship.toml;
+      # meme theme zed "theme.nix" que navi et games, a choisir une fois dans zed
+      ".config/zed/themes/theme-nix.json".text = theme.render ../../config/zed/theme.json;
       ".config/fish/config.fish".source = ../../config/fish/config.fish;
       ".config/git/config".source = ../../config/git/config;
       "Library/Application Support/zen/Profiles/default/user.js".source = ../../config/zen/user.js;
