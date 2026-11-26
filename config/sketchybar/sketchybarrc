@@ -55,7 +55,7 @@ for numeral in I II III IV V VI VII VIII IX X; do
   sketchybar --add item "space.$i" left \
     --set "space.$i" \
       icon="$numeral" \
-      icon.font="$SERIF:Semibold:12.0" \
+      icon.font="$SERIF:Bold:12.0" \
       icon.color=0xff@overlay1.hex@ \
       icon.padding_left=7 icon.padding_right=7 \
       label.drawing=off \
