@@ -1,7 +1,11 @@
 # chargement de la scripting addition au demarrage et si le dock redemarre.
 # chemin complet du store requis par /etc/sudoers.d/yabai et secure_path.
+# apres une mise a jour de l'osax, le premier appel installe et redemarre le dock,
+# le second injecte reellement la charge utile.
 yabai -m signal --add event=dock_did_restart action="sudo -n @yabai@ --load-sa"
-sudo -n @yabai@ --load-sa
+sudo -n @yabai@ --load-sa || true
+sleep 1
+sudo -n @yabai@ --load-sa || true
 sleep 0.5
 
 # garantit 10 espaces sur l'ecran principal pour que mod+1..0 et les regles

@@ -19,6 +19,17 @@ let
     Path=Profiles/default
     Default=1
   '';
+
+  # yabai master (dd84572) : inclut le correctif #2799 du motif add_space pour
+  # macos 26.6+ sur apple silicon (la release 7.1.25 de nixpkgs ne l'a pas encore).
+  yabaiPkg = pkgs.yabai.overrideAttrs {
+    src = pkgs.fetchFromGitHub {
+      owner = "asmvik";
+      repo = "yabai";
+      rev = "dd845723416f5fe92af49fad5ebab00369e07edd";
+      hash = "sha256-RPiGAuJS+tGsexekIzwgKYf/v+kA3lVn0+qMVIMC2Vk=";
+    };
+  };
 in
 {
   imports = [
@@ -67,6 +78,7 @@ in
   # instantanee entre espaces, le deplacement de fenetres et les regles silencieuses.
   services.yabai = {
     enable = true;
+    package = yabaiPkg;
     enableScriptingAddition = true;
     config = {
       layout = "bsp";
@@ -87,10 +99,11 @@ in
       mouse_drop_action = "swap";
       window_shadow = "float";
     };
-    extraConfig = builtins.replaceStrings [ "@yabai@" ] [ "${pkgs.yabai}/bin/yabai" ] (
+    extraConfig = builtins.replaceStrings [ "@yabai@" ] [ "${yabaiPkg}/bin/yabai" ] (
       builtins.readFile ../../config/yabai/extra.sh
     );
   };
+  launchd.user.agents.yabai.serviceConfig.EnvironmentVariables.SHELL = "/bin/sh";
 
   # skhd : raccourcis clavier alignes sur config/hypr/hyprland.lua (mainMod = lalt).
   # SHELL=/bin/sh evite de lancer fish a chaque raccourci.
