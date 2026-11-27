@@ -19,7 +19,8 @@ style_root = "bg:@surface0@ fg:@red@"
 format = "[ $user ]($style)"
 
 [directory]
-style = "fg:@crust@ bg:@blue@"
+# base et pas crust : meme rendu en sombre, passe AA (5.47:1) sur herbanium
+style = "fg:@base@ bg:@blue@"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
