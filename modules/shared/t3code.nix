@@ -38,6 +38,9 @@ in
       system.activationScripts.postActivation.text = lib.mkAfter ''
         if ! grep -qF '# t3code-telemetry' /etc/hosts; then
           echo "blocking ${ingest} in /etc/hosts..." >&2
+          if [ -s /etc/hosts ] && [ -n "$(tail -c 1 /etc/hosts)" ]; then
+            printf '\n' >> /etc/hosts
+          fi
           printf '127.0.0.1 ${ingest} # t3code-telemetry\n::1 ${ingest} # t3code-telemetry\n' >> /etc/hosts
           dscacheutil -flushcache || true
           killall -HUP mDNSResponder 2>/dev/null || true
