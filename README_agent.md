@@ -147,11 +147,12 @@ disturb. amber (`#d9c27a`) marks warnings and idle states.
 
 ### palette: `theme.nix`
 
-`theme.nix` sits at the repo root and holds four palettes: `ramiel` (default,
-used on `games` and `sommei`), `ramiel-orange` (used on `navi`, derived from
-`ehmvi/ramiel` `palettes/orange.css` / matugen seed `#f08c28`), `blood` and
-`copland` (a serial experiments lain reference). `flake.nix` calls `theme.nix`
-per host through `mkHost`'s `themeVariant` argument.
+`theme.nix` sits at the repo root and holds five palettes: `ramiel` (default,
+used on `games`), `ramiel-orange` (used on `navi`, derived from `ehmvi/ramiel`
+`palettes/orange.css` / matugen seed `#f08c28`), `herbanium` (light aged-vellum
+and sepia-ink palette, used on `sommei`), `blood` and `copland` (a serial
+experiments lain reference). `flake.nix` calls `theme.nix` per host through
+`mkHost`'s `themeVariant` argument.
 
 every palette exposes the same 26 semantic keys (catppuccin convention) plus
 the 16 ansi colours, so any consumer that interpolates `theme.palette.<key>`
@@ -184,10 +185,10 @@ the orange accent. here is how the matugen roles map to the palette keys:
    `modules/programs/spicetify.nix`.
 2. **native files with markers**: `theme.render <file>` reads a file from
    `config/` and fills `@key@` (`#rrggbb`), `@key.hex@` (`rrggbb`),
-   `@key.rgb@` (`r,g,b`) and `@variant@`. valid keys are the 26 palette keys,
-   `accent` and `ansi0`..`ansi15`. used for starship, fastfetch, rofi, btm,
-   the zed theme, `gtk.css` and `kdeglobals`. the source files stay readable as
-   is.
+   `@key.rgb@` (`r,g,b`), `@variant@` and `@appearance@` (`light` or `dark`).
+   valid keys are the 26 palette keys, `accent` and `ansi0`..`ansi15`. used for
+   starship, fastfetch, rofi, btm, kitty, the zed theme, `gtk.css` and
+   `kdeglobals`. the source files stay readable as is.
 
 ### build-time and runtime colours (two layers, one owner each)
 
@@ -200,9 +201,9 @@ matugen only runs when the variant is dynamic (`theme.dynamic`, true for
 `ramiel`). wayle then uses `theme-provider = "matugen"`, `hyprland.lua` prefers
 `matugen-colors.lua` and rofi imports `matugen-colors.rasi`. since `ramiel` is
 matugen's own output for the pinned wallpaper, both layers agree; they only
-diverge if the wallpaper changes. with `ramiel-orange`, `blood` or `copland`,
-wayle keeps its static palette and the matugen files, even stale ones, are
-ignored.
+diverge if the wallpaper changes. with `ramiel-orange`, `blood`, `copland` or
+`herbanium`, wayle keeps its static palette and the matugen files, even stale
+ones, are ignored.
 
 | app | where its colours come from |
 |---|---|
@@ -210,16 +211,17 @@ ignored.
 | wayle bar | `[styling]` generated in `hjem.nix`, then matugen at runtime if dynamic. square buttons and popovers |
 | rofi | `config/rofi/config.rasi` (rendered), plus `matugen-colors.rasi` if dynamic |
 | wezterm, hyprlock | generated in `hjem.nix` |
+| kitty (`sommei`) | `config/kitty/theme.conf` (rendered, reloaded with `SIGUSR1` on switch) |
 | starship, fastfetch | `config/starship/starship.toml`, `config/fastfetch/config.jsonc` (rendered, on `sommei` too) |
 | btm (`games`) | `[styles]` in `config/bottom/bottom.toml` (rendered) |
-| zed | `config/zed/theme.json` → `~/.config/zed/themes/theme-nix.json`, theme name `theme.nix` |
+| zed | `config/zed/theme.json` → `~/.config/zed/themes/theme-nix.json`, theme name `theme.nix` (on `sommei` too) |
 | gtk 3 / 4 | `adw-gtk3-dark` + libadwaita, recoloured by `config/gtk/gtk.css` and `gtk4.css`; dconf sets `prefer-dark`, the theme, icons, cursor and fonts (`modules/desktop/theming.nix`) |
 | electron, brave, libadwaita dark mode | `color-scheme = prefer-dark` through `xdg-desktop-portal-gtk` |
 | qt / kde (dolphin, kate, ark, kdenlive…) | `qt.platformTheme = "kde"` with the breeze style; colours, fonts, icons and terminal come from `config/kde/kdeglobals`, installed as `/etc/xdg/kdeglobals` |
 | spotify (`games`) | `config/spicetify/ramiel/user.css` (structure only) + `customColorScheme` from `theme.nix` |
 | vesktop | `ramiel.theme.css` + matugen's `ramiel-colors.theme.css` on `games`; fixed `ramiel-orange.theme.css` on `navi` |
 | equibop | fixed `ramiel-orange.theme.css` |
-| t3 code (`navi`) | `ramiel-orange.json` linked from `inputs.ramiel` into `~/.t3/userdata/themes/` |
+| t3 code (`navi`) | `ramiel-orange.json` copied (`type = "copy"`, t3 code opens themes with `O_NOFOLLOW`) from `inputs.ramiel` into `~/.t3/userdata/themes/` |
 | obsidian | its own ramiel theme in the vault, outside this repo |
 
 `kdeglobals` goes in `/etc/xdg` and gtk settings in the system dconf database
@@ -264,7 +266,8 @@ just check                 # format check + lint + eval, mirrors what ci should 
 just doctor                # read-only health check on the running host (failed units, broken store links, mimeapps, hw guards, wayle log)
 just scan                  # scan full git history with gitleaks
 just bump <input>          # update a single flake input (e.g. just bump nixpkgs)
-just update                # nix flake update + bump-release on tracked pkgs + bump-craft
+just update                # nix flake update + bump-release on tracked pkgs + bump-craft + bump-ladybird
+just bump-ladybird         # bump pkgs/ladybird*.nix from download.ladybird.org and the apt index
 just bump-craft            # bump pkgs/craft-apps.json from github SHA256SUMS.txt
 just bump-release <file>   # move a pkgs/ package to its latest github release (or nightly)
 ```
