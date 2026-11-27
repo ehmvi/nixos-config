@@ -29,6 +29,10 @@
   `kdeglobals` (the colour scheme goes to `/etc/xdg/kdeglobals` instead; kde
   apps read both, `~/.config` first). same for zed's `settings.json`: only the
   theme file in `~/.config/zed/themes/` is linked.
+- **some apps reject symlinks (`O_NOFOLLOW`).** t3 code opens files in
+  `~/.t3/userdata/themes/` with `O_NOFOLLOW` and silently drops symlinks. use
+  `type = "copy"` (with `permissions = "644"` and `clobber = true`) in hjem
+  for those files instead of the default symlink.
 
 **desktop**
 
