@@ -189,12 +189,19 @@ in
       chown -R ${username}:staff "$zenDir"
     fi
 
+    # dossiers images et captures (screencapture echoue si le dossier cible manque)
+    for dir in "/Users/${username}/Pictures" "/Users/${username}/Pictures/screenshots"; do
+      if [ ! -d "$dir" ]; then
+        mkdir -p "$dir"
+        chown ${username}:staff "$dir"
+      fi
+    done
+
     # fond d'ecran herbanium : copie a un chemin stable (recopie seulement s'il change),
     # puis mode clair et fond sur tous les bureaux via system events. sans session
     # graphique, ou sans l'autorisation d'automatisation, on avertit sans echouer.
     wallpaper="/Users/${username}/Pictures/wallpaper.png"
     if ! cmp -s ${./wallpaper.png} "$wallpaper"; then
-      mkdir -p "/Users/${username}/Pictures"
       cp ${./wallpaper.png} "$wallpaper"
       chmod 644 "$wallpaper"
       chown ${username}:staff "$wallpaper"
