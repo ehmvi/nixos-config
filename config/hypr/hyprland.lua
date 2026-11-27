@@ -436,8 +436,15 @@ hl.bind(mainMod .. " + SHIFT + P",       hl.dsp.exec_cmd("hyprshot -m region"))
 -- home sans modificateur : meme capture de zone que print.
 -- sans non_consuming, hyprland garde la touche et les applis ne la voient pas.
 hl.bind("Home",                          hl.dsp.exec_cmd("hyprshot -m region"))
--- super+home : capture de zone a annoter dans satty (reglages dans satty/config.toml)
-hl.bind(mainMod .. " + Home",             hl.dsp.exec_cmd("hyprshot -m region --raw | satty --filename -"))
+-- super+home : capture de zone a annoter dans satty (reglages dans satty/config.toml).
+-- fichier temporaire : evite de lancer satty sur un flux vide si la selection est annulee,
+-- et cree le dossier de sortie s'il n'existe pas encore.
+hl.bind(mainMod .. " + Home", hl.dsp.exec_cmd(
+    "img=$(mktemp --suffix=.png); trap 'rm -f \"$img\"' EXIT; " ..
+    "if hyprshot -m region --raw > \"$img\" && [ -s \"$img\" ]; then " ..
+    "mkdir -p \"${HYPRSHOT_DIR:-$HOME/Pictures/screenshots}\"; " ..
+    "satty --filename \"$img\"; fi"
+))
 -- pipette : copie en hex la couleur cliquee
 hl.bind(mainMod .. " + SHIFT + X",       hl.dsp.exec_cmd("hyprpicker -a"))
 
