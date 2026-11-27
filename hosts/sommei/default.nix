@@ -153,8 +153,6 @@ in
     (callPackage ../../pkgs/ladybird-darwin.nix { })
     # timon : pas de cask, le .dmg officiel (lie dans /Applications/Nix Apps)
     (callPackage ../../pkgs/timon-darwin.nix { })
-    # see : pas de cask, le .app officiel (lie dans /Applications/Nix Apps)
-    (callPackage ../../pkgs/see-darwin.nix { })
   ];
 
   # hjem — declarative dotfiles
