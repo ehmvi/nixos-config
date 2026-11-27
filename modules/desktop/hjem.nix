@@ -262,8 +262,11 @@ in
         '';
     }
     // lib.optionalAttrs (theme.variant == "ramiel-orange") {
-      # theme t3 code : rend ramiel (orange) disponible dans reglages > apparence
+      # theme t3 code : copie et pas lien symbolique, t3 code ouvre les themes
+      # avec O_NOFOLLOW et ignore silencieusement les liens
       ".t3/userdata/themes/ramiel-orange.json" = {
+        type = "copy";
+        permissions = "644";
         source = "${inputs.ramiel}/t3code/ramiel-orange.json";
         clobber = true;
       };
