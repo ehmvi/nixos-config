@@ -6,4 +6,6 @@ fish_add_path --global --append $HOME/.npm-global/bin # npm global
 fish_add_path --global --append $HOME/scripts # scripts perso
 fish_add_path --global --append $HOME/.opencode/bin # opencode
 
-starship init fish | source
+if status is-interactive
+    starship init fish | source
+end
