@@ -88,6 +88,10 @@
       "image/jpeg" = "imv.desktop";
       "image/gif" = "imv.desktop";
       "image/webp" = "imv.desktop";
+      "image/avif" = "imv.desktop";
+      "image/heif" = "imv.desktop";
+      "image/heic" = "imv.desktop";
+      "image/jxl" = "imv.desktop";
       "image/bmp" = "imv.desktop";
       "image/tiff" = "imv.desktop";
       "image/svg+xml" = "imv.desktop";
@@ -117,8 +121,9 @@
     // {
       # pdf : sioyek
       "application/pdf" = "sioyek.desktop";
-      # texte brut : zed
+      # texte brut et markdown : zed (evite qu'onlyoffice prenne text/markdown)
       "text/plain" = "dev.zed.Zed.desktop";
+      "text/markdown" = "dev.zed.Zed.desktop";
       # dossiers : dolphin
       "inode/directory" = "org.kde.dolphin.desktop";
       # navigateur : brave
