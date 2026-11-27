@@ -13,9 +13,9 @@
   },
   "deckcraft": {
     "repo": "storytold/deckcraft",
-    "version": "0.18.1",
-    "linux": "sha256-W659VWZjhiRBHvlo8lMqszWNwoCIQURYPkl8VjHbiiY=",
-    "darwin": "sha256-MyHRH2NTs/+d4yjyFAfXUn8fkCnIPatOOrc09RbToFU="
+    "version": "0.19.1",
+    "linux": "sha256-7HWqrvEKbcSBP36/D3/Y+YBSDFs9BRuj12IEyeXXb+o=",
+    "darwin": "sha256-pSM/KLAxt07cSgffKgBo1DuCzK39rIZfFFdl0oss50Y="
   },
   "designcraft": {
     "repo": "storytold/designcraft",
@@ -61,9 +61,9 @@
   },
   "solidcraft": {
     "repo": "tangency-labs/solidcraft",
-    "version": "0.49.1",
-    "linux": "sha256-Gpm+aEtbhu+jGzwmcYcrZmtedV3BhIS8tSVgCg/1nao=",
-    "darwin": "sha256-O8hLdkIvVkrpNM7c5VrEmM/o0lHqlnflk1nPMJDbmI4="
+    "version": "0.50.0",
+    "linux": "sha256-sMY/Rf5YqxPEAUUTKyH9wwn0XilDAfG6UlBQqplXWSA=",
+    "darwin": "sha256-h9M6lEh1S8cKHd1ZENwi7auGXnQXQxNjsYMPiLSqFcI="
   },
   "soundcraft": {
     "repo": "storytold/soundcraft",

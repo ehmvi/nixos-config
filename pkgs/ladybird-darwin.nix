@@ -14,11 +14,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "ladybird";
-  version = "2026.47.8";
+  version = "2026.48.0";
 
   src = fetchurl {
     url = "https://download.ladybird.org/macos/${finalAttrs.version}/ladybird-${finalAttrs.version}-macOS-arm64.dmg";
-    hash = "sha256-p9m4PpALEAGkrK9ZJpAqbZojnHwmXgHs79JQgxxEmzA=";
+    hash = "sha256-QHGIWZ9HW7RoNg/lKicgxbJOybPjWPfBfUE0f1BLrLY=";
   };
 
   nativeBuildInputs = [ _7zz ];
