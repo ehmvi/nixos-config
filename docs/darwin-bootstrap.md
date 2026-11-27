@@ -119,8 +119,8 @@ works, as long as `scutil --get LocalHostName` says `sommei`.
 - **full disk access** for the terminal only if `darwin-rebuild` asks for it.
 - **touch id for sudo** needs the finger enrolled in step 1.
   `reattach` makes it work inside tmux and cmux.
-- the per-app theme settings in the readme ("settings to set once in each
-  app"), the zed theme for example.
+- the per-app theme settings in [README_agent.md](../README_agent.md)
+  ("one-time steps in app uis"), the zed theme for example.
 
 ## adding a second mac instead
 
